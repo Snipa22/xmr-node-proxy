@@ -1,0 +1,19 @@
+{
+  "name": "xmr-node-proxy",
+  "version": "0.0.1",
+  "description": "Node proxy for XMR pools based on nodejs-pool",
+  "main": "proxy.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snipa22/xmr-node-proxy.git"
+  },
+  "author": "Alexander Blair",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/snipa22/xmr-node-proxy/issues"
+  },
+  "homepage": "https://github.com/snipa22/xmr-node-proxy#readme"
+}
