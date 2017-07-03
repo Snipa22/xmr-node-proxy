@@ -144,6 +144,7 @@ function Pool(poolData){
         }
         this.socket.write(JSON.stringify(rawSend) + '\n');
         this.sendLog[this.sendId++] = rawSend;
+        debug.pool(`Sent ${JSON.stringify(rawSend)} to ${this.hostname}`);
     };
     this.login = function () {
         this.sendData('login', {
@@ -232,6 +233,7 @@ function poolSocket(hostname){
 
 function handlePoolMessage(jsonData, hostname){
     let pool = activePools[hostname];
+    debug.pool(`Received ${JSON.stringify(jsonData)} from ${pool.hostname}`);
     if (jsonData.hasOwnProperty('method')){
         // The only time method is set, is with a push of data.  Everything else is a reply/
         if (jsonData.method === 'job'){
