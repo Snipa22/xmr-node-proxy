@@ -113,9 +113,15 @@ function Pool(poolData){
     this.poolNonces = {};
     this.connect = function(){
         if (this.ssl){
-            this.socket = tls.connect(this.hostname, this.port, poolSocket.bind(this));
+            tls.connect(this.port, this.hostname, (socket)=>{
+                this.socket = socket;
+                poolSocket(this.hostname);
+            });
         } else {
-            this.socket = net.connect(this.hostname, this.port, poolSocket.bind(this));
+            net.connect(this.port, this.hostname, (socket)=>{
+                this.socket = socket;
+                poolSocket(this.hostname);
+            });
         }
     };
     this.heartbeat = function(){
@@ -174,7 +180,8 @@ function connectPools(){
     });
 }
 
-function poolSocket(socket){
+function poolSocket(socket, hostname){
+    let pool = activePools[hostname];
     socket.setKeepAlive(true);
     socket.setEncoding('utf8');
     let dataBuffer = '';
@@ -204,24 +211,24 @@ function poolSocket(socket){
                         }
                     }
 
-                    console.warn(`${global.threadName}Socket error from ${this.hostname} Message: ${message}`);
+                    console.warn(`${global.threadName}Socket error from ${pool.hostname} Message: ${message}`);
                     socket.destroy();
 
                     break;
                 }
-                handlePoolMessage(jsonData, this.hostname);
+                handlePoolMessage(jsonData, pool.hostname);
             }
             dataBuffer = incomplete;
         }
     }).on('error', (err) => {
         if (err.code !== 'ECONNRESET') {
-            console.warn(`${global.threadName}Socket error from ${this.hostname} ${err}`);
+            console.warn(`${global.threadName}Socket error from ${pool.hostname} ${err}`);
         }
     }).on('close', () => {
-        console.warn(`${global.threadName}Socket closed from ${this.hostname}`);
+        console.warn(`${global.threadName}Socket closed from ${pool.hostname}`);
     });
-    console.log(`${global.threadName}connected to pool: ${this.hostname}`);
-    setInterval(this.heartbeat, 30000);
+    console.log(`${global.threadName}connected to pool: ${pool.hostname}`);
+    setInterval(pool.heartbeat, 30000);
 }
 
 function handlePoolMessage(jsonData, hostname){
