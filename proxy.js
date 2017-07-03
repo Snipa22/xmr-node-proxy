@@ -228,6 +228,7 @@ function poolSocket(hostname){
         console.warn(`${global.threadName}Socket closed from ${pool.hostname}`);
     });
     console.log(`${global.threadName}connected to pool: ${pool.hostname}`);
+    pool.login();
     setInterval(pool.heartbeat, 30000);
 }
 
