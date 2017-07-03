@@ -5,8 +5,8 @@
       "port": 7777,
       "ssl": false,
       "share": 80,
-      "username": "",
-      "password": "",
+      "username": "46XWBqE1iwsVxSDP1qDrxhE1XvsZV6eALG5LwnoMdjbT4GPdy2bZTb99kagzxp2MMjUamTYZ4WgvZdFadvMimTjvR6Gv8hL",
+      "password": "proxy:totally.valid@snipanet.com",
       "keepAlive": true,
       "coin": "xmr"
     },
@@ -15,8 +15,8 @@
       "port": 7778,
       "ssl": false,
       "share": 20,
-      "username": "",
-      "password": "",
+      "username": "46XWBqE1iwsVxSDP1qDrxhE1XvsZV6eALG5LwnoMdjbT4GPdy2bZTb99kagzxp2MMjUamTYZ4WgvZdFadvMimTjvR6Gv8hL",
+      "password": "proxy:totally.valid@snipanet.com",
       "keepAlive": true,
       "coin": "xmr"
     }

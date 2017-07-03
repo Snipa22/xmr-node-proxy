@@ -14,6 +14,7 @@ global.config = require('./config.json');
  Internal Variables
  IPC Registry
  Combined Functions
+ Pool Definition
  Master Functions
  Miner Definition
  Slave Functions
@@ -40,6 +41,10 @@ let activePools = {};
 // IPC Registry
 function masterMessageHandler(worker, message, handle) {
     switch (message.type) {
+        case 'foundShare':
+            if (message.host in activePools){
+                activePools[message.host].sendShare(worker, message.data);
+            }
     }
 }
 
@@ -68,7 +73,204 @@ function readConfig() {
     }
 }
 
+// Pool Definition
+function Pool(poolData){
+    /*
+    Pool data is the following:
+     {
+     "hostname": "pool.supportxmr.com",
+     "port": 7777,
+     "ssl": false,
+     "share": 80,
+     "username": "",
+     "password": "",
+     "keepAlive": true,
+     "coin": "xmr"
+     }
+     Client Data format:
+     {
+        "method":"submit",
+        "params":{
+            "id":"12e168f2-db42-4eea-b56a-f1e7d57f94c9",
+            "job_id":"/4FIQEI/Qq++EzzH1e03oTrWF5Ed",
+            "nonce":"9e008000",
+            "result":"4eee0b966418fdc3ec1a684322715e65765554f11ff8f7fed3f75ac45ef20300"
+        },
+        "id":1
+     }
+     */
+    this.hostname = poolData.hostname;
+    this.port = poolData.port;
+    this.ssl = poolData.ssl;
+    this.share = poolData.share;
+    this.username = poolData.username;
+    this.password = poolData.password;
+    this.keepAlive = poolData.keepAlive;
+    this.coin = poolData.coin;
+    this.coinFuncs = require(`./lib/${this.coin}.js`);
+    this.sendId = 0;
+    this.sendLog = {};
+    this.poolNonces = {};
+    this.connect = function(){
+        if (this.ssl){
+            this.socket = tls.connect(this.hostname, this.port, poolSocket.bind(this));
+        } else {
+            this.socket = net.connect(this.hostname, this.port, poolSocket.bind(this));
+        }
+    };
+    this.heartbeat = function(){
+        if (this.keepAlive){
+            this.sendData('keepalived');
+        }
+    };
+    this.sendData = function (method, params) {
+        if (typeof params === 'undefined'){
+            params = {};
+        }
+        let rawSend = {
+            method: method,
+            id: 1,
+        };
+        if (typeof this.id !== 'undefined'){
+            params.id = this.id;
+        }
+        rawSend.params = params;
+        if (!this.socket.writable){
+            return false;
+        }
+        this.socket.write(JSON.stringify(rawSend) + '\n');
+        this.sendLog[this.sendId++] = rawSend;
+    };
+    this.login = function () {
+        this.sendData('login', {
+            login: this.username,
+            pass: this.password,
+            agent: 'xmr-node-proxy/0.0.1'
+        });
+    };
+    this.sendShare = function (worker, shareData) {
+        this.sendData('submit', {
+            job_id: this.activeBlocktemplate.job_id,
+            nonce: shareData.nonce,
+            result: shareData.result,
+            workerNonce: shareData.workerNonce,
+            poolNonce: this.poolNonces[worker.id]
+        });
+    };
+}
+
 // Master Functions
+/*
+The master performs the following tasks:
+1. Serve all API calls.
+2. Distribute appropriately modified block template bases to all pool servers.
+3. Handle all to/from the various pool servers.
+4. Manage and suggest miner changes in order to achieve correct h/s balancing between the various systems.
+ */
+function connectPools(){
+    global.config.pools.forEach(function (poolData) {
+        activePools[poolData.hostname] = new Pool(poolData);
+        activePools[poolData.hostname].connect();
+    });
+}
+
+function poolSocket(socket){
+    socket.setKeepAlive(true);
+    socket.setEncoding('utf8');
+    let dataBuffer = '';
+    socket.on('data', (d) => {
+        dataBuffer += d;
+        if (dataBuffer.indexOf('\n') !== -1) {
+            let messages = dataBuffer.split('\n');
+            let incomplete = dataBuffer.slice(-1) === '\n' ? '' : messages.pop();
+            for (let i = 0; i < messages.length; i++) {
+                let message = messages[i];
+                if (message.trim() === '') {
+                    continue;
+                }
+                let jsonData;
+                try {
+                    jsonData = JSON.parse(message);
+                }
+                catch (e) {
+                    if (message.indexOf('GET /') === 0) {
+                        if (message.indexOf('HTTP/1.1') !== -1) {
+                            socket.end('HTTP/1.1' + httpResponse);
+                            break;
+                        }
+                        else if (message.indexOf('HTTP/1.0') !== -1) {
+                            socket.end('HTTP/1.0' + httpResponse);
+                            break;
+                        }
+                    }
+
+                    console.warn(`${global.threadName}Socket error from ${this.hostname} Message: ${message}`);
+                    socket.destroy();
+
+                    break;
+                }
+                handlePoolMessage(jsonData, this.hostname);
+            }
+            dataBuffer = incomplete;
+        }
+    }).on('error', (err) => {
+        if (err.code !== 'ECONNRESET') {
+            console.warn(`${global.threadName}Socket error from ${this.hostname} ${err}`);
+        }
+    }).on('close', () => {
+        console.warn(`${global.threadName}Socket closed from ${this.hostname}`);
+    });
+    console.log(`${global.threadName}connected to pool: ${this.hostname}`);
+    setInterval(this.heartbeat, 30000);
+}
+
+function handlePoolMessage(jsonData, hostname){
+    let pool = activePools[hostname];
+    if (jsonData.hasOwnProperty('method')){
+        // The only time method is set, is with a push of data.  Everything else is a reply/
+        if (jsonData.method === 'job'){
+            handleNewBlockTemplate(jsonData.params, hostname);
+        }
+    } else {
+        if (jsonData.error !== null){
+            return console.error(`Error response from pool ${pool.hostname}: ${jsonData.error}`);
+        }
+        let sendLog = pool.sendLog[jsonData.id];
+        switch(sendLog.method){
+            case 'login':
+                pool.id = jsonData.result.id;
+                handleNewBlockTemplate(jsonData.result, hostname);
+                break;
+            case 'getjob':
+                handleNewBlockTemplate(jsonData.result, hostname);
+                break;
+            case 'submit':
+                sendLog.accepted = true;
+                break;
+        }
+    }
+}
+
+function handleNewBlockTemplate(blockTemplate, hostname){
+    let pool = activePools[hostname];
+    pool.activeBlocktemplate = pool.coinFuncs.masterBlockTemplate(blockTemplate);
+    for (let worker in cluster.workers){
+        if (cluster.workers.hasOwnProperty(worker)){
+            worker.send({
+                host: hostname,
+                type: 'newBlockTemplate',
+                data: {
+                    blocktemplate_blob: pool.activeBlocktemplate.blobForWorker(),
+                    difficulty: pool.activeBlocktemplate.difficulty,
+                    height: pool.activeBlocktemplate.height,
+                    reserved_offset: pool.activeBlocktemplate.reservedOffset,
+                    worker_offset: pool.activeBlocktemplate.workerOffset
+                }
+            });
+            pool.poolNonces[worker.id] = pool.activeBlocktemplate.poolNonce;
+        }
+    }
+}
 
 // Miner Definition
 function Miner(id, params, ip, pushMessage, portData) {
@@ -82,8 +284,8 @@ function Miner(id, params, ip, pushMessage, portData) {
 
     // Miner Variables
     this.coin = portData.coin;
-    this.coinFuncs = require(`./lib/${portData.coin}.js`);
-    let coinSettings = global.config.coinSettings[portData.coin];
+    this.coinFuncs = require(`./lib/${this.coin}.js`);
+    this.coinSettings = global.config.coinSettings[this.coin];
     this.login = params.login;  // Documentation purposes only.
     this.password = params.pass;  // Documentation purposes only.
     this.agent = params.agent;  // Documentation purposes only.
@@ -128,7 +330,7 @@ function Miner(id, params, ip, pushMessage, portData) {
 
     // VarDiff System
     this.shareTimeBuffer = support.circularBuffer(8);
-    this.shareTimeBuffer.enq(coinSettings.shareTargetTime);
+    this.shareTimeBuffer.enq(this.coinSettings.shareTargetTime);
     this.lastShareTime = Date.now() / 1000 || 0;
 
     this.shares = 0;
@@ -169,11 +371,11 @@ function Miner(id, params, ip, pushMessage, portData) {
     this.setNewDiff = function (difficulty) {
         this.newDiff = Math.round(difficulty);
         debug.diff(global.threadName + "Difficulty: " + this.newDiff + " For: " + this.logString + " Time Average: " + this.shareTimeBuffer.average(this.lastShareTime) + " Entries: " + this.shareTimeBuffer.size() + "  Sum: " + this.shareTimeBuffer.sum());
-        if (this.newDiff > coinSettings.maxDiff) {
-            this.newDiff = coinSettings.maxDiff;
+        if (this.newDiff > this.coinSettings.maxDiff) {
+            this.newDiff = this.coinSettings.maxDiff;
         }
-        if (this.newDiff < coinSettings.minDiff) {
-            this.newDiff = coinSettings.minDiff;
+        if (this.newDiff < this.coinSettings.minDiff) {
+            this.newDiff = this.coinSettings.minDiff;
         }
         if (this.difficulty === this.newDiff) {
             return;
@@ -182,7 +384,7 @@ function Miner(id, params, ip, pushMessage, portData) {
         if (this.hashes > 0){
             debug.diff(global.threadName + "Hashes: " + this.hashes + " in: " + Math.floor((Date.now() - this.connectTime)/1000) + " seconds gives: " +
                 Math.floor(this.hashes/(Math.floor((Date.now() - this.connectTime)/1000))) + " hashes/second or: " +
-                Math.floor(this.hashes/(Math.floor((Date.now() - this.connectTime)/1000))) *coinSettings.shareTargetTime + " difficulty versus: " + this.newDiff);
+                Math.floor(this.hashes/(Math.floor((Date.now() - this.connectTime)/1000))) *this.coinSettings.shareTargetTime + " difficulty versus: " + this.newDiff);
         }
         this.messageSender('job', this.getJob());
     };
@@ -439,3 +641,32 @@ function activatePorts() {
 // API Calls
 
 // System Init
+
+if (cluster.isMaster) {
+    let numWorkers = require('os').cpus().length;
+    console.log('Cluster master setting up ' + numWorkers + ' workers...');
+
+    for (let i = 0; i < numWorkers; i++) {
+        let worker = cluster.fork();
+        worker.on('message', masterMessageHandler);
+    }
+
+    cluster.on('online', function (worker) {
+        console.log('Worker ' + worker.process.pid + ' is online');
+    });
+
+    cluster.on('exit', function (worker, code, signal) {
+        console.log('Worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
+        console.log('Starting a new worker');
+        worker = cluster.fork();
+        worker.on('message', masterMessageHandler);
+    });
+    connectPools();
+} else {
+    /*
+    setInterval(checkAliveMiners, 30000);
+    setInterval(retargetMiners, global.config.pool.retargetTime * 1000);
+    */
+    process.on('message', slaveMessageHandler);
+    activatePorts();
+}
