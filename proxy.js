@@ -27,7 +27,8 @@ let debug = {
     diff: require('debug')('diff'),
     blocks: require('debug')('blocks'),
     shares: require('debug')('shares'),
-    miners: require('debug')('miners')
+    miners: require('debug')('miners'),
+    workers: require('debug')('workers')
 };
 global.threadName = '';
 let nonceCheck = new RegExp("^[0-9a-f]{8}$");
@@ -64,8 +65,8 @@ function masterMessageHandler(worker, message, handle) {
                                 height: pool.activeBlocktemplate.height,
                                 reserved_offset: pool.activeBlocktemplate.reservedOffset,
                                 worker_offset: pool.activeBlocktemplate.workerOffset,
-                                target_diff: pool.activeBlocktemplate.target_diff,
-                                target_diff_hex: pool.activeBlocktemplate.target_diff_hex
+                                target_diff: pool.activeBlocktemplate.targetDiff,
+                                target_diff_hex: pool.activeBlocktemplate.targetHex
                             }
                         });
                         pool.poolNonces[worker.id] = pool.activeBlocktemplate.poolNonce;
@@ -315,8 +316,8 @@ function handleNewBlockTemplate(blockTemplate, hostname){
                     height: pool.activeBlocktemplate.height,
                     reserved_offset: pool.activeBlocktemplate.reservedOffset,
                     worker_offset: pool.activeBlocktemplate.workerOffset,
-                    target_diff: pool.activeBlocktemplate.target_diff,
-                    target_diff_hex: pool.activeBlocktemplate.target_diff_hex
+                    target_diff: pool.activeBlocktemplate.targetDiff,
+                    target_diff_hex: pool.activeBlocktemplate.targetHex
                 }
             });
             pool.poolNonces[id] = pool.activeBlocktemplate.poolNonce;
@@ -369,7 +370,7 @@ function Miner(id, params, ip, pushMessage, portData) {
         this.valid_miner = false;
     }
 
-    if (!(activePools[this.pool].hasOwnProperty('activeBlockTemplate'))){
+    if (typeof activePools[this.pool].activeBlockTemplate !== 'undefined'){
         this.error = "No active block template";
         this.valid_miner = false;
     }
