@@ -39,7 +39,7 @@ let activePools = {};
 
 // IPC Registry
 function masterMessageHandler(worker, message, handle) {
-    if ('type' in message){
+    if (typeof message !== 'undefined' && 'type' in message){
         switch (message.type) {
             case 'blockFind':
             case 'shareFind':
@@ -47,8 +47,6 @@ function masterMessageHandler(worker, message, handle) {
                     activePools[message.host].sendShare(worker, message.data);
                 }
         }
-    } else {
-        console.log(`${global.threadName}Received unknown message ${message}`);
     }
 }
 
