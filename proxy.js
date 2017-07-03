@@ -247,7 +247,7 @@ function handlePoolMessage(jsonData, hostname){
         switch(sendLog.method){
             case 'login':
                 pool.id = jsonData.result.id;
-                handleNewBlockTemplate(jsonData.result, hostname);
+                handleNewBlockTemplate(jsonData.result.job, hostname);
                 break;
             case 'getjob':
                 handleNewBlockTemplate(jsonData.result, hostname);
