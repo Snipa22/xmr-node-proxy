@@ -263,9 +263,9 @@ function handleNewBlockTemplate(blockTemplate, hostname){
     let pool = activePools[hostname];
     console.log(`Received new block template from ${pool.hostname}`);
     pool.activeBlocktemplate = new pool.coinFuncs.MasterBlockTemplate(blockTemplate);
-    for (let worker in cluster.workers){
-        if (cluster.workers.hasOwnProperty(worker)){
-            worker.send({
+    for (let id in cluster.workers){
+        if (cluster.workers.hasOwnProperty(id)){
+            cluster.workers[id].send({
                 host: hostname,
                 type: 'newBlockTemplate',
                 data: {
@@ -276,7 +276,7 @@ function handleNewBlockTemplate(blockTemplate, hostname){
                     worker_offset: pool.activeBlocktemplate.workerOffset
                 }
             });
-            pool.poolNonces[worker.id] = pool.activeBlocktemplate.poolNonce;
+            pool.poolNonces[id] = pool.activeBlocktemplate.poolNonce;
         }
     }
 }
