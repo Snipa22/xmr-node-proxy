@@ -108,7 +108,7 @@ function Pool(poolData){
     this.keepAlive = poolData.keepAlive;
     this.coin = poolData.coin;
     this.coinFuncs = require(`./lib/${this.coin}.js`);
-    this.sendId = 0;
+    this.sendId = 1;
     this.sendLog = {};
     this.poolNonces = {};
     this.connect = function(){
