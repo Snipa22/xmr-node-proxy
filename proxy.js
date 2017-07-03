@@ -40,7 +40,8 @@ let activePools = {};
 // IPC Registry
 function masterMessageHandler(worker, message, handle) {
     switch (message.type) {
-        case 'foundShare':
+        case 'blockFind':
+        case 'shareFind':
             if (message.host in activePools){
                 activePools[message.host].sendShare(worker, message.data);
             }
@@ -273,7 +274,9 @@ function handleNewBlockTemplate(blockTemplate, hostname){
                     difficulty: pool.activeBlocktemplate.difficulty,
                     height: pool.activeBlocktemplate.height,
                     reserved_offset: pool.activeBlocktemplate.reservedOffset,
-                    worker_offset: pool.activeBlocktemplate.workerOffset
+                    worker_offset: pool.activeBlocktemplate.workerOffset,
+                    target_diff: pool.activeBlocktemplate.target_diff,
+                    target_diff_hex: pool.activeBlocktemplate.target_diff_hex
                 }
             });
             pool.poolNonces[id] = pool.activeBlocktemplate.poolNonce;
@@ -677,5 +680,6 @@ if (cluster.isMaster) {
     setInterval(retargetMiners, global.config.pool.retargetTime * 1000);
     */
     process.on('message', slaveMessageHandler);
+    process.send({type: 'needBlockTemplates'});
     activatePorts();
 }
