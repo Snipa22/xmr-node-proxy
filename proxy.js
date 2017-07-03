@@ -52,7 +52,7 @@ function slaveMessageHandler(message) {
     switch (message.type) {
         case 'newBlockTemplate':
             if (message.host in activePools){
-                activePools[message.host].activeBlocktemplate = activePools[message.host].coinFuncs.blockTemplate(message.data);
+                activePools[message.host].activeBlocktemplate = new activePools[message.host].coinFuncs.BlockTemplate(message.data);
             }
     }
 }
@@ -263,7 +263,7 @@ function handlePoolMessage(jsonData, hostname){
 function handleNewBlockTemplate(blockTemplate, hostname){
     let pool = activePools[hostname];
     console.log(`Received new block template from ${pool.hostname}`);
-    pool.activeBlocktemplate = pool.coinFuncs.masterBlockTemplate(blockTemplate);
+    pool.activeBlocktemplate = new pool.coinFuncs.MasterBlockTemplate(blockTemplate);
     for (let worker in cluster.workers){
         if (cluster.workers.hasOwnProperty(worker)){
             worker.send({
