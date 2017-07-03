@@ -354,8 +354,8 @@ function Miner(id, params, ip, pushMessage, portData) {
         this.error = "No active pool for the requested coin";
         this.valid_miner = false;
     }
-    for (let pool in activePools[portData.coin]){
-        if (activePools[portData.coin].hasOwnProperty(pool)){
+    for (let pool in activePools){
+        if (activePools.hasOwnProperty(pool)){
             this.pool = pool.hostname;
             break;
         }
