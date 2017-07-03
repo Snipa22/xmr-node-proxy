@@ -133,7 +133,7 @@ function Pool(poolData){
         }
         let rawSend = {
             method: method,
-            id: 1,
+            id: this.sendId++,
         };
         if (typeof this.id !== 'undefined'){
             params.id = this.id;
@@ -143,7 +143,7 @@ function Pool(poolData){
             return false;
         }
         this.socket.write(JSON.stringify(rawSend) + '\n');
-        this.sendLog[this.sendId++] = rawSend;
+        this.sendLog[rawSend.id] = rawSend;
         debug.pool(`Sent ${JSON.stringify(rawSend)} to ${this.hostname}`);
     };
     this.login = function () {
