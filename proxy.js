@@ -356,7 +356,7 @@ function Miner(id, params, ip, pushMessage, portData) {
     }
     for (let pool in activePools){
         if (activePools.hasOwnProperty(pool)){
-            this.pool = pool.hostname;
+            this.pool = pool;
             break;
         }
     }
