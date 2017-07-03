@@ -46,6 +46,33 @@ function masterMessageHandler(worker, message, handle) {
                 if (message.host in activePools){
                     activePools[message.host].sendShare(worker, message.data);
                 }
+                break;
+            case 'needPoolState':
+                worker.send({
+                    type: 'poolState',
+                    data: Object.keys(activePools)
+                });
+                for (let hostname in activePools){
+                    if (activePools.hasOwnProperty(hostname)){
+                        let pool = activePools[hostname];
+                        worker.send({
+                            host: hostname,
+                            type: 'newBlockTemplate',
+                            data: {
+                                blocktemplate_blob: pool.activeBlocktemplate.blobForWorker(),
+                                difficulty: pool.activeBlocktemplate.difficulty,
+                                height: pool.activeBlocktemplate.height,
+                                reserved_offset: pool.activeBlocktemplate.reservedOffset,
+                                worker_offset: pool.activeBlocktemplate.workerOffset,
+                                target_diff: pool.activeBlocktemplate.target_diff,
+                                target_diff_hex: pool.activeBlocktemplate.target_diff_hex
+                            }
+                        });
+                        pool.poolNonces[worker.id] = pool.activeBlocktemplate.poolNonce;
+                    }
+                }
+                break;
+
         }
     }
 }
@@ -56,6 +83,17 @@ function slaveMessageHandler(message) {
             if (message.host in activePools){
                 activePools[message.host].activeBlocktemplate = new activePools[message.host].coinFuncs.BlockTemplate(message.data);
             }
+            break;
+        case 'poolState':
+            message.data.forEach(function(hostname){
+                if(!(hostname in activePools)){
+                    global.config.pools.forEach(function(poolData){
+                        if (hostname === poolData.hostname){
+                            activePools[hostname] = new Pool(poolData);
+                        }
+                    });
+                }
+            });
     }
 }
 
@@ -331,7 +369,7 @@ function Miner(id, params, ip, pushMessage, portData) {
         this.valid_miner = false;
     }
 
-    if (!(activePools[this.coin][this.pool].hasOwnProperty('activeBlockTemplate'))){
+    if (!(activePools[this.pool].hasOwnProperty('activeBlockTemplate'))){
         this.error = "No active block template";
         this.valid_miner = false;
     }
@@ -372,7 +410,7 @@ function Miner(id, params, ip, pushMessage, portData) {
     };
 
     this.activeBlocktemplate = function(){
-        return activePools[this.coin][this.pool].activeBlocktemplate;
+        return activePools[this.pool].activeBlocktemplate;
     };
 
     // Support functions for how miners activate and run.
@@ -683,6 +721,9 @@ if (cluster.isMaster) {
     setInterval(retargetMiners, global.config.pool.retargetTime * 1000);
     */
     process.on('message', slaveMessageHandler);
-    process.send({type: 'needBlockTemplates'});
+    global.config.pools.forEach(function(poolData){
+        activePools[poolData.hostname] = new Pool(poolData);
+    });
+    process.send({type: 'needPoolState'});
     activatePorts();
 }
