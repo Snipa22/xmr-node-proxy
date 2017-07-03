@@ -1,7 +1,7 @@
 {
   "name": "xmr-node-proxy",
   "version": "0.0.1",
-  "description": "Node proxy for XMR pools based on nodejs-pool",
+  "description": "Node proxy for XMR pools based on nodejs-pool, should support any coins that nodejs-pool does with little work",
   "main": "proxy.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,5 +15,27 @@
   "bugs": {
     "url": "https://github.com/snipa22/xmr-node-proxy/issues"
   },
-  "homepage": "https://github.com/snipa22/xmr-node-proxy#readme"
+  "homepage": "https://github.com/snipa22/xmr-node-proxy#readme",
+  "dependencies": {
+    "async": "2.1.4",
+    "bignum": "^0.12.5",
+    "body-parser": "^1.16.0",
+    "circular-buffer": "1.0.2",
+    "cluster": "0.7.7",
+    "cors": "^2.8.1",
+    "crypto": "0.0.3",
+    "debug": "2.5.1",
+    "express": "4.14.0",
+    "jsonwebtoken": "^7.2.1",
+    "moment": "2.17.1",
+    "range": "0.0.3",
+    "request": "^2.79.0",
+    "request-json": "0.6.1",
+    "sprintf-js": "^1.0.3",
+    "uuid": "3.0.1"
+  },
+  "optionalDependencies": {
+    "cryptonote-util": "git://github.com/Snipa22/node-cryptonote-util.git#xmr-Nan-2.0",
+    "multi-hashing": "git+https://github.com/Snipa22/node-multi-hashing-aesni.git"
+  }
 }
