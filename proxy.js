@@ -180,8 +180,9 @@ function connectPools(){
     });
 }
 
-function poolSocket(socket, hostname){
+function poolSocket(hostname){
     let pool = activePools[hostname];
+    let socket = pool.socket;
     socket.setKeepAlive(true);
     socket.setEncoding('utf8');
     let dataBuffer = '';
