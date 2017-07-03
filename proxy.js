@@ -390,7 +390,7 @@ function Miner(id, params, ip, pushMessage, portData) {
     this.hashes = 0;
     this.logString = this.id + " IP: " + this.ip;
 
-    this.validJobs = global.support.circularBuffer(5);
+    this.validJobs = support.circularBuffer(5);
 
     this.cachedJob = null;
 
