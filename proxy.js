@@ -30,7 +30,6 @@ let debug = {
     miners: require('debug')('miners')
 };
 global.threadName = '';
-let pastBlockTemplates = {};
 let nonceCheck = new RegExp("^[0-9a-f]{8}$");
 let activePorts = [];
 let httpResponse = ' 200 OK\nContent-Type: text/plain\nContent-Length: 18\n\nMining Proxy Online';
@@ -107,7 +106,7 @@ function Pool(poolData){
     this.password = poolData.password;
     this.keepAlive = poolData.keepAlive;
     this.coin = poolData.coin;
-    this.coinFuncs = require(`./lib/${this.coin}.js`);
+    this.coinFuncs = require(`./lib/${this.coin}.js`)();
     this.sendId = 1;
     this.sendLog = {};
     this.poolNonces = {};
@@ -294,7 +293,7 @@ function Miner(id, params, ip, pushMessage, portData) {
 
     // Miner Variables
     this.coin = portData.coin;
-    this.coinFuncs = require(`./lib/${this.coin}.js`);
+    this.coinFuncs = require(`./lib/${this.coin}.js`)();
     this.coinSettings = global.config.coinSettings[this.coin];
     this.login = params.login;  // Documentation purposes only.
     this.password = params.pass;  // Documentation purposes only.
