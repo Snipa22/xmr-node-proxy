@@ -39,12 +39,16 @@ let activePools = {};
 
 // IPC Registry
 function masterMessageHandler(worker, message, handle) {
-    switch (message.type) {
-        case 'blockFind':
-        case 'shareFind':
-            if (message.host in activePools){
-                activePools[message.host].sendShare(worker, message.data);
-            }
+    if ('type' in message){
+        switch (message.type) {
+            case 'blockFind':
+            case 'shareFind':
+                if (message.host in activePools){
+                    activePools[message.host].sendShare(worker, message.data);
+                }
+        }
+    } else {
+        console.log(`${global.threadName}Received unknown message ${message}`);
     }
 }
 
@@ -656,6 +660,7 @@ function activatePorts() {
 
 if (cluster.isMaster) {
     let numWorkers = require('os').cpus().length;
+    global.threadName = 'Master ';
     console.log('Cluster master setting up ' + numWorkers + ' workers...');
 
     for (let i = 0; i < numWorkers; i++) {
