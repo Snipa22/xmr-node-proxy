@@ -113,13 +113,11 @@ function Pool(poolData){
     this.poolNonces = {};
     this.connect = function(){
         if (this.ssl){
-            tls.connect(this.port, this.hostname, (socket)=>{
-                this.socket = socket;
+            this.socket = tls.connect(this.port, this.hostname, ()=>{
                 poolSocket(this.hostname);
             });
         } else {
-            net.connect(this.port, this.hostname, (socket)=>{
-                this.socket = socket;
+            this.socket = net.connect(this.port, this.hostname, ()=>{
                 poolSocket(this.hostname);
             });
         }
@@ -261,6 +259,7 @@ function handlePoolMessage(jsonData, hostname){
 
 function handleNewBlockTemplate(blockTemplate, hostname){
     let pool = activePools[hostname];
+    console.log(`Received new block template from ${pool.hostname}`);
     pool.activeBlocktemplate = pool.coinFuncs.masterBlockTemplate(blockTemplate);
     for (let worker in cluster.workers){
         if (cluster.workers.hasOwnProperty(worker)){
