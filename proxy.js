@@ -207,7 +207,7 @@ function Pool(poolData){
             this.sendData('submit', {
                 job_id: job.masterJobID,
                 nonce: shareData.nonce,
-                result: shareData.result,
+                result: shareData.resultHash,
                 workerNonce: shareData.workerNonce,
                 poolNonce: job.poolNonce
             });
