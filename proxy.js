@@ -351,10 +351,6 @@ function Miner(id, params, ip, pushMessage, portData) {
     this.fixed_diff = false;
     this.difficulty = portData.diff;
     this.connectTime = Date.now();
-    if (!(portData.coin in activePools)){
-        this.error = "No active pool for the requested coin";
-        this.valid_miner = false;
-    }
     for (let pool in activePools){
         if (activePools.hasOwnProperty(pool)){
             this.pool = pool;
@@ -410,10 +406,6 @@ function Miner(id, params, ip, pushMessage, portData) {
         };
     };
 
-    this.activeBlocktemplate = function(){
-        return activePools[this.pool].activeBlocktemplate;
-    };
-
     // Support functions for how miners activate and run.
     this.updateDifficulty = function(){
         if (this.hashes > 0 && !this.fixed_diff) {
@@ -439,10 +431,9 @@ function Miner(id, params, ip, pushMessage, portData) {
                 Math.floor(this.hashes/(Math.floor((Date.now() - this.connectTime)/1000))) + " hashes/second or: " +
                 Math.floor(this.hashes/(Math.floor((Date.now() - this.connectTime)/1000))) *this.coinSettings.shareTargetTime + " difficulty versus: " + this.newDiff);
         }
-        this.messageSender('job', this.getJob());
+        this.messageSender('job', this.getJob(activeMiners[this.id], activePools[this.pool].activeBlocktemplate));
     };
 
-    this.getTargetHex = this.coinFuncs.getTargetHex;
     this.getJob = this.coinFuncs.getJob;
 }
 
@@ -472,7 +463,7 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage) {
             activeMiners[minerId] = miner;
             sendReply(null, {
                 id: minerId,
-                job: miner.getJob(miner),
+                job: miner.getJob(miner, activePools[miner.pool].activeBlocktemplate),
                 status: 'OK'
             });
             break;
@@ -482,7 +473,7 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage) {
                 return;
             }
             miner.heartbeat();
-            sendReply(null, miner.getJob(miner));
+            sendReply(null, miner.getJob(miner, activePools[miner.pool].activeBlocktemplate));
             break;
         case 'submit':
             if (!miner) {
@@ -530,7 +521,7 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage) {
                     miner.newDiff = miner.difficulty - 1;
                     miner.incremented = false;
                 }
-                miner.messageSender('job', miner.getJob());
+                miner.messageSender('job', miner.getJob(miner, activePools[miner.pool].activeBlocktemplate));
                 sendReply('Block expired');
                 return;
             }
