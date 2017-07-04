@@ -86,6 +86,14 @@ function slaveMessageHandler(message) {
                     activePools[message.host].pastBlockTemplates.enq(activePools[message.host].activeBlocktemplate);
                 }
                 activePools[message.host].activeBlocktemplate = new activePools[message.host].coinFuncs.BlockTemplate(message.data);
+                for (let miner in activeMiners){
+                    if (activeMiners.hasOwnProperty(miner)){
+                        let realMiner = activeMiners[miner];
+                        if (realMiner.hostname === message.host){
+                            realMiner.getJob(realMiner, activePools[message.host].activeBlocktemplate);
+                        }
+                    }
+                }
             }
             break;
         case 'poolState':
@@ -513,7 +521,7 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage) {
 
             job.submissions.push(params.nonce);
             let activeBlockTemplate = activePools[miner.pool].activeBlocktemplate;
-            let pastBlockTemplates = activeBlockTemplate.pastBlockTemplates;
+            let pastBlockTemplates = activePools[miner.pool].pastBlockTemplates;
 
             let blockTemplate = activeBlockTemplate.height === job.height ? activeBlockTemplate : pastBlockTemplates.toarray().filter(function (t) {
                 return t.height === job.height;
