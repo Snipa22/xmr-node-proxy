@@ -84,7 +84,7 @@ function slaveMessageHandler(message) {
                     if (activeMiners.hasOwnProperty(miner)){
                         let realMiner = activeMiners[miner];
                         if (realMiner.pool === message.host){
-                            realMiner.getJob(realMiner, activePools[message.host].activeBlocktemplate);
+                            realMiner.messageSender('job', realMiner.getJob(realMiner, activePools[message.host].activeBlocktemplate));
                         }
                     }
                 }
