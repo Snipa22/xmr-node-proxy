@@ -208,7 +208,7 @@ function Pool(poolData){
                 nonce: shareData.nonce,
                 result: shareData.result,
                 workerNonce: shareData.workerNonce,
-                poolNonce: job.poolNonce
+                poolNonce: job.masterJobID
             });
         }
     };
