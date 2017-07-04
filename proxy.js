@@ -74,6 +74,7 @@ function slaveMessageHandler(message) {
         case 'newBlockTemplate':
             if (message.host in activePools){
                 if(activePools[message.host].activeBlocktemplate){
+                    debug.workers(`Received a new block template for ${message.host} and have one in cache.  Storing`);
                     activePools[message.host].pastBlockTemplates.enq(activePools[message.host].activeBlocktemplate);
                 }
                 activePools[message.host].activeBlocktemplate = new activePools[message.host].coinFuncs.BlockTemplate(message.data);
