@@ -59,7 +59,7 @@ function masterMessageHandler(worker, message, handle) {
                         worker.send({
                             host: hostname,
                             type: 'newBlockTemplate',
-                            data: pool.coin.getMasterJob(pool, worker.id)
+                            data: pool.coinFuncs.getMasterJob(pool, worker.id)
                         });
                     }
                 }
