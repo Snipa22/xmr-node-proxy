@@ -324,7 +324,6 @@ function handleNewBlockTemplate(blockTemplate, hostname){
                 type: 'newBlockTemplate',
                 data: pool.coinFuncs.getMasterJob(pool, id)
             });
-            pool.poolNonces[id] = pool.activeBlocktemplate.poolNonce;
         }
     }
 }
