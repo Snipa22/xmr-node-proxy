@@ -690,10 +690,10 @@ if (cluster.isMaster) {
     let numWorkers = require('os').cpus().length;
     global.threadName = 'Master ';
     console.log('Cluster master setting up ' + numWorkers + ' workers...');
-
+    cluster.on('message', masterMessageHandler);
     for (let i = 0; i < numWorkers; i++) {
         let worker = cluster.fork();
-        worker.on('message', masterMessageHandler);
+        worker.on('message', slaveMessageHandler);
     }
 
     cluster.on('online', function (worker) {
@@ -704,7 +704,7 @@ if (cluster.isMaster) {
         console.log('Worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
         console.log('Starting a new worker');
         worker = cluster.fork();
-        worker.on('message', masterMessageHandler);
+        worker.on('message', slaveMessageHandler);
     });
     connectPools();
 } else {
