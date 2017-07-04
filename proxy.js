@@ -588,6 +588,7 @@ function activatePorts() {
                         error: error ? {code: -1, message: error} : null,
                         result: result
                     }) + "\n";
+                debug.miners(`Data sent to miner (sendReply): ${sendData}`);
                 socket.write(sendData);
             };
             handleMinerData(jsonData.method, jsonData.params, socket.remoteAddress, portData, sendReply, pushMessage);
@@ -608,6 +609,7 @@ function activatePorts() {
                         method: method,
                         params: params
                     }) + "\n";
+                debug.miners(`Data sent to miner (pushMessage): ${sendData}`);
                 socket.write(sendData);
             };
 
@@ -628,6 +630,7 @@ function activatePorts() {
                             continue;
                         }
                         let jsonData;
+                        debug.miners(`Data from miner: ${message}`);
                         try {
                             jsonData = JSON.parse(message);
                         }
