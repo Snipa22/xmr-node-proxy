@@ -80,7 +80,7 @@ function slaveMessageHandler(message) {
                 for (let miner in activeMiners){
                     if (activeMiners.hasOwnProperty(miner)){
                         let realMiner = activeMiners[miner];
-                        if (realMiner.hostname === message.host){
+                        if (realMiner.pool === message.host){
                             realMiner.getJob(realMiner, activePools[message.host].activeBlocktemplate);
                         }
                     }
@@ -314,6 +314,7 @@ function handleNewBlockTemplate(blockTemplate, hostname){
     let pool = activePools[hostname];
     console.log(`Received new block template from ${pool.hostname}`);
     if(pool.activeBlocktemplate){
+        debug.pool('Storing the previous block template');
         pool.pastBlockTemplates.enq(pool.activeBlocktemplate);
     }
     pool.activeBlocktemplate = new pool.coinFuncs.MasterBlockTemplate(blockTemplate);
