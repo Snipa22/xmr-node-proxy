@@ -82,6 +82,9 @@ function slaveMessageHandler(message) {
     switch (message.type) {
         case 'newBlockTemplate':
             if (message.host in activePools){
+                if(activePools[message.host].activeBlocktemplate){
+                    activePools[message.host].pastBlockTemplates.enq(activePools[message.host].activeBlocktemplate);
+                }
                 activePools[message.host].activeBlocktemplate = new activePools[message.host].coinFuncs.BlockTemplate(message.data);
             }
             break;
@@ -148,6 +151,7 @@ function Pool(poolData){
     this.password = poolData.password;
     this.keepAlive = poolData.keepAlive;
     this.coin = poolData.coin;
+    this.pastBlockTemplates = support.circularBuffer(4);
     this.coinFuncs = require(`./lib/${this.coin}.js`)();
     this.sendId = 1;
     this.sendLog = {};
@@ -283,7 +287,7 @@ function handlePoolMessage(jsonData, hostname){
         }
     } else {
         if (jsonData.error !== null){
-            return console.error(`Error response from pool ${pool.hostname}: ${jsonData.error}`);
+            return console.error(`Error response from pool ${pool.hostname}: ${JSON.stringify(jsonData.error)}`);
         }
         let sendLog = pool.sendLog[jsonData.id];
         switch(sendLog.method){
@@ -304,6 +308,9 @@ function handlePoolMessage(jsonData, hostname){
 function handleNewBlockTemplate(blockTemplate, hostname){
     let pool = activePools[hostname];
     console.log(`Received new block template from ${pool.hostname}`);
+    if(pool.activeBlocktemplate){
+        pool.pastBlockTemplates.enq(pool.activeBlocktemplate);
+    }
     pool.activeBlocktemplate = new pool.coinFuncs.MasterBlockTemplate(blockTemplate);
     for (let id in cluster.workers){
         if (cluster.workers.hasOwnProperty(id)){
