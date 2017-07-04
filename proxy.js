@@ -76,6 +76,8 @@ function slaveMessageHandler(message) {
                 if(activePools[message.host].activeBlocktemplate){
                     debug.workers(`Received a new block template for ${message.host} and have one in cache.  Storing`);
                     activePools[message.host].pastBlockTemplates.enq(activePools[message.host].activeBlocktemplate);
+                } else {
+                    debug.workers(`Received a new block template for ${message.host} do not have one in cache.`);
                 }
                 activePools[message.host].activeBlocktemplate = new activePools[message.host].coinFuncs.BlockTemplate(message.data);
                 for (let miner in activeMiners){
