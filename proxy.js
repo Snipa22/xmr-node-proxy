@@ -727,5 +727,12 @@ if (cluster.isMaster) {
         activePools[poolData.hostname] = new Pool(poolData);
     });
     process.send({type: 'needPoolState'});
+    setInterval(function(){
+        for (let minerID in activeMiners){
+            if (activeMiners.hasOwnProperty(minerID)){
+                activeMiners[minerID].updateDifficulty();
+            }
+        }
+    }, 60000);
     activatePorts();
 }
