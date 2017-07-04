@@ -505,7 +505,7 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage) {
             }
 
             job.submissions.push(params.nonce);
-            let activeBlockTemplate = miner.activeBlocktemplate();
+            let activeBlockTemplate = activePools[miner.pool].activeBlocktemplate;
             let pastBlockTemplates = activeBlockTemplate.pastBlockTemplates;
 
             let blockTemplate = activeBlockTemplate.height === job.height ? activeBlockTemplate : pastBlockTemplates.toarray().filter(function (t) {
