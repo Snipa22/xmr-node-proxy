@@ -59,17 +59,8 @@ function masterMessageHandler(worker, message, handle) {
                         worker.send({
                             host: hostname,
                             type: 'newBlockTemplate',
-                            data: {
-                                blocktemplate_blob: pool.activeBlocktemplate.blobForWorker(),
-                                difficulty: pool.activeBlocktemplate.difficulty,
-                                height: pool.activeBlocktemplate.height,
-                                reserved_offset: pool.activeBlocktemplate.reservedOffset,
-                                worker_offset: pool.activeBlocktemplate.workerOffset,
-                                target_diff: pool.activeBlocktemplate.targetDiff,
-                                target_diff_hex: pool.activeBlocktemplate.targetHex
-                            }
+                            data: pool.coin.getMasterJob(pool, worker.id)
                         });
-                        pool.poolNonces[worker.id] = pool.activeBlocktemplate.poolNonce;
                     }
                 }
                 break;
@@ -163,7 +154,7 @@ function Pool(poolData){
     this.coinFuncs = require(`./lib/${this.coin}.js`)();
     this.sendId = 1;
     this.sendLog = {};
-    this.poolNonces = {};
+    this.poolJobs = {};
     this.connect = function(){
         if (this.ssl){
             this.socket = tls.connect(this.port, this.hostname, ()=>{
@@ -207,13 +198,19 @@ function Pool(poolData){
         });
     };
     this.sendShare = function (worker, shareData) {
-        this.sendData('submit', {
-            job_id: this.activeBlocktemplate.job_id,
-            nonce: shareData.nonce,
-            result: shareData.result,
-            workerNonce: shareData.workerNonce,
-            poolNonce: this.poolNonces[worker.id]
-        });
+        //btID - Block template ID in the poolJobs circ buffer.
+        let job = this.poolJobs[worker.id].toarray().filter(function (job) {
+            return job.id === shareData.btID;
+        })[0];
+        if (job){
+            this.sendData('submit', {
+                job_id: job.job_id,
+                nonce: shareData.nonce,
+                result: shareData.result,
+                workerNonce: shareData.workerNonce,
+                poolNonce: job.poolNonce
+            });
+        }
     };
 }
 
@@ -325,15 +322,7 @@ function handleNewBlockTemplate(blockTemplate, hostname){
             cluster.workers[id].send({
                 host: hostname,
                 type: 'newBlockTemplate',
-                data: {
-                    blocktemplate_blob: pool.activeBlocktemplate.blobForWorker(),
-                    difficulty: pool.activeBlocktemplate.difficulty,
-                    height: pool.activeBlocktemplate.height,
-                    reserved_offset: pool.activeBlocktemplate.reservedOffset,
-                    worker_offset: pool.activeBlocktemplate.workerOffset,
-                    target_diff: pool.activeBlocktemplate.targetDiff,
-                    target_diff_hex: pool.activeBlocktemplate.targetHex
-                }
+                data: pool.coinFuncs.getMasterJob(pool, id)
             });
             pool.poolNonces[id] = pool.activeBlocktemplate.poolNonce;
         }
