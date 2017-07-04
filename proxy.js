@@ -416,7 +416,7 @@ function Miner(id, params, ip, pushMessage, portData) {
     // Support functions for how miners activate and run.
     this.updateDifficulty = function(){
         if (this.hashes > 0 && !this.fixed_diff) {
-            this.setNewDiff(Math.floor(this.hashes / (Math.floor((Date.now() - this.connectTime) / 1000))) * global.config.pool.targetTime);
+            this.setNewDiff(Math.floor(this.hashes / (Math.floor((Date.now() - this.connectTime) / 1000))) * this.coinSettings.shareTargetTime);
         }
     };
 
