@@ -204,11 +204,11 @@ function Pool(poolData){
         })[0];
         if (job){
             this.sendData('submit', {
-                job_id: job.job_id,
+                job_id: job.masterJobID,
                 nonce: shareData.nonce,
                 result: shareData.result,
                 workerNonce: shareData.workerNonce,
-                poolNonce: job.masterJobID
+                poolNonce: job.poolNonce
             });
         }
     };
