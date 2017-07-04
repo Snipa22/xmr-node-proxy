@@ -528,7 +528,7 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage) {
                     miner.newDiff = miner.difficulty - 1;
                     miner.incremented = false;
                 }
-                miner.messageSender('job', miner.getJob(miner, activePools[miner.pool].activeBlocktemplate));
+                miner.messageSender('job', miner.getJob(miner, activePools[miner.pool].activeBlocktemplate, true));
                 sendReply('Block expired');
                 return;
             }
