@@ -312,9 +312,11 @@ function poolSocket(hostname){
         }
     }).on('error', (err) => {
         if (err.code !== 'ECONNRESET') {
+            activePools[pool.hostname].connect();
             console.warn(`${global.threadName}Socket error from ${pool.hostname} ${err}`);
         }
     }).on('close', () => {
+        activePools[pool.hostname].connect();
         console.warn(`${global.threadName}Socket closed from ${pool.hostname}`);
     });
     console.log(`${global.threadName}connected to pool: ${pool.hostname}`);
@@ -332,6 +334,9 @@ function handlePoolMessage(jsonData, hostname){
         }
     } else {
         if (jsonData.error !== null){
+            if (jsonData.error.message === 'Unauthenticated'){
+                activePools[hostname].connect();
+            }
             return console.error(`Error response from pool ${pool.hostname}: ${JSON.stringify(jsonData.error)}`);
         }
         let sendLog = pool.sendLog[jsonData.id];
