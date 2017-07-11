@@ -552,8 +552,8 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage) {
             let activeBlockTemplate = activePools[miner.pool].activeBlocktemplate;
             let pastBlockTemplates = activePools[miner.pool].pastBlockTemplates;
 
-            let blockTemplate = activeBlockTemplate.height === job.height ? activeBlockTemplate : pastBlockTemplates.toarray().filter(function (t) {
-                return t.height === job.height;
+            let blockTemplate = activeBlockTemplate.id === job.templateID ? activeBlockTemplate : pastBlockTemplates.toarray().filter(function (t) {
+                return t.id === job.templateID;
             })[0];
 
             if (!blockTemplate) {
