@@ -38,6 +38,7 @@ let activeMiners = {};
 let bans = {};
 let activePools = {};
 let activeWorkers = {};
+let masterStats = {shares: 0, blocks: 0, hashes: 0};
 
 // IPC Registry
 function masterMessageHandler(worker, message, handle) {
@@ -248,7 +249,7 @@ function enumerateWorkerStats(){
             for (let workerID in activeWorkers[poolID]){
                 if (activeWorkers[poolID].hasOwnProperty(workerID)) {
                     let workerData = activeWorkers[poolID][workerID];
-                    if (workerData.lastContact < ((Math.floor((Date.now())/1000) - 60))){
+                    if (workerData.lastContact < ((Math.floor((Date.now())/1000) - 120))){
                         delete activeWorkers[poolID][workerID];
                         continue;
                     }
@@ -700,6 +701,7 @@ function activatePorts() {
             }).on('close', function () {
                 pushMessage = function () {
                 };
+                debug.miners('Miner disconnected via standard close');
             });
         }
 
