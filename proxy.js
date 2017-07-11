@@ -37,6 +37,7 @@ let httpResponse = ' 200 OK\nContent-Type: text/plain\nContent-Length: 18\n\nMin
 let activeMiners = {};
 let bans = {};
 let activePools = {};
+let activeWorkers = {};
 
 // IPC Registry
 function masterMessageHandler(worker, message, handle) {
@@ -64,7 +65,9 @@ function masterMessageHandler(worker, message, handle) {
                     }
                 }
                 break;
-
+            case 'workerStats':
+                activeWorkers[worker.id][message.minerID] = message.data;
+                break;
         }
     }
 }
@@ -230,6 +233,39 @@ function connectPools(){
         activePools[poolData.hostname] = new Pool(poolData);
         activePools[poolData.hostname].connect();
     });
+}
+
+function enumerateWorkerStats(){
+    let stats, global_stats = {miners: 0, hashes: 0, hashRate: 0, diff: 0};
+    for (let poolID in activeWorkers){
+        if (activeWorkers.hasOwnProperty(poolID)){
+            stats = {
+                miners: 0,
+                hashes: 0,
+                hashRate: 0,
+                diff: 0
+            };
+            for (let workerID in activeWorkers[poolID]){
+                if (activeWorkers[poolID].hasOwnProperty(workerID)) {
+                    let workerData = activeWorkers[poolID][workerID];
+                    if (workerData.lastContact < ((Math.floor((Date.now())/1000) - 60))){
+                        activeWorkers[poolID].delete(workerID);
+                        continue;
+                    }
+                    stats.miners += 1;
+                    stats.hashes += workerData.hashes;
+                    stats.hashRate += workerData.avgSpeed;
+                    stats.diff += workerData.diff;
+                }
+            }
+            global_stats.miners += stats.miners;
+            global_stats.hashes += stats.hashes;
+            global_stats.hashRate += stats.hashRate;
+            global_stats.diff += stats.diff;
+            debug.workers(`Worker: ${poolID} currently has ${stats.miners} connected at ${stats.hashRate} h/s with an average diff of ${Math.floor(stats.diff/stats.miners)}`);
+        }
+    }
+    console.log(`The proxy currently has ${global_stats.miners} connected at ${global_stats.hashRate} h/s with an average diff of ${Math.floor(global_stats.diff/global_stats.miners)}`);
 }
 
 function poolSocket(hostname){
@@ -708,6 +744,7 @@ if (cluster.isMaster) {
 
     cluster.on('online', function (worker) {
         console.log('Worker ' + worker.process.pid + ' is online');
+        activeWorkers[worker.id] = {};
     });
 
     cluster.on('exit', function (worker, code, signal) {
@@ -717,6 +754,7 @@ if (cluster.isMaster) {
         worker.on('message', slaveMessageHandler);
     });
     connectPools();
+    setInterval(enumerateWorkerStats, 15000);
 } else {
     /*
     setInterval(checkAliveMiners, 30000);
@@ -734,5 +772,12 @@ if (cluster.isMaster) {
             }
         }
     }, 60000);
+    setInterval(function(){
+        for (let minerID in activeMiners){
+            if (activeMiners.hasOwnProperty(minerID)){
+                process.send({minerID: minerID, data: activeMiners[minerID].minerStats(), type: 'workerStats'});
+            }
+        }
+    }, 10000);
     activatePorts();
 }
