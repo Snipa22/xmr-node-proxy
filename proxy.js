@@ -656,7 +656,7 @@ function activatePorts() {
 
             socket.on('data', function (d) {
                 dataBuffer += d;
-                if (Buffer.byteLength(dataBuffer, 'utf8') > 10240) { //10KB
+                if (Buffer.byteLength(dataBuffer, 'utf8') > 102400) { //10KB
                     dataBuffer = null;
                     console.warn(global.threadName + 'Excessive packet size from: ' + socket.remoteAddress);
                     socket.destroy();
