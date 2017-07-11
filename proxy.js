@@ -773,7 +773,7 @@ if (cluster.isMaster) {
                 activeMiners[minerID].updateDifficulty();
             }
         }
-    }, 60000);
+    }, 45000);
     setInterval(function(){
         for (let minerID in activeMiners){
             if (activeMiners.hasOwnProperty(minerID)){
