@@ -249,7 +249,7 @@ function enumerateWorkerStats(){
                 if (activeWorkers[poolID].hasOwnProperty(workerID)) {
                     let workerData = activeWorkers[poolID][workerID];
                     if (workerData.lastContact < ((Math.floor((Date.now())/1000) - 60))){
-                        activeWorkers[poolID].delete(workerID);
+                        delete activeWorkers[poolID][workerID];
                         continue;
                     }
                     stats.miners += 1;
@@ -262,10 +262,10 @@ function enumerateWorkerStats(){
             global_stats.hashes += stats.hashes;
             global_stats.hashRate += stats.hashRate;
             global_stats.diff += stats.diff;
-            debug.workers(`Worker: ${poolID} currently has ${stats.miners} connected at ${stats.hashRate} h/s with an average diff of ${Math.floor(stats.diff/stats.miners)}`);
+            debug.workers(`Worker: ${poolID} currently has ${stats.miners} miners connected at ${stats.hashRate} h/s with an average diff of ${Math.floor(stats.diff/stats.miners)}`);
         }
     }
-    console.log(`The proxy currently has ${global_stats.miners} connected at ${global_stats.hashRate} h/s with an average diff of ${Math.floor(global_stats.diff/global_stats.miners)}`);
+    console.log(`The proxy currently has ${global_stats.miners} miners connected at ${global_stats.hashRate} h/s with an average diff of ${Math.floor(global_stats.diff/global_stats.miners)}`);
 }
 
 function poolSocket(hostname){
