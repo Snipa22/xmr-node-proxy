@@ -504,7 +504,7 @@ function balanceWorkers(){
                                             if (coinPools[donatorPool].miners[miner] < lowPools[pool]){
                                                 minerChanges[pool].push(miner);
                                                 lowPools[pool] -= coinPools[donatorPool].miners[miner];
-                                                debug.balancer(`Stealing ${miner} for ${pool} from ${donatorPool} for ${coinPools[donatorPool].miners[miner]} h/s`);
+                                                debug.balancer(`Moving ${miner} for ${pool} from ${donatorPool} for ${coinPools[donatorPool].miners[miner]} h/s`);
                                                 delete(coinPools[donatorPool].miners[miner]);
                                             }
                                             if (lowPools[pool] < 50){
