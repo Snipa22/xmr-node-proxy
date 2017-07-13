@@ -413,7 +413,7 @@ function balanceWorkers(){
                         };
                     }
                     minerStates[minerCoin].hashrate += miner.avgSpeed;
-                    poolStates[minerCoin][miner.pool].hashrate += miner.pool;
+                    poolStates[minerCoin][miner.pool].hashrate += miner.avgSpeed;
                     poolStates[minerCoin][miner.pool].miners[`${workerID}_${minerID}`] = miner.avgSpeed;
                 }
             }
