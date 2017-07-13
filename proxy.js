@@ -444,7 +444,7 @@ function balanceWorkers(){
                 debug.balancer(`DevPool on ${coin} is enabled.  Set to ${global.config.developerShare}% and ideally would have ${coinPools[devPool].idealRate}.  Currently has ${coinPools[devPool].hashrate}`);
             }
             for (let pool in coinPools){
-                if (coinPools.hasOwnProperty(pool) && pool !== devPool){
+                if (coinPools.hasOwnProperty(pool) && pool !== devPool && activePools.hasOwnProperty(pool)){
                     coinPools[pool].idealRate = Math.floor(coinMiners.hashrate * (coinPools[pool].percentage/100));
                     if (coinPools[pool].idealRate > coinPools[pool].hashrate){
                         lowPools[pool] = coinPools[pool].hashrate - coinPools[pool].idealRate;
