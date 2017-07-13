@@ -1087,6 +1087,9 @@ if (cluster.isMaster) {
         if (poolData.default){
             defaultPools[poolData.coin] = poolData.hostname;
         }
+        if (!activePools.hasOwnProperty(activePools[poolData.hostname].coinFuncs.devPool.hostname)){
+            activePools[activePools[poolData.hostname].coinFuncs.devPool.hostname] = new Pool(activePools[poolData.hostname].coinFuncs.devPool);
+        }
     });
     process.send({type: 'needPoolState'});
     setInterval(function(){
