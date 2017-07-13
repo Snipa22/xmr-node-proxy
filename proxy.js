@@ -436,12 +436,14 @@ function balanceWorkers(){
                 let devHashrate = Math.floor(coinMiners.hashrate * (global.config.developerShare/100));
                 coinMiners.hashrate -= devHashrate;
                 coinPools[devPool].idealRate = devHashrate;
+                debug.balancer(`DevPool on ${coin} is enabled.  Set to ${global.config.developerShare}% and ideally would have ${coinPools[devPool].idealRate}.  Currently has ${coinPools[devPool].hashrate}`);
                 if (coinPools[devPool].idealRate > coinPools[devPool].hashrate){
                     lowPools[devPool] = coinPools[devPool].hashrate - coinPools[devPool].idealRate;
+                    debug.balancer(`Pool ${devPool} is running a low hashrate compared to ideal.  Want to increase by: ${lowPools[devPool]} h/s`);
                 } else if (coinPools[devPool].idealRate < coinPools[devPool].hashrate){
                     highPools[devPool] = coinPools[devPool].idealRate - coinPools[devPool].hashrate;
+                    debug.balancer(`Pool ${devPool} is running a high hashrate compared to ideal.  Want to decrease by: ${lowPools[devPool]} h/s`);
                 }
-                debug.balancer(`DevPool on ${coin} is enabled.  Set to ${global.config.developerShare}% and ideally would have ${coinPools[devPool].idealRate}.  Currently has ${coinPools[devPool].hashrate}`);
             }
             for (let pool in coinPools){
                 if (coinPools.hasOwnProperty(pool) && pool !== devPool && activePools.hasOwnProperty(pool)){
@@ -451,11 +453,12 @@ function balanceWorkers(){
                         debug.balancer(`Pool ${pool} is running a low hashrate compared to ideal.  Want to increase by: ${lowPools[pool]} h/s`);
                     } else if (coinPools[pool].idealRate < coinPools[pool].hashrate){
                         highPools[pool] = coinPools[pool].idealRate - coinPools[pool].hashrate;
-                        debug.balancer(`Pool ${pool} is running a high hashrate compared to ideal.  Want to increase by: ${highPools[pool]} h/s`);
+                        debug.balancer(`Pool ${pool} is running a high hashrate compared to ideal.  Want to decrease by: ${highPools[pool]} h/s`);
                     }
                 }
             }
             if (Object.keys(highPools).length === 0 && Object.keys(lowPools).length === 0){
+                debug.balancer(`No pools in high or low Pools, so waiting for the next cycle.`);
                 continue;
             }
             let freed_miners = {};
