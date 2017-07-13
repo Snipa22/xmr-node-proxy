@@ -488,7 +488,7 @@ function balanceWorkers(){
                             for (let miner in freed_miners){
                                 if (freed_miners.hasOwnProperty(miner)){
                                     if (freed_miners[miner] <= lowPools[pool]){
-                                        minerChanges.push(miner);
+                                        minerChanges[pool].push(miner);
                                         lowPools[pool] -= freed_miners[miner];
                                         debug.balancer(`Snagging up ${miner} for ${pool} for ${freed_miners[miner]} h/s`);
                                         delete(freed_miners[miner]);
@@ -502,7 +502,7 @@ function balanceWorkers(){
                                     for (let miner in coinPools[donatorPool].miners){
                                         if (coinPools[donatorPool].miners.hasOwnProperty(miner)){
                                             if (coinPools[donatorPool].miners[miner] < lowPools[pool]){
-                                                minerChanges.push(miner);
+                                                minerChanges[pool].push(miner);
                                                 lowPools[pool] -= coinPools[donatorPool].miners[miner];
                                                 debug.balancer(`Stealing ${miner} for ${pool} from ${donatorPool} for ${freed_miners[miner]} h/s`);
                                                 delete(coinPools[donatorPool].miners[miner]);
