@@ -316,7 +316,7 @@ function balanceWorkers(){
             };
             if(pool.devPool){
                 poolStates[pool.coin].devPool = poolName;
-                debug.balancer(`Found a developer pool enabled.  ${poolName}`);
+                debug.balancer(`Found a developer pool enabled.  Pool is: ${poolName}`);
             } else {
                 poolStates[pool.coin].percentage += pool.share;
             }
@@ -455,6 +455,7 @@ function balanceWorkers(){
                         highPools[pool] = coinPools[pool].idealRate - coinPools[pool].hashrate;
                         debug.balancer(`Pool ${pool} is running a high hashrate compared to ideal.  Want to decrease by: ${highPools[pool]} h/s`);
                     }
+                    activePools[pool].share = coinPools[pool].percentage;
                 }
             }
             if (Object.keys(highPools).length === 0 && Object.keys(lowPools).length === 0){
