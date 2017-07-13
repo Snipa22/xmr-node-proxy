@@ -442,7 +442,7 @@ function balanceWorkers(){
                     debug.balancer(`Pool ${devPool} is running a low hashrate compared to ideal.  Want to increase by: ${lowPools[devPool]} h/s`);
                 } else if (coinPools[devPool].idealRate < coinPools[devPool].hashrate){
                     highPools[devPool] = coinPools[devPool].hashrate - coinPools[devPool].idealRate;
-                    debug.balancer(`Pool ${devPool} is running a high hashrate compared to ideal.  Want to decrease by: ${lowPools[devPool]} h/s`);
+                    debug.balancer(`Pool ${devPool} is running a high hashrate compared to ideal.  Want to decrease by: ${highPools[devPool]} h/s`);
                 }
             }
             for (let pool in coinPools){
