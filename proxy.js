@@ -305,7 +305,7 @@ function balanceWorkers(){
         if (activePools.hasOwnProperty(poolName)){
             let pool = activePools[poolName];
             if (!poolStates.hasOwnProperty(pool.coin)){
-                poolStates[pool.coin] = {'totalPercentage': 0, 'devPool': false};
+                poolStates[pool.coin] = {'percentage': 0, 'devPool': false};
             }
             poolStates[pool.coin][poolName] = {
                 miners: {},
@@ -318,7 +318,7 @@ function balanceWorkers(){
                 poolStates[pool.coin].devPool = poolName;
                 debug.balancer(`Found a developer pool enabled.  ${poolName}`);
             } else {
-                poolStates[pool.coin].totalPercentage += pool.share;
+                poolStates[pool.coin].percentage += pool.share;
             }
         }
     }
@@ -355,11 +355,11 @@ function balanceWorkers(){
                 // Need to adjust all the pools that aren't the dev pool.
                 percentModifier = 100/poolStates[coin].percentage;
                 for (let pool in poolStates[coin]){
-                    if (poolStates[coin].hasOwnProperty(pool)){
+                    if (poolStates[coin].hasOwnProperty(pool) && activePools.hasOwnProperty(pool)){
                         if (poolStates[coin][pool].devPool){
                             continue;
                         }
-                        poolStates[coin][pool].share *= percentModifier;
+                        poolStates[coin][pool].percentage *= percentModifier;
                         newPercentage += poolStates[coin][pool].share;
                     }
                 }
@@ -368,7 +368,7 @@ function balanceWorkers(){
                     finalMod = 100 - newPercentage;
                 }
                 for (let pool in poolStates[coin]){
-                    if (poolStates[coin].hasOwnProperty(pool)){
+                    if (poolStates[coin].hasOwnProperty(pool) && activePools.hasOwnProperty(pool)){
                         if (poolStates[coin][pool].devPool){
                             continue;
                         }
