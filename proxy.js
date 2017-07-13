@@ -468,7 +468,7 @@ function balanceWorkers(){
                     if (highPools.hasOwnProperty(pool)){
                         for (let miner in coinPools[pool].miners){
                             if (coinPools[pool].miners.hasOwnProperty(miner)){
-                                if (coinPools[pool].miners[miner] < highPools[pool]){
+                                if (coinPools[pool].miners[miner] < highPools[pool] && coinPools[pool].miners[miner] !== 0){
                                     highPools[pool] -= coinPools[pool].miners[miner];
                                     freed_miners[miner] = coinPools[pool].miners[miner];
                                     debug.balancer(`Freeing up ${miner} on ${pool} for ${freed_miners[miner]} h/s`);
@@ -501,7 +501,7 @@ function balanceWorkers(){
                                 if(coinPools.hasOwnProperty(donatorPool) && !lowPools.hasOwnProperty(donatorPool)){
                                     for (let miner in coinPools[donatorPool].miners){
                                         if (coinPools[donatorPool].miners.hasOwnProperty(miner)){
-                                            if (coinPools[donatorPool].miners[miner] < lowPools[pool]){
+                                            if (coinPools[donatorPool].miners[miner] < lowPools[pool] && coinPools[donatorPool].miners[miner] !== 0){
                                                 minerChanges[pool].push(miner);
                                                 lowPools[pool] -= coinPools[donatorPool].miners[miner];
                                                 debug.balancer(`Moving ${miner} for ${pool} from ${donatorPool} for ${coinPools[donatorPool].miners[miner]} h/s`);
