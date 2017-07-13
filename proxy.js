@@ -504,7 +504,7 @@ function balanceWorkers(){
                                             if (coinPools[donatorPool].miners[miner] < lowPools[pool]){
                                                 minerChanges[pool].push(miner);
                                                 lowPools[pool] -= coinPools[donatorPool].miners[miner];
-                                                debug.balancer(`Stealing ${miner} for ${pool} from ${donatorPool} for ${freed_miners[miner]} h/s`);
+                                                debug.balancer(`Stealing ${miner} for ${pool} from ${donatorPool} for ${coinPools[donatorPool].miners[miner]} h/s`);
                                                 delete(coinPools[donatorPool].miners[miner]);
                                             }
                                             if (lowPools[pool] < 50){
@@ -525,7 +525,7 @@ function balanceWorkers(){
                 if(minerChanges.hasOwnProperty(pool) && minerChanges[pool].length > 0){
                     minerChanges[pool].forEach(function(miner){
                         let minerBits = miner.split('_');
-                        process.workers[minerBits[0]].send({
+                        cluster.workers[minerBits[0]].send({
                             type: 'changePool',
                             worker: minerBits[1],
                             pool: pool
