@@ -492,7 +492,7 @@ function balanceWorkers(){
                                 }
                             }
                         }
-                        if(lowPools[pool] > 250){
+                        if(lowPools[pool] > 100){
                             for (let donatorPool in coinPools){
                                 if(coinPools.hasOwnProperty(donatorPool) && !lowPools.hasOwnProperty(donatorPool)){
                                     for (let miner in coinPools[donatorPool].miners){
@@ -503,12 +503,12 @@ function balanceWorkers(){
                                                 debug.balancer(`Stealing ${miner} for ${pool} from ${donatorPool} for ${freed_miners[miner]} h/s`);
                                                 delete(coinPools[donatorPool].miners[miner]);
                                             }
-                                            if (lowPools[pool] < 250){
+                                            if (lowPools[pool] < 50){
                                                 break;
                                             }
                                         }
                                     }
-                                    if (lowPools[pool] < 250){
+                                    if (lowPools[pool] < 50){
                                         break;
                                     }
                                 }
