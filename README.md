@@ -13,9 +13,7 @@ Deployment via Installer
 2. Run the [deploy script](https://raw.githubusercontent.com/Snipa22/xmr-node-proxy/master/install.sh) as a **NON-ROOT USER**.  This is very important!  This script will install the proxy to whatever user it's running under!
 
 ```bash
-25
 curl -L https://raw.githubusercontent.com/Snipa22/xmr-node-proxy/master/install.sh | bash
-26
 ```
 
 3. Once it's complete, copy `example_config.json` to `config.json` and edit as desired.
