@@ -660,6 +660,10 @@ function handleNewBlockTemplate(blockTemplate, hostname){
     let pool = activePools[hostname];
     console.log(`Received new block template from ${pool.hostname}`);
     if(pool.activeBlocktemplate){
+        if (pool.activeBlocktemplate.job_id === blockTemplate.job_id){
+            debug.pool('No update with this job, it is an upstream dupe');
+            return;
+        }
         debug.pool('Storing the previous block template');
         pool.pastBlockTemplates.enq(pool.activeBlocktemplate);
     }
