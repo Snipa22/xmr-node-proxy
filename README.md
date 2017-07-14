@@ -36,3 +36,18 @@ or using the pm2 monitor
 ```
 pm2 monit
 ```
+
+Known Issues
+============
+VM's with 512Mb of ram or less will need some swap space in order to compile the C extensions for node.  Bignum and the CN libraries can chew some serious memory during compile.
+
+If not running on an Ubuntu 16.04 system, please make sure your kernel is at least 3.2 or higher, as older versions will not work for this.
+
+Many smaller VM's come with Ulimits set very low, we suggest looking into how to tweak the ulimits for your systems higher.  In particular nofile (Number of files open) needs to be raised for high-usage instances.
+
+
+Performance
+===========
+The proxy gains a massive boost over a basic pool, by accepting that the majority of the hashes submitted /will/ not be valid, as they do not exceed the required difficulty of the pool.  Due to this the proxy really doesn't bother attempting to validate the hash state and/or value until the difficulty of the share exceeds the difficulty set by the pool.
+
+In testing, we've seen AWS T2.Micro instances taking upwards of 2k connections, with T2.Smalls taking 6k.  The proxy is extremely light weight, and while there are more features on the way, it's our goal to keep the proxy as light weight as possible.
