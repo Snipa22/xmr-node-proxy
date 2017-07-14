@@ -25,13 +25,13 @@
   ],
   "listeningPorts": [
     {
-      "port": 80,
+      "port": 8080,
       "ssl": false,
       "diff": 5000,
       "coin": "xmr"
     },
     {
-      "port": 443,
+      "port": 8443,
       "ssl": true,
       "diff": 5000,
       "coin": "xmr"
