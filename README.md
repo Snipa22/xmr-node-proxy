@@ -51,3 +51,14 @@ Performance
 The proxy gains a massive boost over a basic pool, by accepting that the majority of the hashes submitted /will/ not be valid, as they do not exceed the required difficulty of the pool.  Due to this the proxy really doesn't bother attempting to validate the hash state and/or value until the difficulty of the share exceeds the difficulty set by the pool.
 
 In testing, we've seen AWS T2.Micro instances taking upwards of 2k connections, with T2.Smalls taking 6k.  The proxy is extremely light weight, and while there are more features on the way, it's our goal to keep the proxy as light weight as possible.
+
+
+Known Working Pools
+===================
+* [XMRPool.net](https://xmrpool.net)
+* [supportXMR.com](https://supportxmr.com)
+* [pool.xmr.pt](https://pool.xmr.pt)
+* [minemonero.pro](https://minemonero.pro)
+* [XMRPool.xyz](https://xmrpool.xyz)
+
+If you'd like to have your pool added, please make a pull request here, or contact Snipa on IRC!
