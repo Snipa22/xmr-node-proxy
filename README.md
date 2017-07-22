@@ -60,5 +60,6 @@ Known Working Pools
 * [pool.xmr.pt](https://pool.xmr.pt)
 * [minemonero.pro](https://minemonero.pro)
 * [XMRPool.xyz](https://xmrpool.xyz)
+* [ViaXMR.com](https://viaxmr.com)
 
 If you'd like to have your pool added, please make a pull request here, or contact Snipa on IRC!
