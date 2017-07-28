@@ -632,10 +632,8 @@ function poolSocket(hostname){
             dataBuffer = incomplete;
         }
     }).on('error', (err) => {
-        if (err.code !== 'ECONNRESET') {
-            activePools[pool.hostname].connect();
-            console.warn(`${global.threadName}Socket error from ${pool.hostname} ${err}`);
-        }
+        activePools[pool.hostname].connect();
+        console.warn(`${global.threadName}Socket error from ${pool.hostname} ${err}`);
     }).on('close', () => {
         activePools[pool.hostname].connect();
         console.warn(`${global.threadName}Socket closed from ${pool.hostname}`);
