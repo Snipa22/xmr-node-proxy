@@ -206,14 +206,14 @@ function Pool(poolData){
         }
         this.active = false;
         if (this.ssl){
-            this.socket = tls.connect(this.port, this.hostname, {rejectUnauthorized: this.allowSelfSignedSSL}, ()=>{
+            this.socket = tls.connect(this.port, this.hostname, {rejectUnauthorized: this.allowSelfSignedSSL}).on('connect', ()=>{
                 poolSocket(this.hostname);
             }).on('error', (err)=>{
                 this.connect();
                 console.warn(`${global.threadName}Socket error from ${this.hostname} ${err}`);
             });
         } else {
-            this.socket = net.connect(this.port, this.hostname, ()=>{
+            this.socket = net.connect(this.port, this.hostname).on('connect', ()=>{
                 poolSocket(this.hostname);
             }).on('error', (err)=>{
                 this.connect();
@@ -643,13 +643,12 @@ function poolSocket(hostname){
     }).on('close', () => {
         activePools[pool.hostname].connect();
         console.warn(`${global.threadName}Socket closed from ${pool.hostname}`);
-    }).on('connect', () => {
-        socket.setKeepAlive(true);
-        socket.setEncoding('utf8');
-        console.log(`${global.threadName}connected to pool: ${pool.hostname}`);
-        pool.login();
-        setInterval(pool.heartbeat, 30000);
     });
+    socket.setKeepAlive(true);
+    socket.setEncoding('utf8');
+    console.log(`${global.threadName}connected to pool: ${pool.hostname}`);
+    pool.login();
+    setInterval(pool.heartbeat, 30000);
 }
 
 function handlePoolMessage(jsonData, hostname){
