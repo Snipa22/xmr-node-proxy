@@ -208,10 +208,16 @@ function Pool(poolData){
         if (this.ssl){
             this.socket = tls.connect(this.port, this.hostname, {rejectUnauthorized: this.allowSelfSignedSSL}, ()=>{
                 poolSocket(this.hostname);
+            }).on('error', (err)=>{
+                this.connect();
+                console.warn(`${global.threadName}Socket error from ${this.hostname} ${err}`);
             });
         } else {
             this.socket = net.connect(this.port, this.hostname, ()=>{
                 poolSocket(this.hostname);
+            }).on('error', (err)=>{
+                this.connect();
+                console.warn(`${global.threadName}Socket error from ${this.hostname} ${err}`);
             });
         }
     };
