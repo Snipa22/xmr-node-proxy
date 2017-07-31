@@ -37,6 +37,20 @@ or using the pm2 monitor
 pm2 monit
 ```
 
+Deployment via Docker
+------------------------
+
+1. Build the image
+
+```
+docker build . -t xmr-node-proxy
+```
+2. Run the container, add custom config, expose some ports
+
+```
+docker run -v $PWD/config.json:/app/config.json -p 3333:3333 -p 8080:8080 -p 8443:8443 xmr-node-proxy
+```
+
 Known Issues
 ============
 VM's with 512Mb of ram or less will need some swap space in order to compile the C extensions for node.  Bignum and the CN libraries can chew some serious memory during compile.
