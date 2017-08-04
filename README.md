@@ -17,7 +17,7 @@ curl -L https://raw.githubusercontent.com/Snipa22/xmr-node-proxy/master/install.
 ```
 
 3. Once it's complete, copy `example_config.json` to `config.json` and edit as desired.
-4. Run: source ~/.bashrc  This will activate NVM and get things working for the following pm2 steps.
+4. Run: `source ~/.bashrc`  This will activate NVM and get things working for the following pm2 steps.
 8. Once you're happy with the settings, go ahead and start all the proxy daemon, commands follow.
 
 ```shell
