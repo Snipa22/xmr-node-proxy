@@ -63,6 +63,16 @@ The proxy comes configured for a 1% donation, this is easily toggled inside of i
 * XMR - 44Ldv5GQQhP7K7t3ZBdZjkPA7Kg7dhHwk3ZM3RJqxxrecENSFx27Vq14NAMAd2HBvwEPUVVvydPRLcC69JCZDHLT2X5a4gr
 * BTC - 114DGE2jmPb5CP2RGKZn6u6xtccHhZGFmM
 
+Installation/Configuration Assistance
+=====================================
+If you need help installing the pool from scratch, please have your servers ready, which would be Ubuntu 16.04 servers, blank and clean, DNS records pointed.  These need to be x86_64 boxes with AES-NI Available.
+
+Installation asstiance is 4 XMR, with a 2 XMR deposit, with remainder to be paid on completion.  
+Configuration assistance is 2 XMR with a 1 XMR deposit, and includes debugging your proxy configurations, ensuring that everything is running, and tuning for your uses/needs.  
+
+SSH access with a sudo-enabled user will be needed for installs, preferably the user that is slated to run the pool.
+
+Please contact Snipa at: proxy_installs@snipanet.com or via IRC on irc.freenode.net in #monero-pools
 
 Known Working Pools
 ===================
