@@ -84,5 +84,6 @@ Known Working Pools
 * [ViaXMR.com](https://viaxmr.com)
 * [mine.MoneroPRO.com](https://mine.moneropro.com)
 * [MinerCircle.com](https://www.minercircle.com)
+* [xmr.p00ls.net](https://www.p00ls.net)
 
 If you'd like to have your pool added, please make a pull request here, or contact Snipa on IRC!
