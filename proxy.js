@@ -61,7 +61,7 @@ function masterMessageHandler(worker, message, handle) {
                 for (let hostname in activePools){
                     if (activePools.hasOwnProperty(hostname)){
                         let pool = activePools[hostname];
-                        if (!pool.active){
+                        if (!pool.active || pool.activeBlocktemplate === null){
                             continue;
                         }
                         worker.send({
