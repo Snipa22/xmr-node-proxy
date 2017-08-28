@@ -205,6 +205,14 @@ function Pool(poolData){
                 cluster.workers[worker].send({type: 'disablePool', pool: this.hostname});
             }
         }
+        try {
+            if (this.socket !== null){
+                this.socket.end();
+                this.socket.destroy();
+            }
+        } catch (e) {
+            console.log("Had issues murdering the old socket.  Om nom: " + e)
+        }
         this.socket = null;
         this.active = false;
         if (this.ssl){
