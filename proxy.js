@@ -192,6 +192,7 @@ function Pool(poolData){
     this.sendId = 1;
     this.sendLog = {};
     this.poolJobs = {};
+    this.socket = null;
     this.allowSelfSignedSSL = true;
     // Partial checks for people whom havn't upgraded yet
     if (poolData.hasOwnProperty('allowSelfSignedSSL')){
@@ -204,6 +205,7 @@ function Pool(poolData){
                 cluster.workers[worker].send({type: 'disablePool', pool: this.hostname});
             }
         }
+        this.socket = null;
         this.active = false;
         if (this.ssl){
             this.socket = tls.connect(this.port, this.hostname, {rejectUnauthorized: this.allowSelfSignedSSL}).on('connect', ()=>{
