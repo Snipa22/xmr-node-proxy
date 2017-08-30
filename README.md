@@ -9,8 +9,20 @@ Based on a clean Ubuntu 16.04 LTS minimal install
 Deployment via Installer
 ------------------------
 
-1. Add your user to `/etc/sudoers`, this must be done so the script can sudo up and do it's job.  We suggest passwordless sudo.  Suggested line: `<USER> ALL=(ALL) NOPASSWD:ALL`.  Our sample builds use: `nodeproxy ALL=(ALL) NOPASSWD:ALL`
-2. Run the [deploy script](https://raw.githubusercontent.com/Snipa22/xmr-node-proxy/master/install.sh) as a **NON-ROOT USER**.  This is very important!  This script will install the proxy to whatever user it's running under!
+1. Create a user xmrproxy and assign a password (or add an SSH key, if you want that, you should know how to do it)
+
+```bash
+useradd -d /home/nodeproxy -m -s /bin/bash nodeproxy
+passwd xmrproxy
+```
+
+2. Add your user to `/etc/sudoers`, this must be done so the script can sudo up and do it's job.  We suggest passwordless sudo.  Suggested line: `<USER> ALL=(ALL) NOPASSWD:ALL`.  Our sample builds use: `nodeproxy ALL=(ALL) NOPASSWD:ALL`
+
+```bash
+echo "nodeproxy ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+```
+
+3. Log in as the **NON-ROOT USER** you just created and run the [deploy script](https://raw.githubusercontent.com/Snipa22/xmr-node-proxy/master/install.sh).  This is very important!  This script will install the proxy to whatever user it's running under!
 
 ```bash
 curl -L https://raw.githubusercontent.com/Snipa22/xmr-node-proxy/master/install.sh | bash
