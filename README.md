@@ -9,11 +9,11 @@ Based on a clean Ubuntu 16.04 LTS minimal install
 Deployment via Installer
 ------------------------
 
-1. Create a user xmrproxy and assign a password (or add an SSH key, if you want that, you should know how to do it)
+1. Create a user 'nodeproxy' and assign a password (or add an SSH key. If you prefer that, you should already know how to do it)
 
 ```bash
 useradd -d /home/nodeproxy -m -s /bin/bash nodeproxy
-passwd xmrproxy
+passwd nodeproxy
 ```
 
 2. Add your user to `/etc/sudoers`, this must be done so the script can sudo up and do it's job.  We suggest passwordless sudo.  Suggested line: `<USER> ALL=(ALL) NOPASSWD:ALL`.  Our sample builds use: `nodeproxy ALL=(ALL) NOPASSWD:ALL`
