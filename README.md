@@ -51,7 +51,7 @@ pm2 monit
 
 Known Issues
 ============
-VM's with 512Mb of ram or less will need some swap space in order to compile the C extensions for node.  Bignum and the CN libraries can chew some serious memory during compile.  In regards to this, one of our users has put together a guide for T2.Micro servers: https://docs.google.com/document/d/1m8E4_pDwKuFo0TnWJaO13LDHqOmbL6YrzyR6FvzqGgU
+VM's with 512Mb of ram or less will need some swap space in order to compile the C extensions for node.  Bignum and the CN libraries can chew some serious memory during compile.  In regards to this, one of our users has put together a guide for T2.Micro servers: https://docs.google.com/document/d/1m8E4_pDwKuFo0TnWJaO13LDHqOmbL6YrzyR6FvzqGgU (Credit goes to MayDay30 for his work with this!)
 
 If not running on an Ubuntu 16.04 system, please make sure your kernel is at least 3.2 or higher, as older versions will not work for this.
 
