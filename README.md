@@ -104,5 +104,6 @@ Known Working Pools
 * [MinerCircle.com](https://www.minercircle.com)
 * [xmr.p00ls.net](https://www.p00ls.net)
 * [MoriaXMR.com](https://moriaxmr.com)
+* [MoneroOcean.stream](https://moneroocean.stream)
 
 If you'd like to have your pool added, please make a pull request here, or contact Snipa on IRC!
