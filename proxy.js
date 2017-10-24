@@ -8,6 +8,7 @@ const uuidV4 = require('uuid/v4');
 const support = require('./lib/support.js')();
 global.config = require('./config.json');
 
+
 /*
  General file design/where to find things.
 
@@ -588,14 +589,18 @@ function enumerateWorkerStats(){
             for (let workerID in activeWorkers[poolID]){
                 if (activeWorkers[poolID].hasOwnProperty(workerID)) {
                     let workerData = activeWorkers[poolID][workerID];
-                    if (workerData.lastContact < ((Math.floor((Date.now())/1000) - 120))){
+                    if (typeof workerData !== 'undefined') {
+                        if (workerData.lastContact < ((Math.floor((Date.now())/1000) - 120))){
+                            delete activeWorkers[poolID][workerID];
+                            continue;
+                        }
+                        stats.miners += 1;
+                        stats.hashes += workerData.hashes;
+                        stats.hashRate += workerData.avgSpeed;
+                        stats.diff += workerData.diff;
+                    } else {
                         delete activeWorkers[poolID][workerID];
-                        continue;
                     }
-                    stats.miners += 1;
-                    stats.hashes += workerData.hashes;
-                    stats.hashRate += workerData.avgSpeed;
-                    stats.diff += workerData.diff;
                 }
             }
             global_stats.miners += stats.miners;
@@ -716,7 +721,7 @@ function handleNewBlockTemplate(blockTemplate, hostname){
 }
 
 // Miner Definition
-function Miner(id, params, ip, pushMessage, portData) {
+function Miner(id, params, ip, pushMessage, portData, minerSocket) {
     // Arguments
     // minerId, params, ip, pushMessage, portData
     // Username Layout - <address in BTC or XMR>.<Difficulty>
@@ -733,6 +738,7 @@ function Miner(id, params, ip, pushMessage, portData) {
     this.password = params.pass;  // Documentation purposes only.
     this.agent = params.agent;  // Documentation purposes only.
     this.ip = ip;  // Documentation purposes only.
+    this.socket = minerSocket;
     this.messageSender = pushMessage;
     this.error = "";
     this.valid_miner = true;
@@ -777,6 +783,10 @@ function Miner(id, params, ip, pushMessage, portData) {
     this.cachedJob = null;
 
     this.minerStats = function(){
+        if (this.socket.destroyed){
+            delete activeMiners[this.id];
+            return;
+        }
         return {
             shares: this.shares,
             blocks: this.blocks,
@@ -823,7 +833,7 @@ function Miner(id, params, ip, pushMessage, portData) {
 }
 
 // Slave Functions
-function handleMinerData(method, params, ip, portData, sendReply, pushMessage) {
+function handleMinerData(method, params, ip, portData, sendReply, pushMessage, minerSocket) {
     /*
     Deals with handling the data from miners in a sane-ish fashion.
      */
@@ -838,7 +848,7 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage) {
         case 'login':
             let difficulty = portData.difficulty;
             let minerId = uuidV4();
-            miner = new Miner(minerId, params, ip, pushMessage, portData);
+            miner = new Miner(minerId, params, ip, pushMessage, portData, minerSocket);
             if (!miner.valid_miner) {
                 console.log("Invalid miner, disconnecting due to: " + miner.error);
                 sendReply(miner.error);
@@ -851,7 +861,7 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage) {
                 job: miner.getJob(miner, activePools[miner.pool].activeBlocktemplate),
                 status: 'OK'
             });
-            break;
+            return minerId;
         case 'getjob':
             if (!miner) {
                 sendReply('Unauthenticated');
@@ -946,7 +956,7 @@ function activatePorts() {
         if (activePorts.indexOf(portData.port) !== -1) {
             return;
         }
-        let handleMessage = function (socket, jsonData, pushMessage) {
+        let handleMessage = function (socket, jsonData, pushMessage, minerSocket) {
             if (!jsonData.id) {
                 console.warn('Miner RPC request missing RPC id');
                 return;
@@ -973,8 +983,8 @@ function activatePorts() {
                 debug.miners(`Data sent to miner (sendReply): ${sendData}`);
                 socket.write(sendData);
             };
-            handleMinerData(jsonData.method, jsonData.params, socket.remoteAddress, portData, sendReply, pushMessage);
-        };
+            handleMinerData(jsonData.method, jsonData.params, socket.remoteAddress, portData, sendReply, pushMessage, minerSocket);
+            };
 
         function socketConn(socket) {
             socket.setKeepAlive(true);
@@ -1031,7 +1041,7 @@ function activatePorts() {
                             socket.destroy();
                             break;
                         }
-                        handleMessage(socket, jsonData, pushMessage);
+                        handleMessage(socket, jsonData, pushMessage, socket);
                     }
                     dataBuffer = incomplete;
                 }
@@ -1039,10 +1049,14 @@ function activatePorts() {
                 if (err.code !== 'ECONNRESET') {
                     console.warn(global.threadName + "Socket Error from " + socket.remoteAddress + " " + err);
                 }
+                socket.end();
+                socket.destroy();
             }).on('close', function () {
                 pushMessage = function () {
                 };
                 debug.miners('Miner disconnected via standard close');
+                socket.end();
+                socket.destroy();
             });
         }
 
@@ -1097,7 +1111,18 @@ function checkActivePools() {
 // System Init
 
 if (cluster.isMaster) {
-    let numWorkers = require('os').cpus().length;
+    let numWorkers;
+    try {
+        let argv = require('minimist')(process.argv.slice(2));
+        if (typeof argv.workers !== 'undefined') {
+            numWorkers = Number(argv.workers);
+        } else {
+            numWorkers = require('os').cpus().length;
+        }
+    } catch (err) {
+        console.error(`Unable to set the number of workers via arguments.  Make sure to run npm install!`);
+        numWorkers = require('os').cpus().length;
+    }
     global.threadName = 'Master ';
     console.log('Cluster master setting up ' + numWorkers + ' workers...');
     cluster.on('message', masterMessageHandler);
