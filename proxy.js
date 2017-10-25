@@ -445,15 +445,17 @@ function balanceWorkers(){
             for (let minerID in activeWorkers[workerID]){
                 if (activeWorkers[workerID].hasOwnProperty(minerID)){
                     let miner = activeWorkers[workerID][minerID];
-                    let minerCoin = miner.coin;
-                    if (!minerStates.hasOwnProperty(minerCoin)){
-                        minerStates[minerCoin] = {
-                            hashrate: 0
-                        };
-                    }
-                    minerStates[minerCoin].hashrate += miner.avgSpeed;
-                    poolStates[minerCoin][miner.pool].hashrate += miner.avgSpeed;
-                    poolStates[minerCoin][miner.pool].miners[`${workerID}_${minerID}`] = miner.avgSpeed;
+                    try {
+                        let minerCoin = miner.coin;
+                        if (!minerStates.hasOwnProperty(minerCoin)){
+                            minerStates[minerCoin] = {
+                                hashrate: 0
+                            };
+                        }
+                        minerStates[minerCoin].hashrate += miner.avgSpeed;
+                        poolStates[minerCoin][miner.pool].hashrate += miner.avgSpeed;
+                        poolStates[minerCoin][miner.pool].miners[`${workerID}_${minerID}`] = miner.avgSpeed;
+                    } catch (err) {}
                 }
             }
         }
