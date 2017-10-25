@@ -592,14 +592,18 @@ function enumerateWorkerStats(){
                 if (activeWorkers[poolID].hasOwnProperty(workerID)) {
                     let workerData = activeWorkers[poolID][workerID];
                     if (typeof workerData !== 'undefined') {
-                        if (workerData.lastContact < ((Math.floor((Date.now())/1000) - 120))){
+                        try{
+                            if (workerData.lastContact < ((Math.floor((Date.now())/1000) - 120))){
+                                delete activeWorkers[poolID][workerID];
+                                continue;
+                            }
+                            stats.miners += 1;
+                            stats.hashes += workerData.hashes;
+                            stats.hashRate += workerData.avgSpeed;
+                            stats.diff += workerData.diff;
+                        } catch (err) {
                             delete activeWorkers[poolID][workerID];
-                            continue;
                         }
-                        stats.miners += 1;
-                        stats.hashes += workerData.hashes;
-                        stats.hashRate += workerData.avgSpeed;
-                        stats.diff += workerData.diff;
                     } else {
                         delete activeWorkers[poolID][workerID];
                     }
