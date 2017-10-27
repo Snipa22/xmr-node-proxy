@@ -53,6 +53,11 @@
       "minDiff": 100,
       "maxDiff": 300000,
       "shareTargetTime": 15
+    },
+    "aeon":{
+      "minDiff": 100,
+      "maxDiff": 300000,
+      "shareTargetTime": 15
     }
   }
 }
