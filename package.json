@@ -1,21 +1,21 @@
 {
-  "name": "xmr-node-proxy",
+  "name": "intense-node-proxy",
   "version": "0.0.1",
-  "description": "Node proxy for XMR pools based on nodejs-pool, should support any coins that nodejs-pool does with little work",
+  "description": "Node proxy for ITNS pools based on nodejs-pool.  For XMR and other XMR fork coins, please see xmr-node-proxy",
   "main": "proxy.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/snipa22/xmr-node-proxy.git"
+    "url": "git+https://github.com/Venthos/intense-node-proxy.git"
   },
   "author": "Alexander Blair",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/snipa22/xmr-node-proxy/issues"
+    "url": "https://github.com/Venthos/intense-node-proxy/issues"
   },
-  "homepage": "https://github.com/snipa22/xmr-node-proxy#readme",
+  "homepage": "https://github.com/Venthos/intense-node-proxy#readme",
   "dependencies": {
     "async": "2.1.4",
     "bignum": "^0.12.5",
