@@ -81,17 +81,5 @@ The proxy is pre-configured for a 1% donation to its original developer ([Snipa2
 
 ## Known Working Pools
 
-* [XMRPool.net](https://xmrpool.net)
-* [supportXMR.com](https://supportxmr.com)
-* [pool.xmr.pt](https://pool.xmr.pt)
-* [minemonero.pro](https://minemonero.pro)
-* [XMRPool.xyz](https://xmrpool.xyz)
-* [ViaXMR.com](https://viaxmr.com)
-* [mine.MoneroPRO.com](https://mine.moneropro.com)
-* [MinerCircle.com](https://www.minercircle.com)
-* [xmr.p00ls.net](https://www.p00ls.net)
-* [MoriaXMR.com](https://moriaxmr.com)
-* [MoneroOcean.stream](https://moneroocean.stream)
-* [SECUmine.net](https://secumine.net)
-* [Chinaenter.cn](http://xmr.chinaenter.cn)
+* [ITNSpool.net](https://itnspool.net)
 If you'd like to have your pool added, please make a pull request here, or contact Venthos at ITNSpool.net's Discord!
