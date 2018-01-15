@@ -10,7 +10,7 @@
       "password": "proxy:totally.valid@venthos.net",
       "keepAlive": true,
       "coin": "itns",
-      "default": false
+      "default": true
     }
   ],
   "listeningPorts": [
