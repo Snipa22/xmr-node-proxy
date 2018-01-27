@@ -78,7 +78,7 @@ Please check the [wiki](https://github.com/Snipa22/xmr-node-proxy/wiki/config_re
 The proxy is pre-configured for a 1% donation. This is easily toggled inside of it's configuration. If you'd like to make a one time donation, the addresses are as follows:
 
 * XMR - 44Ldv5GQQhP7K7t3ZBdZjkPA7Kg7dhHwk3ZM3RJqxxrecENSFx27Vq14NAMAd2HBvwEPUVVvydPRLcC69JCZDHLT2X5a4gr
-* BTC - 114DGE2jmPb5CP2RGKZn6u6xtccHhZGFmM
+* BTC - 15fkPTtN8cRXD3moKWDoXjuiTaS9FgA3UE
 
 ## Installation/Configuration Assistance
 
