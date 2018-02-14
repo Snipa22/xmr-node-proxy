@@ -106,4 +106,6 @@ Please contact Snipa at: proxy_installs@snipanet.com or via IRC on irc.freenode.
 * [MoneroOcean.stream](https://moneroocean.stream)
 * [SECUmine.net](https://secumine.net)
 * [Chinaenter.cn](http://xmr.chinaenter.cn)
+* [XMRPool.eu](https://xmrpool.eu)
+
 If you'd like to have your pool added, please make a pull request here, or contact Snipa on IRC!
