@@ -1,21 +1,21 @@
 {
-  "name": "xmr-node-proxy",
+  "name": "intense-node-proxy",
   "version": "0.0.1",
-  "description": "Node proxy for XMR pools based on nodejs-pool, should support any coins that nodejs-pool does with little work",
+  "description": "Node proxy for ITNS pools based on nodejs-pool.  For XMR and other XMR fork coins, please see xmr-node-proxy",
   "main": "proxy.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/snipa22/xmr-node-proxy.git"
+    "url": "git+https://github.com/Venthos/intense-node-proxy.git"
   },
   "author": "Alexander Blair",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/snipa22/xmr-node-proxy/issues"
+    "url": "https://github.com/Venthos/intense-node-proxy/issues"
   },
-  "homepage": "https://github.com/snipa22/xmr-node-proxy#readme",
+  "homepage": "https://github.com/Venthos/intense-node-proxy#readme",
   "dependencies": {
     "async": "2.1.4",
     "bignum": "^0.12.5",
@@ -36,6 +36,7 @@
     "uuid": "3.0.1"
   },
   "optionalDependencies": {
+    "forknote-util": "git://github.com/wallet42/node-forknote-util.git",
     "cryptonote-util": "git://github.com/Snipa22/node-cryptonote-util.git#xmr-Nan-2.0",
     "multi-hashing": "git+https://github.com/Snipa22/node-multi-hashing-aesni.git"
   }

@@ -1,27 +1,15 @@
 {
   "pools": [
     {
-      "hostname": "pool.supportxmr.com",
+      "hostname": "pool.itnspool.net",
       "port": 7777,
       "ssl": false,
       "allowSelfSignedSSL": false,
-      "share": 80,
-      "username": "46XWBqE1iwsVxSDP1qDrxhE1XvsZV6eALG5LwnoMdjbT4GPdy2bZTb99kagzxp2MMjUamTYZ4WgvZdFadvMimTjvR6Gv8hL",
-      "password": "proxy:totally.valid@snipanet.com",
+      "share": 99,
+      "username": "iz5WBfVURQPSM4tC13xybaKYZVESARDJF78Sh6BHrR1VQrRepJa9prRZS9YwXfggWuQsjMSDNbPj214xEKeURdhH1GhDUtfHP",
+      "password": "proxy:totally.valid@venthos.net",
       "keepAlive": true,
-      "coin": "xmr",
-      "default": false
-    },
-    {
-      "hostname": "mine.xmrpool.net",
-      "port": 7778,
-      "ssl": false,
-      "allowSelfSignedSSL": false,
-      "share": 20,
-      "username": "46XWBqE1iwsVxSDP1qDrxhE1XvsZV6eALG5LwnoMdjbT4GPdy2bZTb99kagzxp2MMjUamTYZ4WgvZdFadvMimTjvR6Gv8hL",
-      "password": "proxy:totally.valid@snipanet.com",
-      "keepAlive": true,
-      "coin": "xmr",
+      "coin": "itns",
       "default": true
     }
   ],
@@ -30,31 +18,26 @@
       "port": 8080,
       "ssl": false,
       "diff": 5000,
-      "coin": "xmr"
+      "coin": "itns"
     },
     {
       "port": 8443,
       "ssl": true,
       "diff": 5000,
-      "coin": "xmr"
+      "coin": "itns"
     },
     {
       "port": 3333,
       "ssl": false,
       "diff": 10000,
-      "coin": "xmr"
+      "coin": "itns"
     }
   ],
   "bindAddress": "0.0.0.0",
   "developerShare": 1,
-  "daemonAddress": "127.0.0.1:18081",
+  "daemonAddress": "127.0.0.1:48772",
   "coinSettings": {
-    "xmr":{
-      "minDiff": 100,
-      "maxDiff": 300000,
-      "shareTargetTime": 15
-    },
-    "aeon":{
+    "itns":{
       "minDiff": 100,
       "maxDiff": 300000,
       "shareTargetTime": 15
