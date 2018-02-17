@@ -12,6 +12,7 @@
 (($) => {
 
 var $disp = $('#displaytable').DataTable({
+	pageLength: 50,
 	ajax: {
 		url: "/json",
 		type: "GET",
@@ -26,7 +27,7 @@ setInterval(() => { $disp.ajax.reload(); }, 15000);
 
 function parseJSON(json) {
 	var res = [];
-	var worker, miner, name;
+	var worker, miner, row, name;
 	for(var workerid in json) {
 		worker = json[workerid];
 		if(worker.length == 0) continue;
