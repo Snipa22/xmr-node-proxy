@@ -5,7 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
 	</head>
 	<body>
-		<table id="displaytable" width="100%"><table>
+		<table id="displaytable" width="100%" class="display" cellspacing="0"><tfoot><td></td><td></td><td></td></tfoot><table>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 		<script>
@@ -19,9 +19,43 @@ var $disp = $('#displaytable').DataTable({
 		dataSrc: parseJSON
 	},
 	columns: [
-		{ title: "Name", data: "name", className: "dt-body-right" },
-		{ title: "Hashrate", data: "hashrate" }
-	]
+		{ title: "Name", data: "name" },
+		{ title: "Hashrate", data: "hashrate" },
+		{ title: "Difficulty", data: "diff" }
+	],
+	footerCallback: function(row, data, start, end, display) {
+		var api = this.api(), data;
+
+		// converting to interger to find total
+		var intVal = function (i) {
+			return typeof i === 'string' ?
+				i.replace(/[\$,]/g, '')*1 :
+				typeof i === 'number' ?
+					i : 0;
+		};
+
+		var minerCount = api.column(0).data().length;
+
+		var hashTotal = api
+			.column(1)
+			.data()
+			.reduce( function (a, b) {
+				return intVal(a) + intVal(b);
+			}, 0);
+
+		var totDiff = api
+			.column(2)
+			.data()
+			.reduce( function (a, b) {
+				return intVal(a) + intVal(b);
+			}, 0);
+		var avgDiff = Math.floor(totDiff / api.column(2).data().length);
+
+		// Update footer by showing the total with the reference of the column index
+		$(api.column(0).footer()).html("Count: " + minerCount);
+		$(api.column(1).footer()).html("Total: " + hashTotal);
+		$(api.column(2).footer()).html("Avg: " + avgDiff);
+	}
 })
 setInterval(() => { $disp.ajax.reload(); }, 15000);
 
@@ -35,7 +69,7 @@ function parseJSON(json) {
 			miner = worker[minerid];
 			if(miner.length == 0) continue;
 			name = (miner["password"].length > 0) ? miner["password"] : miner["id"];
-			row = { name: name, hashrate: miner["avgSpeed"] }
+			row = { name: name, hashrate: miner["avgSpeed"], diff: miner["diff"] }
 			res.push(row);
 		}
 	}
