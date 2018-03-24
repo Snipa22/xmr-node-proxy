@@ -55,11 +55,6 @@ If not running on an Ubuntu 16.04 system, please make sure your kernel is at lea
 
 Many smaller VMs come with ulimits set very low. We suggest looking into setting the ulimit higher. In particular, `nofile` (Number of files open) needs to be raised for high-usage instances.
 
-If your system doesn't have AES-NI, then it will throw an error during the node-multi-hashing install, as this requires AES-NI.  If this is the case, go ahead and change the following line:
-"multi-hashing": "git+https://github.com/MoneroOcean/node-multi-hashing-aesni.git",
-to:
-"multi-hashing": "git://github.com/clintar/node-multi-hashing.git#Nan-2.0",
-
 In your `packages.json`, do a `npm install`, and it should pass.
 
 
