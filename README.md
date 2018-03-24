@@ -20,10 +20,10 @@ passwd nodeproxy
 echo "nodeproxy ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 ```
 
-3. Log in as the **NON-ROOT USER** you just created and run the [deploy script](https://raw.githubusercontent.com/Snipa22/xmr-node-proxy/master/install.sh).  This is very important!  This script will install the proxy to whatever user it's running under!
+3. Log in as the **NON-ROOT USER** you just created and run the [deploy script](https://raw.githubusercontent.com/MoneroOcean/xmr-node-proxy/master/install.sh).  This is very important!  This script will install the proxy to whatever user it's running under!
 
 ```bash
-curl -L https://raw.githubusercontent.com/Snipa22/xmr-node-proxy/master/install.sh | bash
+curl -L https://raw.githubusercontent.com/MoneroOcean/xmr-node-proxy/master/install.sh | bash
 ```
 
 3. Once it's complete, copy `example_config.json` to `config.json` and edit as desired.
@@ -56,7 +56,7 @@ If not running on an Ubuntu 16.04 system, please make sure your kernel is at lea
 Many smaller VMs come with ulimits set very low. We suggest looking into setting the ulimit higher. In particular, `nofile` (Number of files open) needs to be raised for high-usage instances.
 
 If your system doesn't have AES-NI, then it will throw an error during the node-multi-hashing install, as this requires AES-NI.  If this is the case, go ahead and change the following line:
-"multi-hashing": "git+https://github.com/Snipa22/node-multi-hashing-aesni.git",
+"multi-hashing": "git+https://github.com/MoneroOcean/node-multi-hashing-aesni.git",
 to:
 "multi-hashing": "git://github.com/clintar/node-multi-hashing.git#Nan-2.0",
 
@@ -71,7 +71,7 @@ In testing, we've seen AWS t2.micro instances take upwards of 2k connections, wh
 
 ## Configuration Guidelines
 
-Please check the [wiki](https://github.com/Snipa22/xmr-node-proxy/wiki/config_review) for information on configuration
+Please check the [wiki](https://github.com/MoneroOcean/xmr-node-proxy/wiki/config_review) for information on configuration
 
 ## Developer Donations
 
@@ -79,17 +79,6 @@ The proxy is pre-configured for a 1% donation. This is easily toggled inside of 
 
 * XMR - 44Ldv5GQQhP7K7t3ZBdZjkPA7Kg7dhHwk3ZM3RJqxxrecENSFx27Vq14NAMAd2HBvwEPUVVvydPRLcC69JCZDHLT2X5a4gr
 * BTC - 15fkPTtN8cRXD3moKWDoXjuiTaS9FgA3UE
-
-## Installation/Configuration Assistance
-
-If you need help installing the pool from scratch, please have your servers ready, which would be Ubuntu 16.04 servers, blank and clean, DNS records pointed.  These need to be x86_64 boxes with AES-NI Available.
-
-Installation asstiance is 4 XMR, with a 2 XMR deposit, with remainder to be paid on completion.  
-Configuration assistance is 2 XMR with a 1 XMR deposit, and includes debugging your proxy configurations, ensuring that everything is running, and tuning for your uses/needs.  
-
-SSH access with a sudo-enabled user will be needed for installs, preferably the user that is slated to run the pool.
-
-Please contact Snipa at: proxy_installs@snipanet.com or via IRC on irc.freenode.net in #monero-pools
 
 ## Known Working Pools
 
@@ -108,4 +97,4 @@ Please contact Snipa at: proxy_installs@snipanet.com or via IRC on irc.freenode.
 * [Chinaenter.cn](http://xmr.chinaenter.cn)
 * [XMRPool.eu](https://xmrpool.eu)
 
-If you'd like to have your pool added, please make a pull request here, or contact Snipa on IRC!
+If you'd like to have your pool added, please make a pull request here, or contact MoneroOcean at support@moneroocean.stream!

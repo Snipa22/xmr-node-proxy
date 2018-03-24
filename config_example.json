@@ -1,28 +1,16 @@
 {
   "pools": [
     {
-      "hostname": "pool.supportxmr.com",
-      "port": 7777,
+      "hostname": "gulf.moneroocean.stream",
+      "port": 10032,
       "ssl": false,
       "allowSelfSignedSSL": false,
-      "share": 80,
-      "username": "46XWBqE1iwsVxSDP1qDrxhE1XvsZV6eALG5LwnoMdjbT4GPdy2bZTb99kagzxp2MMjUamTYZ4WgvZdFadvMimTjvR6Gv8hL",
-      "password": "proxy:totally.valid@snipanet.com",
+      "share": 100,
+      "username": "44qJYxdbuqSKarYnDSXB6KLbsH4yR65vpJe3ELLDii9i4ZgKpgQXZYR4AMJxBJbfbKZGWUxZU42QyZSsP4AyZZMbJBCrWr1",
+      "password": "proxy",
       "keepAlive": true,
       "coin": "xmr",
       "default": false
-    },
-    {
-      "hostname": "mine.xmrpool.net",
-      "port": 7778,
-      "ssl": false,
-      "allowSelfSignedSSL": false,
-      "share": 20,
-      "username": "46XWBqE1iwsVxSDP1qDrxhE1XvsZV6eALG5LwnoMdjbT4GPdy2bZTb99kagzxp2MMjUamTYZ4WgvZdFadvMimTjvR6Gv8hL",
-      "password": "proxy:totally.valid@snipanet.com",
-      "keepAlive": true,
-      "coin": "xmr",
-      "default": true
     }
   ],
   "listeningPorts": [

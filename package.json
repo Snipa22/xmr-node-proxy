@@ -1,6 +1,6 @@
 {
   "name": "xmr-node-proxy",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Node proxy for XMR pools based on nodejs-pool, should support any coins that nodejs-pool does with little work",
   "main": "proxy.js",
   "scripts": {
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/snipa22/xmr-node-proxy.git"
+    "url": "git+https://github.com/MoneroOcean/xmr-node-proxy.git"
   },
-  "author": "Alexander Blair",
+  "author": "Multiple",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/snipa22/xmr-node-proxy/issues"
+    "url": "https://github.com/MoneroOcean/xmr-node-proxy/issues"
   },
-  "homepage": "https://github.com/snipa22/xmr-node-proxy#readme",
+  "homepage": "https://github.com/MoneroOcean/xmr-node-proxy#readme",
   "dependencies": {
     "async": "2.1.4",
     "bignum": "^0.12.5",
@@ -37,6 +37,6 @@
   },
   "optionalDependencies": {
     "cryptonote-util": "git://github.com/Snipa22/node-cryptonote-util.git#xmr-Nan-2.0",
-    "multi-hashing": "git+https://github.com/Snipa22/node-multi-hashing-aesni.git"
+    "multi-hashing": "git+https://github.com/MoneroOcean/node-multi-hashing-aesni.git"
   }
 }
