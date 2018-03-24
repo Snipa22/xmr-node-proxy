@@ -10,7 +10,7 @@
       "password": "proxy",
       "keepAlive": true,
       "coin": "xmr",
-      "default": false
+      "default": true
     }
   ],
   "listeningPorts": [
