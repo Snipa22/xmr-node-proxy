@@ -68,12 +68,12 @@ In testing, we've seen AWS t2.micro instances take upwards of 2k connections, wh
 
 Please check the [wiki](https://github.com/MoneroOcean/xmr-node-proxy/wiki/config_review) for information on configuration
 
-## Developer Donations
-
-The proxy is pre-configured for a 1% donation. This is easily toggled inside of it's configuration. If you'd like to make a one time donation, the addresses are as follows:
-
-* XMR - 44Ldv5GQQhP7K7t3ZBdZjkPA7Kg7dhHwk3ZM3RJqxxrecENSFx27Vq14NAMAd2HBvwEPUVVvydPRLcC69JCZDHLT2X5a4gr
-* BTC - 15fkPTtN8cRXD3moKWDoXjuiTaS9FgA3UE
+Developer Donations
+===================
+If you'd like to make a one time donation, the addresses are as follows:
+* XMR - ```499fS1Phq64hGeqV8p2AfXbf6Ax7gP6FybcMJq6Wbvg8Hw6xms8tCmdYpPsTLSaTNuLEtW4kF2DDiWCFcw4u7wSvFD8wFWE```
+* ETN - ```etnkQMp3Hmsay2p7uxokuHRKANrMDNASwQjDUgFb5L2sDM3jqUkYQPKBkooQFHVWBzEaZVzfzrXoETX6RbMEvg4R4csxfRHLo1```
+* SUMO - ```Sumoo1DGS7c9LEKZNipsiDEqRzaUB3ws7YHfUiiZpx9SQDhdYGEEbZjRET26ewuYEWAZ8uKrz6vpUZkEVY7mDCZyGnQhkLpxKmy```
 
 ## Known Working Pools
 
