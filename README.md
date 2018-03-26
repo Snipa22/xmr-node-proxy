@@ -5,6 +5,12 @@
 
 Based on a clean Ubuntu 16.04 LTS minimal install
 
+## Switching from other xmr-node-proxy repository
+
+```bash
+git remote set-url origin https://github.com/MoneroOcean/xmr-node-proxy.git && git pull && npm update
+```
+
 ## Deployment via Installer
 
 1. Create a user 'nodeproxy' and assign a password (or add an SSH key. If you prefer that, you should already know how to do it)
