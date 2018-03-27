@@ -8,6 +8,7 @@ Based on a clean Ubuntu 16.04 LTS minimal install
 ## Switching from other xmr-node-proxy repository
 
 ```bash
+cd xmr-node-proxy
 git remote set-url origin https://github.com/MoneroOcean/xmr-node-proxy.git && git pull && npm update
 ```
 
