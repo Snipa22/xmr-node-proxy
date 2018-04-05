@@ -1,6 +1,6 @@
 {
   "name": "xmr-node-proxy",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Node proxy for XMR pools based on nodejs-pool, should support any coins that nodejs-pool does with little work",
   "main": "proxy.js",
   "scripts": {
@@ -37,6 +37,7 @@
   },
   "optionalDependencies": {
     "cryptonote-util": "git://github.com/Snipa22/node-cryptonote-util.git#xmr-Nan-2.0",
-    "multi-hashing": "git+https://github.com/Snipa22/node-multi-hashing-aesni.git#v0.1"
+    "multi-hashing": "git+https://github.com/Snipa22/node-multi-hashing-aesni.git#v0.1",
+    "cryptonight-hashing": "git+https://github.com/MoneroOcean/node-cryptonight-hashing.git"
   }
 }
