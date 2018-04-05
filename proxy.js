@@ -580,12 +580,14 @@ function balanceWorkers(){
 }
 
 function enumerateWorkerStats() {
-	// here we do a bit of a hack and "cache" the activeWorkers
-	// this file is parsed for the http://host/json endpoint
-	fs.writeFile("workers.json", JSON.stringify(activeWorkers), function(err) {
-		if(err)
-			return console.log(err);
-	});
+    // here we do a bit of a hack and "cache" the activeWorkers
+    // this file is parsed for the http://host/json endpoint
+    if(global.config.httpEnable) {
+        fs.writeFile("workers.json", JSON.stringify(activeWorkers), function(err) {
+            if(err)
+                return console.log(err);
+        });
+    }
     let stats, global_stats = {miners: 0, hashes: 0, hashRate: 0, diff: 0};
     for (let poolID in activeWorkers){
         if (activeWorkers.hasOwnProperty(poolID)){
@@ -1218,6 +1220,6 @@ if (cluster.isMaster) {
     }, 10000);
     setInterval(checkActivePools, 90000);
     activatePorts();
-	if(global.config.httpEnable)
-		activateHTTP();
+    if(global.config.httpEnable)
+        activateHTTP();
 }
