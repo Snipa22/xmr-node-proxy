@@ -36,6 +36,10 @@
   "bindAddress": "0.0.0.0",
   "developerShare": 1,
   "daemonAddress": "127.0.0.1:18081",
+  "accessControl": {
+    "enabled": false,
+    "controlFile": "accessControl.json"
+  },
   "coinSettings": {
     "xmr":{
       "minDiff": 100,
