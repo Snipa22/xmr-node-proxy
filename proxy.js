@@ -43,6 +43,7 @@ let activePools = {};
 let activeWorkers = {};
 let defaultPools = {};
 let accessControl = {};
+let lastAccessControlLoadTime = null;
 let masterStats = {shares: 0, blocks: 0, hashes: 0};
 
 // IPC Registry
@@ -860,12 +861,30 @@ function isAllowedLogin(username, password) {
     // If user is in the list (return true)
     if (isInAccessControl(username, password)) {
         return true;
-    } else {
-        // If user is not in the list, re-load file from disk and inject in accessControl
-        accessControl = JSON.parse(fs.readFileSync(global.config['accessControl']['controlFile']));
+    }
+    // If user is not in the list ...
+    else {
 
-        // Re-verify if the user is in the list
-        return isInAccessControl(username, password);
+        // ... and accessControl has not been loaded in last minute (prevent HD flooding in case of attack)
+        if (lastAccessControlLoadTime === null
+            || (Date.now() - lastAccessControlLoadTime) / 1000 > 60) {
+
+            // Take note of new load time
+            lastAccessControlLoadTime = Date.now();
+
+            // Re-load file from disk and inject in accessControl
+            accessControl = JSON.parse(fs.readFileSync(global.config['accessControl']['controlFile']));
+
+            // Re-verify if the user is in the list
+            return isInAccessControl(username, password);
+        }
+
+        // User is not in the list, and not yet ready to re-load from disk
+        else {
+
+            // TODO Take notes of IP/Nb of rejections.  Ultimately insert IP in bans after X threshold
+            return false;
+        }
     }
 }
 function isInAccessControl(username, password) {
