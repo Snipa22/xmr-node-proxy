@@ -42,6 +42,8 @@ let bans = {};
 let activePools = {};
 let activeWorkers = {};
 let defaultPools = {};
+let accessControl = {};
+let lastAccessControlLoadTime = null;
 let masterStats = {shares: 0, blocks: 0, hashes: 0};
 
 // IPC Registry
@@ -741,7 +743,8 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
     this.coinFuncs = require(`./lib/${this.coin}.js`)();
     this.coinSettings = global.config.coinSettings[this.coin];
     this.login = params.login;  // Documentation purposes only.
-    this.password = params.pass;  // Documentation purposes only.
+    this.user = params.login;  // For accessControl and workerStats.
+    this.password = params.pass;  // For accessControl and workerStats.
     this.agent = params.agent;  // Documentation purposes only.
     this.ip = ip;  // Documentation purposes only.
     this.socket = minerSocket;
@@ -758,6 +761,7 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
     if (diffSplit.length === 2) {
         this.fixed_diff = true;
         this.difficulty = Number(diffSplit[1]);
+        this.user = diffSplit[0];
     } else if (diffSplit.length > 2) {
         this.error = "Too many options in the login field";
         this.valid_miner = false;
@@ -765,6 +769,12 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
 
     if (activePools[this.pool].activeBlocktemplate === null){
         this.error = "No active block template";
+        this.valid_miner = false;
+    }
+
+    // Verify if user/password is in allowed client connects
+    if (!isAllowedLogin(this.user, this.password)) {
+        this.error = "Unauthorized access";
         this.valid_miner = false;
     }
 
@@ -839,6 +849,47 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
 }
 
 // Slave Functions
+function isAllowedLogin(username, password) {
+    // If controlled login is not enabled, everybody can connnect (return true)
+    if (typeof global.config['accessControl'] !== 'object'
+        || global.config['accessControl'].enabled !== true) {
+        return true;
+    }
+
+    // If user is in the list (return true)
+    if (isInAccessControl(username, password)) {
+        return true;
+    }
+    // If user is not in the list ...
+    else {
+
+        // ... and accessControl has not been loaded in last minute (prevent HD flooding in case of attack)
+        if (lastAccessControlLoadTime === null
+            || (Date.now() - lastAccessControlLoadTime) / 1000 > 60) {
+
+            // Take note of new load time
+            lastAccessControlLoadTime = Date.now();
+
+            // Re-load file from disk and inject in accessControl
+            accessControl = JSON.parse(fs.readFileSync(global.config['accessControl']['controlFile']));
+
+            // Re-verify if the user is in the list
+            return isInAccessControl(username, password);
+        }
+
+        // User is not in the list, and not yet ready to re-load from disk
+        else {
+
+            // TODO Take notes of IP/Nb of rejections.  Ultimately insert IP in bans after X threshold
+            return false;
+        }
+    }
+}
+function isInAccessControl(username, password) {
+    return typeof accessControl[username] !== 'undefined'
+            && accessControl[username] === password;
+}
+
 function handleMinerData(method, params, ip, portData, sendReply, pushMessage, minerSocket) {
     /*
     Deals with handling the data from miners in a sane-ish fashion.
