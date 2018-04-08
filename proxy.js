@@ -813,9 +813,7 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
             lastShare: this.lastShareTime,
             coin: this.coin,
             pool: this.pool,
-            id: this.id,
-            user: this.user,
-            password: this.password
+            id: this.id
         };
     };
 
