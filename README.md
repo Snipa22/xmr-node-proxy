@@ -9,7 +9,7 @@ Based on a clean Ubuntu 16.04 LTS minimal install
 
 ```bash
 cd xmr-node-proxy
-git remote set-url origin https://github.com/MoneroOcean/xmr-node-proxy.git && git pull && npm update
+git remote set-url origin https://github.com/MoneroOcean/xmr-node-proxy.git && git pull -X theirs --no-edit && npm update
 ```
 
 ## Deployment via Installer
