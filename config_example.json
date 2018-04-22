@@ -40,6 +40,9 @@
     "enabled": false,
     "controlFile": "accessControl.json"
   },
+  "httpEnable": false,
+  "httpAddress": "127.0.0.1",
+  "httpPort": "8080",
   "coinSettings": {
     "xmr":{
       "minDiff": 100,
