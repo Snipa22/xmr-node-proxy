@@ -801,7 +801,7 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
 
     this.cachedJob = null;
 
-    let pass_split = pass.split(":");
+    let pass_split = params.pass.split(":");
     this.identifier = pass_split[0];
 
     this.minerStats = function(){
