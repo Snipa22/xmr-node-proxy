@@ -43,6 +43,7 @@
   "httpEnable": false,
   "httpAddress": "127.0.0.1",
   "httpPort": "8080",
+  "minerInactivityTime": "120",
   "coinSettings": {
     "xmr":{
       "minDiff": 100,
