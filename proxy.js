@@ -1050,12 +1050,12 @@ function activateHTTP() {
 	<table>
 		<thead>
 			<th><TAB INDENT=0  ID=t1>Name</th>
-			<th><TAB INDENT=20 ID=t2>Hashrate</th>
-			<th><TAB INDENT=30 ID=t3>Difficulty</th>
-			<th><TAB INDENT=40 ID=t4>Shares</th>
-			<th><TAB INDENT=50 ID=t5>Hashes</th>
-			<th><TAB INDENT=60 ID=t6>Share Ago</th>
-			<th><TAB INDENT=80 ID=t7>Ping Ago</th>
+			<th><TAB INDENT=60 ID=t2>Hashrate</th>
+			<th><TAB INDENT=80 ID=t3>Difficulty</th>
+			<th><TAB INDENT=100 ID=t4>Shares</th>
+			<th><TAB INDENT=120 ID=t5>Hashes</th>
+			<th><TAB INDENT=140 ID=t6>Share Ago</th>
+			<th><TAB INDENT=180 ID=t7>Ping Ago</th>
 		</thead>
 		<tbody>
 			${tableBody}
