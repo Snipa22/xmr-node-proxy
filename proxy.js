@@ -1017,13 +1017,12 @@ function activateHTTP() {
 		if (req.url == "/") {
 			let totalWorkers = 0, totalHashrate = 0;
 			let tableBody = "";
-			for (var workerid in activeWorkers) {
-				let worker = activeWorkers[workerid];
-				if (worker.length == 0) continue;
-				for (var minerid in worker) {
-					let miner = worker[minerid];
-					if (miner.length == 0) continue;
-					let name = (miner.identifier.length > 0 && miner.identifier != "x") ? miner.identifier + " (" + miner.ip + ")" : miner.ip;
+    			for (let workerID in activeWorkers) {
+				if (!activeWorkers.hasOwnProperty(workerID)) continue;
+				for (let minerID in activeWorkers[workerID]){
+                			if (!activeWorkers[workerID].hasOwnProperty(minerID)) continue;
+					let miner = activeWorkers[workerID][minerID];
+					let name = (miner.identifier && miner.identifier != "x") ? miner.identifier + " (" + miner.ip + ")" : miner.ip;
 					++ totalWorkers;
 					totalHashrate += miner.avgSpeed;
 					tableBody += `
