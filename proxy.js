@@ -1354,7 +1354,7 @@ if (cluster.isMaster) {
     setInterval(enumerateWorkerStats, 15000);
     setInterval(balanceWorkers, 90000);
     if (global.config.httpEnable) { 
-        console.log("Activating Web API server on " + (global.config.httpAddress || "localhost") + ":" (global.config.httpPort || "8081"));
+        console.log("Activating Web API server on " + (global.config.httpAddress || "localhost") + ":" + (global.config.httpPort || "8081"));
         activateHTTP();
     }
 } else {
