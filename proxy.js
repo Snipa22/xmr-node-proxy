@@ -1036,7 +1036,7 @@ function activateHTTP() {
 					<td><TAB TO=t5>${miner.hashes}</td>
 					<td><TAB TO=t6>${moment.unix(miner.lastShare).fromNow(true)}</td>
 					<td><TAB TO=t7>${moment.unix(miner.lastContact).fromNow(true)}</td>
-					<td><TAB TO=t8>${moment.unix(miner.connectTime).fromNow(true)}</td>
+					<td><TAB TO=t8>${moment(miner.connectTime).fromNow(true)}</td>
 				</tr>
 	`;
 				}
