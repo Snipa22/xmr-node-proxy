@@ -1102,7 +1102,7 @@ function activateHTTP() {
 	        tbodyHtml = null;
 	        $('table.sorted-table > tbody > tr').each(function() {
 	          var str = $(this).children('td').eq(thIndex).html();
-	          var re1 = /^<.+>(\d+)<\\/.+>$/;
+	          var re1 = /^<.+>(\\d+)<\\/.+>$/;
 	          var m;
 	          if (m = re1.exec(str)) {
 	            var pad = "000000000000";
