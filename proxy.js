@@ -10,6 +10,7 @@ const uuidV4 = require('uuid/v4');
 const support = require('./lib/support.js')();
 global.config = require('./config.json');
 
+const PROXY_VERSION = "0.1.1";
 
 /*
  General file design/where to find things.
@@ -264,7 +265,7 @@ function Pool(poolData){
         this.sendData('login', {
             login: this.username,
             pass: this.password,
-            agent: 'xmr-node-proxy/0.1.1'
+            agent: 'xmr-node-proxy/' + PROXY_VERSION
         });
         this.active = true;
         for (let worker in cluster.workers){
@@ -1149,7 +1150,7 @@ function activateHTTP() {
 		}
 	});
 
-	jsonServer.listen(global.config.httpPort || "8080", global.config.httpAddress || "localhost")
+	jsonServer.listen(global.config.httpPort || "8081", global.config.httpAddress || "localhost")
 }
 
 function activatePorts() {
@@ -1317,6 +1318,7 @@ function checkActivePools() {
 // System Init
 
 if (cluster.isMaster) {
+    console.log("xmr-node-proxy v" + PROXY_VERSION);
     let numWorkers;
     try {
         let argv = require('minimist')(process.argv.slice(2));
@@ -1351,7 +1353,10 @@ if (cluster.isMaster) {
     connectPools();
     setInterval(enumerateWorkerStats, 15000);
     setInterval(balanceWorkers, 90000);
-    if(global.config.httpEnable) activateHTTP();
+    if (global.config.httpEnable) { 
+        console.log("Activating Web API server on " + (global.config.httpAddress || "localhost") + ":" (global.config.httpPort || "8081"));
+        activateHTTP();
+    }
 } else {
     /*
     setInterval(checkAliveMiners, 30000);
