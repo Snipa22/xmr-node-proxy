@@ -816,6 +816,7 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
             hashes: this.hashes,
             avgSpeed: Math.floor(this.hashes/(Math.floor((Date.now() - this.connectTime)/1000))),
             diff: this.difficulty,
+            connectTime: this.connectTime,
             lastContact: Math.floor(this.lastContact/1000),
             lastShare: this.lastShareTime,
             coin: this.coin,
@@ -1035,6 +1036,7 @@ function activateHTTP() {
 					<td><TAB TO=t5>${miner.hashes}</td>
 					<td><TAB TO=t6>${moment.unix(miner.lastShare).fromNow(true)}</td>
 					<td><TAB TO=t7>${moment.unix(miner.lastContact).fromNow(true)}</td>
+					<td><TAB TO=t8>${moment.unix(miner.connectTime).fromNow(true)}</td>
 				</tr>
 	`;
 				}
@@ -1078,6 +1080,7 @@ function activateHTTP() {
 			<th><TAB INDENT=120 ID=t5>Hashes</th>
 			<th><TAB INDENT=140 ID=t6>Share Ago</th>
 			<th><TAB INDENT=180 ID=t7>Ping Ago</th>
+			<th><TAB INDENT=220 ID=t8>Connected Ago</th>
 		</thead>
 		<tbody>
 			${tableBody}
