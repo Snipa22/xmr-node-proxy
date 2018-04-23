@@ -1318,7 +1318,7 @@ function checkActivePools() {
 // System Init
 
 if (cluster.isMaster) {
-    console.log("xmr-node-proxy v" + PROXY_VERSION);
+    console.log("Xmr-Node-Proxy (XNP) v" + PROXY_VERSION);
     let numWorkers;
     try {
         let argv = require('minimist')(process.argv.slice(2));
