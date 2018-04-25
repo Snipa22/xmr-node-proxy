@@ -1047,7 +1047,7 @@ function activateHTTP() {
 <html lang="en"><head>
 	<title>XNP Hashrate Monitor</title>
 	<meta charset="utf-8">
-	<meta http-equiv="refresh" content="15">
+	<meta http-equiv="refresh" content="60">
 	<style>
 	  html, body {
 	    font-family: 'Saira Semi Condensed', sans-serif;
