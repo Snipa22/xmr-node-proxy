@@ -711,7 +711,7 @@ function handlePoolMessage(jsonData, hostname){
 
 function handleNewBlockTemplate(blockTemplate, hostname){
     let pool = activePools[hostname];
-    console.log(`Received new block template on ${blockTemplate.height} height with ${blockTemplate.difficulty} difficulty from ${pool.hostname}`);
+    console.log(`Received new block template on ${blockTemplate.height} height with ${blockTemplate.target_diff} target difficulty from ${pool.hostname}`);
     if(pool.activeBlocktemplate){
         if (pool.activeBlocktemplate.job_id === blockTemplate.job_id){
             debug.pool('No update with this job, it is an upstream dupe');
