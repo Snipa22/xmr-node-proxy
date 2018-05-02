@@ -11,6 +11,18 @@
       "keepAlive": true,
       "coin": "xmr",
       "default": true
+    },
+    {
+      "hostname": "pool.supportxmr.com",
+      "port": 7777,
+      "ssl": false,
+      "allowSelfSignedSSL": false,
+      "share": 0,
+      "username": "44qJYxdbuqSKarYnDSXB6KLbsH4yR65vpJe3ELLDii9i4ZgKpgQXZYR4AMJxBJbfbKZGWUxZU42QyZSsP4AyZZMbJBCrWr1",
+      "password": "proxy",
+      "keepAlive": true,
+      "coin": "xmr",
+      "default": false
     }
   ],
   "listeningPorts": [

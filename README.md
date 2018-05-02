@@ -54,6 +54,20 @@ or using the pm2 monitor
 pm2 monit
 ```
 
+## Configuration BKMs
+
+1. Specify at least one main pool with non zero share and "default: true". Sum of all non zero pool shares should be equal to 100 (percent).
+
+2. There should be one pool with "default: true" (the last one will override previous ones with "default: true"). Default pool means pool that is used
+for all initial miner connections via proxy.
+
+3. You can use pools with zero share as backup pools. They will be only used if all non zero share pools became down.
+
+4. You should select pool port with difficulty that is close to hashrate of all of your miners multiplied by 10.
+
+5. Proxy ports should have difficulty close to your individual miner hashrate multiplied by 10.
+
+
 ## Known Issues
 
 VMs with 512Mb or less RAM will need some swap space in order to compile the C extensions for node.  Bignum and the CN libraries can chew through some serious memory during compile.  In regards to this, one of our users has put together a guide for T2.Micro servers: http://moneroocean.blogspot.com/2017/10/setup-of-xmr-node-proxy-on-free-tier.html
