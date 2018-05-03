@@ -10,7 +10,7 @@ const uuidV4 = require('uuid/v4');
 const support = require('./lib/support.js')();
 global.config = require('./config.json');
 
-const PROXY_VERSION = "0.1.2";
+const PROXY_VERSION = "0.1.3";
 
 /*
  General file design/where to find things.
