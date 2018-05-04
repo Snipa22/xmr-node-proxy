@@ -204,10 +204,7 @@ function Pool(poolData){
     }
 
     setInterval(function(pool) {
-        if (pool.keepAlive && is_active_pool(pool.hostname)) {
-            pool.sendData('keepalived');
-	    console.log(pool.hostname + ": keepalive");
-        }
+        if (pool.keepAlive && is_active_pool(pool.hostname)) pool.sendData('keepalived');
     }, 30000, this);
 
     this.connect = function(){
