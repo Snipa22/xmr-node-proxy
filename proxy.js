@@ -66,10 +66,8 @@ function masterMessageHandler(worker, message, handle) {
                 });
                 for (let hostname in activePools){
                     if (activePools.hasOwnProperty(hostname)){
+                        if (!is_active_pool(hostname)) continue;
                         let pool = activePools[hostname];
-                        if (!pool.active || pool.activeBlocktemplate === null){
-                            continue;
-                        }
                         worker.send({
                             host: hostname,
                             type: 'newBlockTemplate',
@@ -211,39 +209,37 @@ function Pool(poolData){
                 cluster.workers[worker].send({type: 'disablePool', pool: this.hostname});
             }
         }
-        try {
-            if (this.socket !== null){
-                this.socket.end();
-                this.socket.destroy();
-            }
-        } catch (e) {
-            console.warn(global.threadName + "Had issues murdering the old socket.  Om nom: " + e)
-        }
-        this.socket = null;
         this.active = false;
 
-	function connect2(ssl, port, hostname, allowSelfSignedSSL, callback) {
+	function connect2(ssl, port, hostname, allowSelfSignedSSL) {
+                try {
+                    if (activePools[hostname].socket !== null){
+                        activePools[hostname].socket.end();
+                        activePools[hostname].socket.destroy();
+                    }
+                } catch (e) {
+                    console.warn(global.threadName + "Had issues murdering the old socket. Om nom: " + e)
+                }
+                activePools[hostname].socket = null;
+
 	        if (ssl){
-	            let socket = tls.connect(port, hostname, {rejectUnauthorized: allowSelfSignedSSL});
-		    socket.on('connect', ()=>{ return callback(socket); });
-		    socket.on('error', (err)=>{
-        	        socket.destroy();
-	                setTimeout(connect2, 10*1000, ssl, port, hostname, allowSelfSignedSSL, callback);
-	                console.warn(`${global.threadName}SSL socket connect error from ${hostname}: ${err}`);
+	            activePools[hostname].socket = tls.connect(port, hostname, {rejectUnauthorized: allowSelfSignedSSL})
+		    .on('connect', ()=>{ poolSocket(hostname); })
+		    .on('error', (err)=>{
+	                setTimeout(connect2, 30*1000, ssl, port, hostname, allowSelfSignedSSL);
+	                console.warn(`${global.threadName}SSL pool socket connect error from ${hostname}: ${err}`);
 	            });
 	        } else {
-	            let socket = net.connect(port, hostname);
-		    socket.on('connect', ()=>{ return callback(socket); });
-		    socket.on('error', (err)=>{
-        	        socket.destroy();
-	                setTimeout(connect2, 10*1000, ssl, port, hostname, allowSelfSignedSSL, callback);
-	                console.warn(`${global.threadName}Plain socket connect error from ${hostname}: ${err}`);
+	            activePools[hostname].socket = net.connect(port, hostname)
+		    .on('connect', ()=>{ poolSocket(hostname); })
+		    .on('error', (err)=>{
+	                setTimeout(connect2, 30*1000, ssl, port, hostname, allowSelfSignedSSL);
+	                console.warn(`${global.threadName}Plain pool socket connect error from ${hostname}: ${err}`);
 	            });
 	        }
 	}
 
-	let hostname = this.hostname;
-	connect2(this.ssl, this.port, this.hostname, this.allowSelfSignedSSL, function(socket) { poolSocket(hostname, socket); });
+	connect2(this.ssl, this.port, this.hostname, this.allowSelfSignedSSL);
     };
     this.heartbeat = function(){
         if (this.keepAlive){
@@ -651,9 +647,9 @@ function enumerateWorkerStats() {
     console.log(`The proxy currently has ${global_stats.miners} miners connected at ${global_stats.hashRate} h/s${pool_hs} with an average diff of ${Math.floor(global_stats.diff/global_stats.miners)}`);
 }
 
-function poolSocket(hostname, socket){
+function poolSocket(hostname){
     let pool = activePools[hostname];
-    pool.socket = socket;
+    let socket = pool.socket;
     let dataBuffer = '';
     socket.on('data', (d) => {
         dataBuffer += d;
