@@ -203,6 +203,13 @@ function Pool(poolData){
         this.allowSelfSignedSSL = !poolData.allowSelfSignedSSL;
     }
 
+    setInterval(function(pool) {
+        if (pool.keepAlive && is_active_pool(pool.hostname)) {
+            pool.sendData('keepalived');
+	    console.log(pool.hostname + ": keepalive");
+        }
+    }, 30000, this);
+
     this.connect = function(){
         for (let worker in cluster.workers){
             if (cluster.workers.hasOwnProperty(worker)){
@@ -240,11 +247,6 @@ function Pool(poolData){
 	}
 
 	connect2(this.ssl, this.port, this.hostname, this.allowSelfSignedSSL);
-    };
-    this.heartbeat = function(){
-        if (this.keepAlive){
-            this.sendData('keepalived');
-        }
     };
     this.sendData = function (method, params) {
         if (typeof params === 'undefined'){
@@ -697,7 +699,6 @@ function poolSocket(hostname){
     socket.setEncoding('utf8');
     console.log(`${global.threadName}Connected to pool: ${pool.hostname}`);
     pool.login();
-    setInterval(pool.heartbeat, 30000);
 }
 
 function handlePoolMessage(jsonData, hostname){
@@ -755,7 +756,7 @@ function handleNewBlockTemplate(blockTemplate, hostname){
 }
 
 function is_active_pool(hostname) {
-    return activePools[hostname].active && activePools[hostname].activeBlocktemplate !== null;
+    return activePools[hostname].socket && activePools[hostname].active && activePools[hostname].activeBlocktemplate !== null;
 }
 
 // Miner Definition
