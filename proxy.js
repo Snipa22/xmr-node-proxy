@@ -217,7 +217,7 @@ function Pool(poolData){
                 this.socket.destroy();
             }
         } catch (e) {
-            console.log("Had issues murdering the old socket.  Om nom: " + e)
+            console.warn(global.threadName + "Had issues murdering the old socket.  Om nom: " + e)
         }
         this.socket = null;
         this.active = false;
@@ -229,7 +229,7 @@ function Pool(poolData){
 		    socket.on('error', (err)=>{
         	        socket.destroy();
 	                setTimeout(connect2, 10*1000, ssl, port, hostname, allowSelfSignedSSL, callback);
-	                console.warn(`${global.threadName}Socket error from ${hostname} ${err}`);
+	                console.warn(`${global.threadName}SSL socket connect error from ${hostname}: ${err}`);
 	            });
 	        } else {
 	            let socket = net.connect(port, hostname);
@@ -237,7 +237,7 @@ function Pool(poolData){
 		    socket.on('error', (err)=>{
         	        socket.destroy();
 	                setTimeout(connect2, 10*1000, ssl, port, hostname, allowSelfSignedSSL, callback);
-	                console.warn(`${global.threadName}Socket error from ${hostname} ${err}`);
+	                console.warn(`${global.threadName}Plain socket connect error from ${hostname}: ${err}`);
 	            });
 	        }
 	}
@@ -681,7 +681,7 @@ function poolSocket(hostname, socket){
                         }
                     }
 
-                    console.warn(`${global.threadName}Socket error from ${pool.hostname} Message: ${message}`);
+                    console.warn(`${global.threadName}Pool wrong reply error from ${pool.hostname}: ${message}`);
                     socket.destroy();
 
                     break;
@@ -692,14 +692,14 @@ function poolSocket(hostname, socket){
         }
     }).on('error', (err) => {
         activePools[pool.hostname].connect();
-        console.warn(`${global.threadName}Socket error from ${pool.hostname} ${err}`);
+        console.warn(`${global.threadName}Pool socket error from ${pool.hostname}: ${err}`);
     }).on('close', () => {
         activePools[pool.hostname].connect();
-        console.warn(`${global.threadName}Socket closed from ${pool.hostname}`);
+        console.warn(`${global.threadName}Pool socket closed from ${pool.hostname}`);
     });
     socket.setKeepAlive(true);
     socket.setEncoding('utf8');
-    console.log(`${global.threadName}connected to pool: ${pool.hostname}`);
+    console.log(`${global.threadName}Connected to pool: ${pool.hostname}`);
     pool.login();
     setInterval(pool.heartbeat, 30000);
 }
@@ -717,7 +717,7 @@ function handlePoolMessage(jsonData, hostname){
             if (jsonData.error.message === 'Unauthenticated'){
                 activePools[hostname].connect();
             }
-            return console.error(`Error response from pool ${pool.hostname}: ${JSON.stringify(jsonData.error)}`);
+            return console.error(`${global.threadName}Error response from pool ${pool.hostname}: ${JSON.stringify(jsonData.error)}`);
         }
         let sendLog = pool.sendLog[jsonData.id];
         switch(sendLog.method){
@@ -959,7 +959,7 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage, m
             let minerId = uuidV4();
             miner = new Miner(minerId, params, ip, pushMessage, portData, minerSocket);
             if (!miner.valid_miner) {
-                console.log("Invalid miner, disconnecting due to: " + miner.error);
+                console.warn(global.threadName + "Invalid miner, disconnecting due to: " + miner.error);
                 sendReply(miner.error);
                 return;
             }
@@ -1212,15 +1212,15 @@ function activatePorts() {
         }
         let handleMessage = function (socket, jsonData, pushMessage, minerSocket) {
             if (!jsonData.id) {
-                console.warn('Miner RPC request missing RPC id');
+                console.warn(global.threadName + 'Miner RPC request missing RPC id');
                 return;
             }
             else if (!jsonData.method) {
-                console.warn('Miner RPC request missing RPC method');
+                console.warn(global.threadName + 'Miner RPC request missing RPC method');
                 return;
             }
             else if (!jsonData.params) {
-                console.warn('Miner RPC request missing RPC params');
+                console.warn(global.threadName + 'Miner RPC request missing RPC params');
                 return;
             }
 
@@ -1301,7 +1301,7 @@ function activatePorts() {
                 }
             }).on('error', function (err) {
                 if (err.code !== 'ECONNRESET') {
-                    console.warn(global.threadName + "Socket Error from " + socket.remoteAddress + " " + err);
+                    console.warn(global.threadName + "Miner socket error from " + socket.remoteAddress + ": " + err);
                 }
                 socket.end();
                 socket.destroy();
@@ -1328,7 +1328,7 @@ function activatePorts() {
                 console.log(global.threadName + "Started server on port: " + portData.port);
             });
             server.on('error', function (error) {
-                console.error("Can't bind server to " + portData.port + " SSL port!");
+                console.error(global.threadName + "Can't bind server to " + portData.port + " SSL port!");
             });
         } else {
             let server = net.createServer(socketConn);
@@ -1341,7 +1341,7 @@ function activatePorts() {
                 console.log(global.threadName + "Started server on port: " + portData.port);
             });
             server.on('error', function (error) {
-                console.error("Can't bind server to " + portData.port + " port!");
+                console.error(global.threadName + "Can't bind server to " + portData.port + " port!");
             });
         }
     });
@@ -1383,10 +1383,10 @@ if (cluster.isMaster) {
             numWorkers = require('os').cpus().length;
         }
     } catch (err) {
-        console.error(`Unable to set the number of workers via arguments.  Make sure to run npm install!`);
+        console.error(`${global.threadName}Unable to set the number of workers via arguments.  Make sure to run npm install!`);
         numWorkers = require('os').cpus().length;
     }
-    global.threadName = 'Master ';
+    global.threadName = '[MASTER] ';
     console.log('Cluster master setting up ' + numWorkers + ' workers...');
     cluster.on('message', masterMessageHandler);
     for (let i = 0; i < numWorkers; i++) {
@@ -1400,7 +1400,7 @@ if (cluster.isMaster) {
     });
 
     cluster.on('exit', function (worker, code, signal) {
-        console.log('Worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
+        console.error('Worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal);
         console.log('Starting a new worker');
         worker = cluster.fork();
         worker.on('message', slaveMessageHandler);
