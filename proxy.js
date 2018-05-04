@@ -1315,10 +1315,11 @@ function activatePorts() {
         }
 
         if ('ssl' in portData && portData.ssl === true) {
-            tls.createServer({
+            let server = tls.createServer({
                 key: fs.readFileSync('cert.key'),
                 cert: fs.readFileSync('cert.pem')
-            }, socketConn).listen(portData.port, global.config.bindAddress, function (error) {
+            }, socketConn);
+	    server.listen(portData.port, global.config.bindAddress, function (error) {
                 if (error) {
                     console.error(global.threadName + "Unable to start server on: " + portData.port + " Message: " + error);
                     return;
@@ -1326,14 +1327,21 @@ function activatePorts() {
                 activePorts.push(portData.port);
                 console.log(global.threadName + "Started server on port: " + portData.port);
             });
+            server.on('error', function (error) {
+                console.error("Can't bind server to " + portData.port + " SSL port!");
+            });
         } else {
-            net.createServer(socketConn).listen(portData.port, global.config.bindAddress, function (error) {
+            let server = net.createServer(socketConn);
+	    server.listen(portData.port, global.config.bindAddress, function (error) {
                 if (error) {
                     console.error(global.threadName + "Unable to start server on: " + portData.port + " Message: " + error);
                     return;
                 }
                 activePorts.push(portData.port);
                 console.log(global.threadName + "Started server on port: " + portData.port);
+            });
+            server.on('error', function (error) {
+                console.error("Can't bind server to " + portData.port + " port!");
             });
         }
     });
