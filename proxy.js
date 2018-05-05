@@ -1054,6 +1054,8 @@ function activateHTTP() {
 	var jsonServer = http.createServer((req, res) => {
 		if (req.url == "/") {
 			let totalWorkers = 0, totalHashrate = 0;
+			let poolHashrate = [];
+			let tablePool = "";
 			let tableBody = "";
     			for (let workerID in activeWorkers) {
 				if (!activeWorkers.hasOwnProperty(workerID)) continue;
@@ -1064,20 +1066,29 @@ function activateHTTP() {
 					let name = (miner.identifier && miner.identifier != "x") ? miner.identifier + " (" + miner.ip + ")" : miner.ip;
 					++ totalWorkers;
 					totalHashrate += miner.avgSpeed;
+					if (!poolHashrate[miner.pool]) poolHashrate[miner.pool] = 0;
+					poolHashrate[miner.pool] += miner.avgSpeed;
 					tableBody += `
-				<tr>
-					<td><TAB TO=t1>${name}</td>
-					<td><TAB TO=t2>${miner.avgSpeed}</td>
-					<td><TAB TO=t3>${miner.diff}</td>
-					<td><TAB TO=t4>${miner.shares}</td>
-					<td><TAB TO=t5>${miner.hashes}</td>
-					<td><TAB TO=t6>${moment.unix(miner.lastShare).fromNow(true)}</td>
-					<td><TAB TO=t7>${moment.unix(miner.lastContact).fromNow(true)}</td>
-					<td><TAB TO=t8>${moment(miner.connectTime).fromNow(true)}</td>
-				</tr>
-	`;
+					<tr>
+						<td><TAB TO=t1>${name}</td>
+						<td><TAB TO=t2>${miner.avgSpeed}</td>
+						<td><TAB TO=t3>${miner.diff}</td>
+						<td><TAB TO=t4>${miner.shares}</td>
+						<td><TAB TO=t5>${miner.hashes}</td>
+						<td><TAB TO=t6>${moment.unix(miner.lastShare).fromNow(true)}</td>
+						<td><TAB TO=t7>${moment.unix(miner.lastContact).fromNow(true)}</td>
+						<td><TAB TO=t8>${moment(miner.connectTime).fromNow(true)}</td>
+						<td><TAB TO=t9>${miner.pool}</td>
+					</tr>
+					`;
 				}
 			}
+    			for (let poolName in poolHashrate) {
+				let poolPercentage = (100*poolHashrate[poolName]/totalHashrate).toFixed(2);
+				tablePool += `
+				<h2> ${poolName} : ${poolHashrate[poolName]} H/S or ${poolPercentage} %</h2>
+				`;
+			}	
 			res.writeHead(200, {'Content-type':'text/html'});
 			res.write(`
 <html lang="en"><head>
@@ -1109,6 +1120,7 @@ function activateHTTP() {
 </head><body>
 	<h1>XNP Hashrate Monitor</h1>
 	<h2>Workers: ${totalWorkers}, Hashrate: ${totalHashrate}</h2>
+	${tablePool}
 	<table class="sorted-table">
 		<thead>
 			<th><TAB INDENT=0  ID=t1>Name</th>
@@ -1119,6 +1131,7 @@ function activateHTTP() {
 			<th><TAB INDENT=140 ID=t6>Share Ago</th>
 			<th><TAB INDENT=180 ID=t7>Ping Ago</th>
 			<th><TAB INDENT=220 ID=t8>Connected Ago</th>
+			<th><TAB INDENT=260 ID=t9>Pool</th>
 		</thead>
 		<tbody>
 			${tableBody}
