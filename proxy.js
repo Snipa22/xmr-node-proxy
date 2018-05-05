@@ -202,6 +202,8 @@ function Pool(poolData){
     if (poolData.hasOwnProperty('allowSelfSignedSSL')){
         this.allowSelfSignedSSL = !poolData.allowSelfSignedSSL;
     }
+    this.algo = poolData.algo;
+    this.blob_type = poolData.blob_type;
 
     setInterval(function(pool) {
         if (pool.keepAlive && is_active_pool(pool.hostname)) pool.sendData('keepalived');
@@ -728,7 +730,7 @@ function handlePoolMessage(jsonData, hostname){
         }
     }
 }
-
+    	
 function handleNewBlockTemplate(blockTemplate, hostname){
     let pool = activePools[hostname];
     console.log(`Received new block template on ${blockTemplate.height} height with ${blockTemplate.target_diff} target difficulty from ${pool.hostname}`);
@@ -740,6 +742,8 @@ function handleNewBlockTemplate(blockTemplate, hostname){
         debug.pool('Storing the previous block template');
         pool.pastBlockTemplates.enq(pool.activeBlocktemplate);
     }
+    if (!blockTemplate.algo) blockTemplate.algo = pool.algo;
+    if (!blockTemplate.blob_type) blockTemplate.blob_type = pool.blob_type;
     pool.activeBlocktemplate = new pool.coinFuncs.MasterBlockTemplate(blockTemplate);
     for (let id in cluster.workers){
         if (cluster.workers.hasOwnProperty(id)){
@@ -753,7 +757,21 @@ function handleNewBlockTemplate(blockTemplate, hostname){
 }
 
 function is_active_pool(hostname) {
-    return activePools[hostname].socket && activePools[hostname].active && activePools[hostname].activeBlocktemplate !== null;
+    let pool = activePools[hostname];
+    if (!pool.socket || !pool.active || pool.activeBlocktemplate === null) return false;
+
+    let top_height = 0;
+    for (let poolName in activePools){
+        if (!activePools.hasOwnProperty(poolName)) continue;
+        let pool2 = activePools[poolName];
+        if (pool2.coin != pool.coin) continue;
+        if (!pool2.socket || !pool2.active || pool2.activeBlocktemplate === null) continue;
+        if (Math.abs(pool2.activeBlocktemplate.height - pool.activeBlocktemplate.height) > 1000) continue; // different coin templates, can't compare here
+        if (pool2.activeBlocktemplate.height > top_height) top_height = pool2.activeBlocktemplate.height;
+    }
+
+    if (pool.activeBlocktemplate.height < top_height - 5) return false;
+    return true;
 }
 
 // Miner Definition
