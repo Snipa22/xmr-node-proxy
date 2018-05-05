@@ -371,6 +371,8 @@ function balanceWorkers(){
             } else if (is_active_pool(poolName)) {
                 poolStates[pool.coin].totalPercentage += pool.share;
                 ++ poolStates[pool.coin].activePoolCount;
+            } else {
+                console.error(`${global.threadName}Pool ${poolName} is disabled due to issues with it`);
             }
             if (!minerStates.hasOwnProperty(pool.coin)){
                 minerStates[pool.coin] = {
