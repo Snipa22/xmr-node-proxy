@@ -54,6 +54,13 @@ or using the pm2 monitor
 pm2 monit
 ```
 
+## Updating xmr-node-proxy
+
+```bash
+cd xmr-node-proxy
+./update.sh
+```
+
 ## Configuration BKMs
 
 1. Specify at least one main pool with non zero share and "default: true". Sum of all non zero pool shares should be equal to 100 (percent).
