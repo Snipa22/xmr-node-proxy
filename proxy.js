@@ -712,9 +712,7 @@ function handlePoolMessage(jsonData, hostname){
         }
     } else {
         if (jsonData.error !== null){
-            if (jsonData.error.message === 'Unauthenticated'){
-                activePools[hostname].connect();
-            }
+            activePools[hostname].connect();
             return console.error(`${global.threadName}Error response from pool ${pool.hostname}: ${JSON.stringify(jsonData.error)}`);
         }
         let sendLog = pool.sendLog[jsonData.id];
