@@ -496,10 +496,10 @@ function balanceWorkers(){
                 coinMiners.hashrate -= devHashrate;
                 coinPools[devPool].idealRate = devHashrate;
                 debug.balancer(`DevPool on ${coin} is enabled.  Set to ${global.config.developerShare}% and ideally would have ${coinPools[devPool].idealRate}.  Currently has ${coinPools[devPool].hashrate}`);
-                if (coinPools[devPool].idealRate > coinPools[devPool].hashrate){
+                if (is_active_pool(devPool) && coinPools[devPool].idealRate > coinPools[devPool].hashrate){
                     lowPools[devPool] = coinPools[devPool].idealRate - coinPools[devPool].hashrate;
                     debug.balancer(`Pool ${devPool} is running a low hashrate compared to ideal.  Want to increase by: ${lowPools[devPool]} h/s`);
-                } else if (coinPools[devPool].idealRate < coinPools[devPool].hashrate){
+                } else if (!is_active_pool(devPool) || coinPools[devPool].idealRate < coinPools[devPool].hashrate){
                     highPools[devPool] = coinPools[devPool].hashrate - coinPools[devPool].idealRate;
                     debug.balancer(`Pool ${devPool} is running a high hashrate compared to ideal.  Want to decrease by: ${highPools[devPool]} h/s`);
                 }
