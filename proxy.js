@@ -642,7 +642,7 @@ function enumerateWorkerStats() {
         for (let pool in poolStates[coin] ){
             if (!poolStates[coin].hasOwnProperty(pool) || !activePools.hasOwnProperty(pool) || poolStates[coin][pool].devPool || poolStates[coin][pool].hashrate === 0) continue;
             if (pool_hs != "") pool_hs += ", ";
-            pool_hs += `${pool}/${poolStates[coin][pool].percentage}%`;
+            pool_hs += `${pool}/${poolStates[coin][pool].percentage.toFixed(2)}%`;
         }
     }
     if (pool_hs != "") pool_hs = " (" + pool_hs + ")";
@@ -1106,7 +1106,7 @@ function activateHTTP() {
     			for (let poolName in poolHashrate) {
 				let poolPercentage = (100*poolHashrate[poolName]/totalHashrate).toFixed(2);
 				tablePool += `
-				<h2> ${poolName} : ${poolHashrate[poolName]} H/S or ${poolPercentage} %</h2>
+				<h2> ${poolName} : ${poolHashrate[poolName]} H/S or ${poolPercentage.toFixed(2)} %</h2>
 				`;
 			}	
 			res.writeHead(200, {'Content-type':'text/html'});
