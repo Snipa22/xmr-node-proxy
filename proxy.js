@@ -1106,7 +1106,7 @@ function activateHTTP() {
     			for (let poolName in poolHashrate) {
 				let poolPercentage = (100*poolHashrate[poolName]/totalHashrate).toFixed(2);
 				tablePool += `
-				<h2> ${poolName} : ${poolHashrate[poolName]} H/S or ${poolPercentage.toFixed(2)} %</h2>
+				<h2> ${poolName} : ${poolHashrate[poolName]} H/S or ${poolPercentage} %</h2>
 				`;
 			}	
 			res.writeHead(200, {'Content-type':'text/html'});
