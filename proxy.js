@@ -1103,8 +1103,8 @@ function activateHTTP() {
 			}
     			for (let poolName in poolHashrate) {
 				let poolPercentage = (100*poolHashrate[poolName]/totalHashrate).toFixed(2);
-				tablePool += `
-				<h2> ${poolName} : ${poolHashrate[poolName]} H/S or ${poolPercentage} %</h2>
+				let targetDiff = activePools[poolName].activeBlocktemplate ? activePools[poolName].activeBlocktemplate.targetDiff : "?";
+				tablePool += `<h2> ${poolName}: ${poolHashrate[poolName]} H/s or ${poolPercentage}% (${targetDiff} diff)</h2>
 				`;
 			}	
 			res.writeHead(200, {'Content-type':'text/html'});
