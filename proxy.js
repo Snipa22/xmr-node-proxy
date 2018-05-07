@@ -843,8 +843,6 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
     this.heartbeat();
 
     // VarDiff System
-    this.shareTimeBuffer = support.circularBuffer(8);
-    this.shareTimeBuffer.enq(this.coinSettings.shareTargetTime);
     this.lastShareTime = Date.now() / 1000 || 0;
 
     this.shares = 0;
@@ -890,7 +888,6 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
 
     this.setNewDiff = function (difficulty) {
         this.newDiff = Math.round(difficulty);
-        debug.diff(global.threadName + "Difficulty: " + this.newDiff + " For: " + this.logString + " Time Average: " + this.shareTimeBuffer.average(this.lastShareTime) + " Entries: " + this.shareTimeBuffer.size() + "  Sum: " + this.shareTimeBuffer.sum());
         if (this.newDiff > this.coinSettings.maxDiff) {
             this.newDiff = this.coinSettings.maxDiff;
         }
@@ -953,6 +950,11 @@ function isInAccessControl(username, password) {
     return typeof accessControl[username] !== 'undefined'
             && accessControl[username] === password;
 }
+
+// for more intellegent reporting
+let poolShareSize = {};
+let poolShareCount = {};
+let poolShareTime = {};
 
 function handleMinerData(method, params, ip, portData, sendReply, pushMessage, minerSocket) {
     /*
@@ -1049,9 +1051,22 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage, m
                 return;
             }
 
-            let now = Date.now() / 1000 || 0;
-            miner.shareTimeBuffer.enq(now - miner.lastShareTime);
-            miner.lastShareTime = now;
+            const poolName = miner.pool;
+            if (!(poolName in poolShareTime)) {
+                console.log(`Submitted share of ${blockTemplate.targetDiff} hashes to ${poolName} pool`);
+                poolShareTime[poolName] = Date.now();
+                poolShareCount[poolName] = 0;
+                poolShareSize[poolName] = blockTemplate.targetDiff;
+            } else if (Date.now() - poolShareTime[poolName] > 30*1000 || (poolName in poolShareSize && poolShareSize[poolName] != blockTemplate.targetDiff)) {
+                if (poolShareCount[poolName]) console.log(`Submitted ${poolShareCount[poolName]} share(s) of ${poolShareSize[poolName]} hashes to ${poolName} pool`);
+                poolShareTime[poolName] = Date.now();
+                poolShareCount[poolName] = 1;
+                poolShareSize[poolName] = blockTemplate.targetDiff;
+            } else {
+                ++ poolShareCount[poolName];
+            }
+
+            miner.lastShareTime = Date.now() / 1000 || 0;
 
             sendReply(null, {status: 'OK'});
             break;
