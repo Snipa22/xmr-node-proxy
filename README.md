@@ -63,16 +63,25 @@ cd xmr-node-proxy
 
 ## Configuration BKMs
 
-1. Specify at least one main pool with non zero share and "default: true". Sum of all non zero pool shares should be equal to 100 (percent).
+# Specify at least one main pool with non zero share and "default: true". Sum of all non zero pool shares should be equal to 100 (percent).
 
-2. There should be one pool with "default: true" (the last one will override previous ones with "default: true"). Default pool means pool that is used
+# There should be one pool with "default: true" (the last one will override previous ones with "default: true"). Default pool means pool that is used 
 for all initial miner connections via proxy.
 
-3. You can use pools with zero share as backup pools. They will be only used if all non zero share pools became down.
+# You can use pools with zero share as backup pools. They will be only used if all non zero share pools became down.
 
-4. You should select pool port with difficulty that is close to hashrate of all of your miners multiplied by 10.
+# You should select pool port with difficulty that is close to hashrate of all of your miners multiplied by 10.
 
-5. Proxy ports should have difficulty close to your individual miner hashrate multiplied by 10.
+# Proxy ports should have difficulty close to your individual miner hashrate multiplied by 10.
+
+# Algorithm names ("algo" option in pool config section) can be taken from [Algorithm names and variants](https://github.com/xmrig/xmrig-proxy/blob/dev/doc/STRATUM_EXT.md#14-algorithm-names-and-variants) table
+
+# Blob type ("blob_type" option in pool config section) can be as follows
+
+## cryptonote
+## cryptonote2
+## forknote1
+## forknote2
 
 
 ## Known Issues
