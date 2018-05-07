@@ -79,8 +79,11 @@ for all initial miner connections via proxy.
 7. Blob type ("blob_type" option in pool config section) can be as follows
 
 ..* cryptonote  - Monero forks like Sumokoin, Electroneum, Graft, Aeon
+
 ..* cryptonote2 - Masari
+
 ..* forknote
+
 ..* forknote2   - Bytecoin forks like Intense, Turtlecoin, IPBC
 
 ## Known Issues
