@@ -951,11 +951,6 @@ function isInAccessControl(username, password) {
             && accessControl[username] === password;
 }
 
-// for more intellegent reporting
-let poolShareSize = {};
-let poolShareCount = {};
-let poolShareTime = {};
-
 function handleMinerData(method, params, ip, portData, sendReply, pushMessage, minerSocket) {
     /*
     Deals with handling the data from miners in a sane-ish fashion.
@@ -1049,21 +1044,6 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage, m
             if (!shareAccepted) {
                 sendReply('Low difficulty share');
                 return;
-            }
-
-            const poolName = miner.pool;
-            if (!(poolName in poolShareTime)) {
-                console.log(`Submitted share of ${blockTemplate.targetDiff} hashes to ${poolName} pool`);
-                poolShareTime[poolName] = Date.now();
-                poolShareCount[poolName] = 0;
-                poolShareSize[poolName] = blockTemplate.targetDiff;
-            } else if (Date.now() - poolShareTime[poolName] > 30*1000 || (poolName in poolShareSize && poolShareSize[poolName] != blockTemplate.targetDiff)) {
-                if (poolShareCount[poolName]) console.log(`Submitted ${poolShareCount[poolName]} share(s) of ${poolShareSize[poolName]} hashes to ${poolName} pool`);
-                poolShareTime[poolName] = Date.now();
-                poolShareCount[poolName] = 1;
-                poolShareSize[poolName] = blockTemplate.targetDiff;
-            } else {
-                ++ poolShareCount[poolName];
             }
 
             miner.lastShareTime = Date.now() / 1000 || 0;
