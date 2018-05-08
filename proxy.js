@@ -1105,7 +1105,7 @@ function activateHTTP() {
 			res.writeHead(200, {'Content-type':'text/html'});
 			res.write(`
 <html lang="en"><head>
-	<title>XNP Hashrate Monitor</title>
+	<title>XNP v${PROXY_VERSION} Hashrate Monitor</title>
 	<meta charset="utf-8">
 	<meta http-equiv="refresh" content="60">
 	<style>
