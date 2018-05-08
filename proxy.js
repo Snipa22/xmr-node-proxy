@@ -1131,7 +1131,7 @@ function activateHTTP() {
 	  }
 	</style>
 </head><body>
-	<h1>XNP Hashrate Monitor</h1>
+	<h1>XNP v${PROXY_VERSION} Hashrate Monitor</h1>
 	<h2>Workers: ${totalWorkers}, Hashrate: ${totalHashrate}</h2>
 	${tablePool}
 	<table class="sorted-table">
