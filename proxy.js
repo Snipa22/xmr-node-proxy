@@ -623,7 +623,8 @@ function enumerateWorkerStats() {
                 hashRate: 0,
                 diff: 0
             };
-            let inactivityDeadline = Math.floor((Date.now())/1000) - (global.config.minerInactivityTime ? global.config.minerInactivityTime : 120);
+            let inactivityDeadline = (typeof global.config.minerInactivityTime === 'undefined') ? Math.floor((Date.now())/1000) - 120
+                : (global.config.minerInactivityTime <= 0 ? 0 : Math.floor((Date.now())/1000) - global.config.minerInactivityTime);
             for (let workerID in activeWorkers[poolID]){
                 if (activeWorkers[poolID].hasOwnProperty(workerID)) {
                     let workerData = activeWorkers[poolID][workerID];
