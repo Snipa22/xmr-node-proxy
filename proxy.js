@@ -543,6 +543,7 @@ function balanceWorkers(){
                 for (let pool in lowPools){
                     if (lowPools.hasOwnProperty(pool)){
                         minerChanges[pool] = [];
+                        // fit low pools without overflow
                         if (Object.keys(freed_miners).length > 0){
                             for (let miner in freed_miners){
                                 if (freed_miners.hasOwnProperty(miner)){
@@ -560,7 +561,7 @@ function balanceWorkers(){
                                 if(coinPools.hasOwnProperty(donatorPool) && !lowPools.hasOwnProperty(donatorPool)){
                                     for (let miner in coinPools[donatorPool].miners){
                                         if (coinPools[donatorPool].miners.hasOwnProperty(miner)){
-                                            if (coinPools[donatorPool].miners[miner] < lowPools[pool] && coinPools[donatorPool].miners[miner] !== 0){
+                                            if (coinPools[donatorPool].miners[miner] <= lowPools[pool] && coinPools[donatorPool].miners[miner] !== 0){
                                                 minerChanges[pool].push(miner);
                                                 lowPools[pool] -= coinPools[donatorPool].miners[miner];
                                                 debug.balancer(`Moving ${miner} for ${pool} from ${donatorPool} for ${coinPools[donatorPool].miners[miner]} h/s`);
@@ -574,6 +575,22 @@ function balanceWorkers(){
                                     if (lowPools[pool] < 50){
                                         break;
                                     }
+                                }
+                            }
+                        }
+                    }
+                }
+                // fit low pools with overflow except devPool
+                if (Object.keys(freed_miners).length > 0){
+                    for (let pool in lowPools){
+                        if (lowPools.hasOwnProperty(pool) && pool !== devPool){
+                            if (!(pool in minerChanges)) minerChanges[pool] = [];
+                            for (let miner in freed_miners){
+                                if (freed_miners.hasOwnProperty(miner)){
+                                    minerChanges[pool].push(miner);
+                                    lowPools[pool] -= freed_miners[miner];
+                                    debug.balancer(`Moving overflow ${miner} for ${pool} for ${freed_miners[miner]} h/s`);
+                                    delete(freed_miners[miner]);
                                 }
                             }
                         }
