@@ -31,17 +31,17 @@
     {
       "port": 8080,
       "ssl": false,
-      "diff": 5000,
+      "diff": 5000
     },
     {
       "port": 8443,
       "ssl": true,
-      "diff": 5000,
+      "diff": 5000
     },
     {
       "port": 3333,
       "ssl": false,
-      "diff": 10000,
+      "diff": 10000
     }
   ],
   "bindAddress": "0.0.0.0",
