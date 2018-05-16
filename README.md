@@ -1,5 +1,14 @@
 # xmr-node-proxy
 
+Supports all known cryptonight/heavy/light coins:
+
+* Monero (XMR), MoneroV (XMV), Monero Original (XMO), Monero Classic (XMC), ...
+* Wownero (WOW), Masari (MSR), Electroneum (ETN), Graft (GRFT), Intense (ITNS)
+* Stellite (XTL)
+* Aeon (AEON), Turtlecoin (TRTL), IPBC/BitTube (TUBE)
+* Sumokoin (SUMO), Haven (XHV), Loki (LOKI)
+* ...
+
 
 ## Setup Instructions
 
@@ -78,13 +87,13 @@ for all initial miner connections via proxy.
 
 7. Blob type ("blob_type" option in pool config section) can be as follows
 
-	* cryptonote  - Monero forks like Sumokoin, Electroneum, Graft, Aeon
+	* cryptonote  - Monero forks like Sumokoin, Electroneum, Graft, Aeon, Intense
 
 	* cryptonote2 - Masari
 
-	* forknote    - Some old Bytecoin forks
+	* forknote    - Some old Bytecoin forks (do not even know which one)
 
-	* forknote2   - Bytecoin forks like Intense, Turtlecoin, IPBC
+	* forknote2   - Bytecoin forks like Turtlecoin, IPBC
 
 ## Known Issues
 
@@ -117,6 +126,8 @@ If you'd like to make a one time donation, the addresses are as follows:
 * GRFT - ```GACadqdXj5eNLnyNxvQ56wcmsmVCFLkHQKgtaQXNEE5zjMDJkWcMVju2aYtxbTnZgBboWYmHovuiH1Ahm4g2N5a7LuMQrpT```
 * MSR - ```5hnMXUKArLDRue5tWsNpbmGLsLQibt23MEsV3VGwY6MGStYwfTqHkff4BgvziprTitbcDYYpFXw2rEgXeipsABTtEmcmnCK```
 * ITNS - ```iz53aMEaKJ25zB8xku3FQK5VVvmu2v6DENnbGHRmn659jfrGWBH1beqAzEVYaKhTyMZcxLJAdaCW3Kof1DwTiTbp1DSqLae3e```
+* WOW - ```Wo3yjV8UkwvbJDCB1Jy7vvXv3aaQu3K8YMG6tbY3Jo2KApfyf5RByZiBXy95bzmoR3AvPgNq6rHzm98LoHTkzjiA2dY7sqQMJ```
+* XMV - ```4BDgQohRBqg2wFZ5ezYqCrNGjgECAttARdbh1fNkuAbd3HnNkSgas11QD9VFQMzbnvDD3Mfcky1LAFihkbEYph5oGAMLurw```
 * BTC - ```3BzvMuLStA388kYZ9nudfm8L22937dSPS3```
 * BCH - ```qrhww48p5s6zw9twhc7cujgwp7vym2k4vutem6f92p```
 * ETH - ```0xCF8BABC074C487Ae17F9Ce0394eab492E6A35658```
