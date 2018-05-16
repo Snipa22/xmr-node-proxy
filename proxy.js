@@ -108,6 +108,7 @@ function slaveMessageHandler(message) {
             message.data.forEach(function(hostname){
                 if(!(hostname in activePools)){
                     global.config.pools.forEach(function(poolData){
+                        if (!poolData.coin) poolData.coin = "xmr";
                         if (hostname === poolData.hostname){
                             activePools[hostname] = new Pool(poolData);
                         }
@@ -306,6 +307,7 @@ The master performs the following tasks:
  */
 function connectPools(){
     global.config.pools.forEach(function (poolData) {
+        if (!poolData.coin) poolData.coin = "xmr";
         if (activePools.hasOwnProperty(poolData.hostname)){
             return;
         }
@@ -984,6 +986,7 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage, m
         case 'login':
             let difficulty = portData.difficulty;
             let minerId = uuidV4();
+            if (!portData.coin) portData.coin = "xmr";
             miner = new Miner(minerId, params, ip, pushMessage, portData, minerSocket);
             if (!miner.valid_miner) {
                 console.warn(global.threadName + "Invalid miner, disconnecting due to: " + miner.error);
@@ -1457,6 +1460,7 @@ if (cluster.isMaster) {
     */
     process.on('message', slaveMessageHandler);
     global.config.pools.forEach(function(poolData){
+        if (!poolData.coin) poolData.coin = "xmr";
         activePools[poolData.hostname] = new Pool(poolData);
         if (poolData.default){
             defaultPools[poolData.coin] = poolData.hostname;

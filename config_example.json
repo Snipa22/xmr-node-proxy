@@ -9,7 +9,6 @@
       "username": "44qJYxdbuqSKarYnDSXB6KLbsH4yR65vpJe3ELLDii9i4ZgKpgQXZYR4AMJxBJbfbKZGWUxZU42QyZSsP4AyZZMbJBCrWr1",
       "password": "proxy",
       "keepAlive": true,
-      "coin": "xmr",
       "algo": "cryptonight/1",
       "blob_type": "cryptonote",
       "default": true
@@ -23,7 +22,6 @@
       "username": "44qJYxdbuqSKarYnDSXB6KLbsH4yR65vpJe3ELLDii9i4ZgKpgQXZYR4AMJxBJbfbKZGWUxZU42QyZSsP4AyZZMbJBCrWr1",
       "password": "proxy",
       "keepAlive": true,
-      "coin": "xmr",
       "algo": "cryptonight/1",
       "blob_type": "cryptonote",
       "default": false
@@ -34,19 +32,16 @@
       "port": 8080,
       "ssl": false,
       "diff": 5000,
-      "coin": "xmr"
     },
     {
       "port": 8443,
       "ssl": true,
       "diff": 5000,
-      "coin": "xmr"
     },
     {
       "port": 3333,
       "ssl": false,
       "diff": 10000,
-      "coin": "xmr"
     }
   ],
   "bindAddress": "0.0.0.0",
@@ -62,11 +57,6 @@
   "minerInactivityTime": "120",
   "coinSettings": {
     "xmr":{
-      "minDiff": 100,
-      "maxDiff": 300000,
-      "shareTargetTime": 15
-    },
-    "aeon":{
       "minDiff": 100,
       "maxDiff": 300000,
       "shareTargetTime": 15
