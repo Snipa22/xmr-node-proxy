@@ -207,7 +207,7 @@ function Pool(poolData){
     this.blob_type = poolData.blob_type;
 
     setInterval(function(pool) {
-        if (pool.keepAlive && is_active_pool(pool.hostname)) pool.sendData('keepalived');
+        if (pool.keepAlive && pool.socket && is_active_pool(pool.hostname)) pool.sendData('keepalived');
     }, 30000, this);
 
     this.connect = function(){
@@ -778,14 +778,14 @@ function handleNewBlockTemplate(blockTemplate, hostname){
 
 function is_active_pool(hostname) {
     let pool = activePools[hostname];
-    if ((!pool.socket) || !pool.active || pool.activeBlocktemplate === null) return false;
+    if ((cluster.isMaster && !pool.socket) || !pool.active || pool.activeBlocktemplate === null) return false;
 
     let top_height = 0;
     for (let poolName in activePools){
         if (!activePools.hasOwnProperty(poolName)) continue;
         let pool2 = activePools[poolName];
         if (pool2.coin != pool.coin) continue;
-        if ((!pool2.socket) || !pool2.active || pool2.activeBlocktemplate === null) continue;
+        if ((cluster.isMaster && !pool2.socket) || !pool2.active || pool2.activeBlocktemplate === null) continue;
         if (Math.abs(pool2.activeBlocktemplate.height - pool.activeBlocktemplate.height) > 1000) continue; // different coin templates, can't compare here
         if (pool2.activeBlocktemplate.height > top_height) top_height = pool2.activeBlocktemplate.height;
     }
