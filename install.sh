@@ -9,7 +9,7 @@ fi
 CURUSER=$(whoami)
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
-sudo DEBIAN_FRONTEND=noninteractive apt-get -y install git curl build-essential cmake
+sudo DEBIAN_FRONTEND=noninteractive apt-get -y install git curl build-essential cmake python-virtualenv libboost-all-dev
 cd ~
 git clone https://github.com/MoneroOcean/xmr-node-proxy
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash
