@@ -21,9 +21,9 @@ cd xmr-node-proxy
 git remote set-url origin https://github.com/MoneroOcean/xmr-node-proxy.git && git pull -X theirs --no-edit && npm update
 ```
 
-## Deployment via Docker on Windows 10 with the Fall Creators Update (1709) or newer
+## Deployment via Docker on Windows 10 with the Fall Creators Update (or newer)
 
-1. Install and run (Docker for Windows)[https://docs.docker.com/docker-for-windows/install/] with Linux containers mode.
+1. Install and run [Docker for Windows](https://docs.docker.com/docker-for-windows/install/) with Linux containers mode.
 
 2. Get xmr-node-proxy sources by downloading and unpacking the latest [xmr-node-proxy](https://github.com/MoneroOcean/xmr-node-proxy/archive/master.zip)
 archive to xmr-node-proxy-master directory.
