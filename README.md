@@ -54,19 +54,19 @@ docker cp config.json xnp:/xmr-node-proxy
 docker start --attach xnp
 ```
 
-8. Stop xnp Docker container:
+8. Stop xnp Docker container (to start it again with update):
 
 ```
 docker stop xnp
 ```
 
-9. Delete xnp Docker container:
+9. Delete xnp Docker container (if you want to create it again with different ports):
 
 ```
 docker rm xnp
 ```
 
-10. Delete xmr-node-proxy Docker image:
+10. Delete xmr-node-proxy Docker image (if you no longer need proxy):
 
 ```
 docker rmi xmr-node-proxy
