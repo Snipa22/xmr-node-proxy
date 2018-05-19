@@ -48,7 +48,7 @@ docker create -p 3333:3333 -p 8080:8080 -p 8443:8443 --name xnp xmr-node-proxy
 docker cp config.json xnp:/xmr-node-proxy
 ```
 
-7. Run xnp Docker container (or attach or already running one):
+7. Run xnp Docker container (or attach to already running one):
 
 ```
 docker start --attach xnp
