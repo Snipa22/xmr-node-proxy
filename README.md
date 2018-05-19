@@ -66,7 +66,7 @@ docker stop xnp
 docker rm xnp
 ```
 
-9. Delete xmr-node-proxy Docker image:
+10. Delete xmr-node-proxy Docker image:
 
 ```
 docker rmi xmr-node-proxy
