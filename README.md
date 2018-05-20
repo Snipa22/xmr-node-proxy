@@ -21,6 +21,55 @@ cd xmr-node-proxy
 git remote set-url origin https://github.com/MoneroOcean/xmr-node-proxy.git && git pull -X theirs --no-edit && npm update
 ```
 
+## Deployment via Installer on Linux
+
+1. Create a user 'nodeproxy' and assign a password (or add an SSH key. If you prefer that, you should already know how to do it)
+
+```bash
+useradd -d /home/nodeproxy -m -s /bin/bash nodeproxy
+passwd nodeproxy
+```
+
+2. Add your user to `/etc/sudoers`, this must be done so the script can sudo up and do it's job.  We suggest passwordless sudo.  Suggested line: `<USER> ALL=(ALL) NOPASSWD:ALL`.  Our sample builds use: `nodeproxy ALL=(ALL) NOPASSWD:ALL`
+
+```bash
+echo "nodeproxy ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+```
+
+3. Log in as the **NON-ROOT USER** you just created and run the [deploy script](https://raw.githubusercontent.com/MoneroOcean/xmr-node-proxy/master/install.sh).  This is very important!  This script will install the proxy to whatever user it's running under!
+
+```bash
+curl -L https://raw.githubusercontent.com/MoneroOcean/xmr-node-proxy/master/install.sh | bash
+```
+
+3. Once it's complete, copy `config_example.json` to `config.json` and edit as desired.
+4. Run: `source ~/.bashrc`  This will activate NVM and get things working for the following pm2 steps.
+8. Once you're happy with the settings, go ahead and start all the proxy daemon, commands follow.
+
+```shell
+cd ~/xmr-node-proxy/
+pm2 start proxy.js --name=proxy --log-date-format="YYYY-MM-DD HH:mm:ss:SSS Z"
+pm2 save
+```
+You can check the status of your proxy by either issuing
+
+```
+pm2 logs proxy
+```
+
+or using the pm2 monitor
+
+```
+pm2 monit
+```
+
+## Updating xmr-node-proxy
+
+```bash
+cd xmr-node-proxy
+./update.sh
+```
+
 ## Deployment via Docker on Windows 10 with the Fall Creators Update (or newer)
 
 1. Install and run [Docker for Windows](https://docs.docker.com/docker-for-windows/install/) with Linux containers mode.
@@ -72,54 +121,6 @@ docker rm xnp
 docker rmi xmr-node-proxy
 ```
 
-## Deployment via Installer
-
-1. Create a user 'nodeproxy' and assign a password (or add an SSH key. If you prefer that, you should already know how to do it)
-
-```bash
-useradd -d /home/nodeproxy -m -s /bin/bash nodeproxy
-passwd nodeproxy
-```
-
-2. Add your user to `/etc/sudoers`, this must be done so the script can sudo up and do it's job.  We suggest passwordless sudo.  Suggested line: `<USER> ALL=(ALL) NOPASSWD:ALL`.  Our sample builds use: `nodeproxy ALL=(ALL) NOPASSWD:ALL`
-
-```bash
-echo "nodeproxy ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-```
-
-3. Log in as the **NON-ROOT USER** you just created and run the [deploy script](https://raw.githubusercontent.com/MoneroOcean/xmr-node-proxy/master/install.sh).  This is very important!  This script will install the proxy to whatever user it's running under!
-
-```bash
-curl -L https://raw.githubusercontent.com/MoneroOcean/xmr-node-proxy/master/install.sh | bash
-```
-
-3. Once it's complete, copy `config_example.json` to `config.json` and edit as desired.
-4. Run: `source ~/.bashrc`  This will activate NVM and get things working for the following pm2 steps.
-8. Once you're happy with the settings, go ahead and start all the proxy daemon, commands follow.
-
-```shell
-cd ~/xmr-node-proxy/
-pm2 start proxy.js --name=proxy --log-date-format="YYYY-MM-DD HH:mm:ss:SSS Z"
-pm2 save
-```
-You can check the status of your proxy by either issuing
-
-```
-pm2 logs proxy
-```
-
-or using the pm2 monitor
-
-```
-pm2 monit
-```
-
-## Updating xmr-node-proxy
-
-```bash
-cd xmr-node-proxy
-./update.sh
-```
 
 ## Configuration BKMs
 
