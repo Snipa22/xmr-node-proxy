@@ -1,11 +1,20 @@
 # xmr-node-proxy
 
+## Deployment via Docker
+- *note* xmr-node-proxy needs requires a properly configured `config.json`. 
+	- `mv config.json.example config.json` and edit the newly created `config.json`
+	- `docker build -f ./Dockerfile .`
+    - `docker container run -v $(pwd)/config.json:/app/config.json -p 3333:3333 --name proxy -d jzgdev/xmr-node-proxy`
 
-## Setup Instructions
-
-Based on a clean Ubuntu 16.04 LTS minimal install
+- Monitor with `bash -c "clear && docker exec -it xmr sh" && pm2 monit`
 
 ## Deployment via Installer
+
+Compatible with:
+	
+- Ubuntu 14.04
+- FreeBSD 11.1 
+- macOS High Sierra
 
 1. Create a user 'nodeproxy' and assign a password (or add an SSH key. If you prefer that, you should already know how to do it)
 
@@ -79,6 +88,7 @@ The proxy is pre-configured for a 1% donation. This is easily toggled inside of 
 
 * XMR - 44Ldv5GQQhP7K7t3ZBdZjkPA7Kg7dhHwk3ZM3RJqxxrecENSFx27Vq14NAMAd2HBvwEPUVVvydPRLcC69JCZDHLT2X5a4gr
 * BTC - 15fkPTtN8cRXD3moKWDoXjuiTaS9FgA3UE
+* ETH - 0x490184777c1eeb306927ded6baa6edf46d08298c
 
 ## Installation/Configuration Assistance
 
