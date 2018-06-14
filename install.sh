@@ -15,6 +15,7 @@ git clone https://github.com/MoneroOcean/xmr-node-proxy
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash
 source ~/.nvm/nvm.sh
 nvm install v8.9.3
+nvm alias default v8.9.3
 cd ~/xmr-node-proxy
 npm install || exit 1
 npm install -g pm2
