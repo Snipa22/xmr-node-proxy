@@ -931,6 +931,8 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
     };
 
     this.getJob = this.coinFuncs.getJob;
+
+    this.setNewDiff(this.difficulty);
 }
 
 // Slave Functions
