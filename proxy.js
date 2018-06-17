@@ -915,6 +915,9 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
         if (this.newDiff < this.coinSettings.minDiff) {
             this.newDiff = this.coinSettings.minDiff;
         }
+        if (activePools[this.pool].activeBlocktemplate !== null && this.newDiff > activePools[this.pool].activeBlocktemplate.targetDiff) {
+            this.newDiff = activePools[this.pool].activeBlocktemplate.targetDiff;
+        }
         if (this.difficulty === this.newDiff) {
             return;
         }
