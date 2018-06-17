@@ -903,7 +903,10 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
     // Support functions for how miners activate and run.
     this.updateDifficulty = function(){
         if (this.hashes > 0 && !this.fixed_diff) {
-            this.setNewDiff(Math.floor(this.hashes / (Math.floor((Date.now() - this.connectTime) / 1000))) * this.coinSettings.shareTargetTime);
+            const new_diff = Math.floor(this.hashes / (Math.floor((Date.now() - this.connectTime) / 1000))) * this.coinSettings.shareTargetTime;
+            if (this.setNewDiff(new_diff)) {
+                this.messageSender('job', this.getJob(activeMiners[this.id], activePools[this.pool].activeBlocktemplate));
+            }
         }
     };
 
@@ -919,7 +922,7 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
             this.newDiff = activePools[this.pool].activeBlocktemplate.targetDiff;
         }
         if (this.difficulty === this.newDiff) {
-            return;
+            return false;
         }
         debug.diff(global.threadName + "Difficulty change to: " + this.newDiff + " For: " + this.logString);
         if (this.hashes > 0){
@@ -927,7 +930,7 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
                 Math.floor(this.hashes/(Math.floor((Date.now() - this.connectTime)/1000))) + " hashes/second or: " +
                 Math.floor(this.hashes/(Math.floor((Date.now() - this.connectTime)/1000))) *this.coinSettings.shareTargetTime + " difficulty versus: " + this.newDiff);
         }
-        this.messageSender('job', this.getJob(activeMiners[this.id], activePools[this.pool].activeBlocktemplate));
+        return true;
     };
 
     this.getJob = this.coinFuncs.getJob;
