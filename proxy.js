@@ -1172,7 +1172,7 @@ function activateHTTP() {
 			<th><TAB INDENT=180 ID=t7>Ping Ago</th>
 			<th><TAB INDENT=220 ID=t8>Connected Ago</th>
 			<th><TAB INDENT=260 ID=t9>Pool</th>
-			<th><TAB INDENT=300 ID=t10>Agent</th>
+			<th><TAB INDENT=320 ID=t10>Agent</th>
 		</thead>
 		<tbody>
 			${tableBody}
