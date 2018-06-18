@@ -1094,19 +1094,23 @@ function activateHTTP() {
 		if (global.config.httpUser && global.config.httpPass) {
 			var auth = req.headers['authorization'];  // auth is in base64(username:password)  so we need to decode the base64
 			if (!auth) {
-				res.writeHead(401);
-				res.end();
+				res.statusCode = 401;
+				res.setHeader('WWW-Authenticate', 'Basic realm="Secure Area"');
+				res.end('<html><body>Unauthorized XNP access.</body></html>');
 				return;
 			}
+			console.debug("Authorization Header is: ", auth);
 			var tmp = auth.split(' ');
 	                var buf = new Buffer(tmp[1], 'base64');
         	        var plain_auth = buf.toString();
+			console.log("Decoded Authorization ", plain_auth);
 			var creds = plain_auth.split(':');
 			var username = creds[0];
 			var password = creds[1];
 			if (username !== global.config.httpUser || password !== global.config.httpPass) {
-				res.writeHead(401);
-				res.end();
+				res.statusCode = 401;
+				res.setHeader('WWW-Authenticate', 'Basic realm="Secure Area"');
+				res.end('<html><body>Wrong login.</body></html>');
 				return;
 			}
 		}
