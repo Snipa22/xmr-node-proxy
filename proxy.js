@@ -33,7 +33,8 @@ let debug = {
     shares: require('debug')('shares'),
     miners: require('debug')('miners'),
     workers: require('debug')('workers'),
-    balancer: require('debug')('balancer')
+    balancer: require('debug')('balancer'),
+    misc: require('debug')('misc')
 };
 global.threadName = '';
 let nonceCheck = new RegExp("^[0-9a-f]{8}$");
@@ -1099,11 +1100,11 @@ function activateHTTP() {
 				res.end('<html><body>Unauthorized XNP access.</body></html>');
 				return;
 			}
-			debug.workers("Authorization Header is: ", auth);
+			debug.misc("Authorization Header is: ", auth);
 			var tmp = auth.split(' ');
 	                var buf = new Buffer(tmp[1], 'base64');
         	        var plain_auth = buf.toString();
-			debug.workers("Decoded Authorization ", plain_auth);
+			debug.misc("Decoded Authorization ", plain_auth);
 			var creds = plain_auth.split(':');
 			var username = creds[0];
 			var password = creds[1];
