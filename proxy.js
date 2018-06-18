@@ -896,7 +896,8 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
             pool: this.pool,
             id: this.id,
             identifier: this.identifier,
-            ip: this.ip
+            ip: this.ip,
+            agent: this.agent,
         };
     };
 
@@ -1117,6 +1118,7 @@ function activateHTTP() {
 						<td><TAB TO=t7>${moment.unix(miner.lastContact).fromNow(true)}</td>
 						<td><TAB TO=t8>${moment(miner.connectTime).fromNow(true)}</td>
 						<td><TAB TO=t9>${miner.pool}</td>
+						<td><TAB TO=t10>${miner.agent}</td>
 					</tr>
 					`;
 				}
@@ -1170,6 +1172,7 @@ function activateHTTP() {
 			<th><TAB INDENT=180 ID=t7>Ping Ago</th>
 			<th><TAB INDENT=220 ID=t8>Connected Ago</th>
 			<th><TAB INDENT=260 ID=t9>Pool</th>
+			<th><TAB INDENT=300 ID=t10>Agent</th>
 		</thead>
 		<tbody>
 			${tableBody}
