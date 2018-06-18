@@ -1099,7 +1099,7 @@ function activateHTTP() {
 				res.end('<html><body>Unauthorized XNP access.</body></html>');
 				return;
 			}
-			console.log("Authorization Header is: ", auth);
+			console.debug("Authorization Header is: ", auth);
 			var tmp = auth.split(' ');
 	                var buf = new Buffer(tmp[1], 'base64');
         	        var plain_auth = buf.toString();
