@@ -1091,6 +1091,26 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage, m
 
 function activateHTTP() {
 	var jsonServer = http.createServer((req, res) => {
+		if (global.config.httpUser && global.config.httpPass) {
+			var auth = req.headers['authorization'];  // auth is in base64(username:password)  so we need to decode the base64
+			if (!auth) {
+				res.writeHead(401);
+				res.end();
+				return;
+			}
+			var tmp = auth.split(' ');
+	                var buf = new Buffer(tmp[1], 'base64');
+        	        var plain_auth = buf.toString();
+			var creds = plain_auth.split(':');
+			var username = creds[0];
+			var password = creds[1];
+			if (username !== global.config.httpUser || password !== global.config.httpPass) {
+				res.writeHead(401);
+				res.end();
+				return;
+			}
+		}
+
 		if (req.url == "/") {
 			let totalWorkers = 0, totalHashrate = 0;
 			let poolHashrate = [];
