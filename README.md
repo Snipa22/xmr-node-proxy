@@ -9,6 +9,7 @@ Supports all known cryptonight/heavy/light coins:
 * Sumokoin (SUMO), Haven (XHV), Loki (LOKI)
 * ...
 
+... except Fonero.
 
 ## Setup Instructions
 
