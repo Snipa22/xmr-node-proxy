@@ -1143,7 +1143,7 @@ function activateHTTP() {
 						<td><TAB TO=t7>${moment.unix(miner.lastContact).fromNow(true)}</td>
 						<td><TAB TO=t8>${moment(miner.connectTime).fromNow(true)}</td>
 						<td><TAB TO=t9>${miner.pool}</td>
-						<td><TAB TO=t10>${miner.agent}</td>
+						<td><TAB TO=t10><div class="tooltip">Info<span class="tooltiptext">${miner.agent}</div></td>
 					</tr>
 					`;
 				}
@@ -1181,6 +1181,43 @@ function activateHTTP() {
 	    background-color: #eeeeee;
 	    cursor: pointer;
 	  }
+          .tooltip {
+              position: relative;
+              display: inline-block;
+              border-bottom: 1px dotted black;
+          }
+
+          .tooltip .tooltiptext {
+              visibility: hidden;
+              width: 140px;
+              background-color: #000;
+              color: #fff;
+              text-align: center;
+              padding: 5px 0;
+              border-radius: 6px;
+              position: absolute;
+              z-index: 1;
+              bottom: 125%;
+              left: 50%;
+              margin-left: -70px;
+              opacity: 0;
+              transition: opacity 0.3s;
+          }
+
+          .tooltip .tooltiptext::after {
+              content: "";
+              position: absolute;
+              top: 100%;
+              left: 50%;
+              margin-left: -5px;
+              border-width: 5px;
+              border-style: solid;
+              border-color: #000 transparent transparent transparent;
+          }
+          .tooltip:hover .tooltiptext {
+              visibility: visible;
+              opacity: 1;
+          }
 	</style>
 </head><body>
 	<h1>XNP v${PROXY_VERSION} Hashrate Monitor</h1>
