@@ -1132,6 +1132,7 @@ function activateHTTP() {
 					totalHashrate += miner.avgSpeed;
 					if (!poolHashrate[miner.pool]) poolHashrate[miner.pool] = 0;
 					poolHashrate[miner.pool] += miner.avgSpeed;
+					let agent_parts = miner.agent.split(" ");
 					tableBody += `
 					<tr>
 						<td><TAB TO=t1>${name}</td>
@@ -1143,7 +1144,7 @@ function activateHTTP() {
 						<td><TAB TO=t7>${moment.unix(miner.lastContact).fromNow(true)}</td>
 						<td><TAB TO=t8>${moment(miner.connectTime).fromNow(true)}</td>
 						<td><TAB TO=t9>${miner.pool}</td>
-						<td><TAB TO=t10><div class="tooltip">Info<span class="tooltiptext">${miner.agent}</div></td>
+						<td><TAB TO=t10><div class="tooltip">${agent_parts[0]}<span class="tooltiptext">${miner.agent}</div></td>
 					</tr>
 					`;
 				}
