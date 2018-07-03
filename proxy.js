@@ -637,7 +637,7 @@ function enumerateWorkerStats() {
                                 delete activeWorkers[poolID][workerID];
                                 continue;
                             }
-                            stats.miners += 1;
+                            ++ stats.miners;
                             stats.hashes += workerData.hashes;
                             stats.hashRate += workerData.avgSpeed;
                             stats.diff += workerData.diff;
