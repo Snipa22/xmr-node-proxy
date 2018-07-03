@@ -880,11 +880,12 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
     this.identifier = pass_split[0];
 
     this.minerStats = function(){
-        if (this.socket.destroyed){
+        if (this.socket.destroyed && !global.config.keepOfflineMiners){
             delete activeMiners[this.id];
             return;
         }
         return {
+	    active: !this.socket.destroyed,
             shares: this.shares,
             blocks: this.blocks,
             hashes: this.hashes,
@@ -1001,6 +1002,17 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage, m
             }
             process.send({type: 'newMiner', data: miner.port});
             activeMiners[minerId] = miner;
+            // clean old miners with the same name/ip/agent
+            if (global.config.keepOfflineMiners) {
+                for (let miner_id in activeMiners) {
+                    if (activeMiners.hasOwnProperty(miner_id)) {
+                        let realMiner = activeMiners[miner_id];
+                        if (realMiner.socket.destroyed && realMiner.identifier === miner.identifier && realMiner.ip === miner.ip && realMiner.agent === miner.agent) {
+                            delete activeMiners[miner_id];
+                        }
+                    }
+                }
+            } 
             sendReply(null, {
                 id: minerId,
                 job: miner.getJob(miner, activePools[miner.pool].activeBlocktemplate),
@@ -1117,37 +1129,58 @@ function activateHTTP() {
 		}
 
 		if (req.url == "/") {
-			let totalWorkers = 0, totalHashrate = 0;
-			let poolHashrate = [];
-			let tablePool = "";
-			let tableBody = "";
+		        let miners = {};
+		        let offline_miners = {};
+			let miner_names = {};
     			for (let workerID in activeWorkers) {
 				if (!activeWorkers.hasOwnProperty(workerID)) continue;
 				for (let minerID in activeWorkers[workerID]){
                 			if (!activeWorkers[workerID].hasOwnProperty(minerID)) continue;
 					let miner = activeWorkers[workerID][minerID];
 					if (typeof(miner) === 'undefined' || !miner) continue;	
-					let name = (miner.identifier && miner.identifier != "x") ? miner.identifier + " (" + miner.ip + ")" : miner.ip;
-					++ totalWorkers;
-					totalHashrate += miner.avgSpeed;
-					if (!poolHashrate[miner.pool]) poolHashrate[miner.pool] = 0;
-					poolHashrate[miner.pool] += miner.avgSpeed;
-					let agent_parts = miner.agent.split(" ");
-					tableBody += `
-					<tr>
-						<td><TAB TO=t1>${name}</td>
-						<td><TAB TO=t2>${miner.avgSpeed}</td>
-						<td><TAB TO=t3>${miner.diff}</td>
-						<td><TAB TO=t4>${miner.shares}</td>
-						<td><TAB TO=t5>${miner.hashes}</td>
-						<td><TAB TO=t6>${moment.unix(miner.lastShare).fromNow(true)}</td>
-						<td><TAB TO=t7>${moment.unix(miner.lastContact).fromNow(true)}</td>
-						<td><TAB TO=t8>${moment(miner.connectTime).fromNow(true)}</td>
-						<td><TAB TO=t9>${miner.pool}</td>
-						<td><TAB TO=t10><div class="tooltip">${agent_parts[0]}<span class="tooltiptext">${miner.agent}</div></td>
-					</tr>
-					`;
+					if (miner.active) {
+  						miners[miner.id] = miner;
+						const name = (miner.identifier && miner.identifier != "x") ? miner.identifier + " (" + miner.ip + ")" : miner.ip;
+                                                miner_names[name] = 1;
+                                        } else {
+						offline_miners[miner.id] = miner;
+					}
 				}
+			}
+    			for (let offline_miner_id in offline_miners) {
+				const miner = offline_miners[offline_miner_id];
+				const name = (miner.identifier && miner.identifier != "x") ? miner.identifier + " (" + miner.ip + ")" : miner.ip;
+				if (name in miner_names) continue;
+				miners[miner.id] = miner;
+				miner_names[name] = 1;
+			}
+			let totalWorkers = 0, totalHashrate = 0;
+			let poolHashrate = [];
+			let tablePool = "";
+			let tableBody = "";
+    			for (let miner_id in miners) {
+				const miner = miners[miner_id];
+				const name = (miner.identifier && miner.identifier != "x") ? miner.identifier + " (" + miner.ip + ")" : miner.ip;
+				++ totalWorkers;
+				totalHashrate += miner.avgSpeed;
+				if (!poolHashrate[miner.pool]) poolHashrate[miner.pool] = 0;
+				poolHashrate[miner.pool] += miner.avgSpeed;
+				let avgSpeed = miner.active ? miner.avgSpeed : "offline";
+				let agent_parts = miner.agent.split(" ");
+				tableBody += `
+				<tr>
+					<td><TAB TO=t1>${name}</td>
+					<td><TAB TO=t2>${avgSpeed}</td>
+					<td><TAB TO=t3>${miner.diff}</td>
+					<td><TAB TO=t4>${miner.shares}</td>
+					<td><TAB TO=t5>${miner.hashes}</td>
+					<td><TAB TO=t6>${moment.unix(miner.lastShare).fromNow(true)}</td>
+					<td><TAB TO=t7>${moment.unix(miner.lastContact).fromNow(true)}</td>
+					<td><TAB TO=t8>${moment(miner.connectTime).fromNow(true)}</td>
+					<td><TAB TO=t9>${miner.pool}</td>
+					<td><TAB TO=t10><div class="tooltip">${agent_parts[0]}<span class="tooltiptext">${miner.agent}</div></td>
+				</tr>
+				`;
 			}
     			for (let poolName in poolHashrate) {
 				let poolPercentage = (100*poolHashrate[poolName]/totalHashrate).toFixed(2);
