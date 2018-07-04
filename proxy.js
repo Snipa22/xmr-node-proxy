@@ -1129,6 +1129,8 @@ function activateHTTP() {
 		}
 
 		if (req.url == "/") {
+			let totalWorkers = 0, totalHashrate = 0;
+			let poolHashrate = [];
 		        let miners = {};
 		        let offline_miners = {};
 			let miner_names = {};
@@ -1142,6 +1144,10 @@ function activateHTTP() {
   						miners[miner.id] = miner;
 						const name = (miner.identifier && miner.identifier != "x") ? miner.identifier + " (" + miner.ip + ")" : miner.ip;
                                                 miner_names[name] = 1;
+						++ totalWorkers;
+						totalHashrate += miner.avgSpeed;
+						if (!poolHashrate[miner.pool]) poolHashrate[miner.pool] = 0;
+						poolHashrate[miner.pool] += miner.avgSpeed;
                                         } else {
 						offline_miners[miner.id] = miner;
 					}
@@ -1154,17 +1160,11 @@ function activateHTTP() {
 				miners[miner.id] = miner;
 				miner_names[name] = 1;
 			}
-			let totalWorkers = 0, totalHashrate = 0;
-			let poolHashrate = [];
 			let tablePool = "";
 			let tableBody = "";
     			for (let miner_id in miners) {
 				const miner = miners[miner_id];
 				const name = (miner.identifier && miner.identifier != "x") ? miner.identifier + " (" + miner.ip + ")" : miner.ip;
-				++ totalWorkers;
-				totalHashrate += miner.avgSpeed;
-				if (!poolHashrate[miner.pool]) poolHashrate[miner.pool] = 0;
-				poolHashrate[miner.pool] += miner.avgSpeed;
 				let avgSpeed = miner.active ? miner.avgSpeed : "offline";
 				let agent_parts = miner.agent.split(" ");
 				tableBody += `
