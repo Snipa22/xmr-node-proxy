@@ -57,6 +57,7 @@
   "httpUser": "",
   "httpPass": "",
   "minerInactivityTime": "120",
+  "keepOfflineMiners": 0,
   "coinSettings": {
     "xmr":{
       "minDiff": 100,
