@@ -1204,7 +1204,7 @@ function activateHTTP() {
 	
 	  .sorted-table {
 	    margin: auto;
-	    width: 60%;
+	    width: 95%;
 	    text-align: center;
 	  }
 	
