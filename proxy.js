@@ -751,7 +751,7 @@ function handlePoolMessage(jsonData, hostname){
         }
     }
 }
-    	
+
 function handleNewBlockTemplate(blockTemplate, hostname){
     let pool = activePools[hostname];
     console.log(`Received new block template on ${blockTemplate.height} height with ${blockTemplate.target_diff} target difficulty from ${pool.hostname}`);
@@ -1012,7 +1012,7 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage, m
                         }
                     }
                 }
-            } 
+            }
             sendReply(null, {
                 id: minerId,
                 job: miner.getJob(miner, activePools[miner.pool].activeBlocktemplate),
@@ -1139,7 +1139,7 @@ function activateHTTP() {
 				for (let minerID in activeWorkers[workerID]){
                 			if (!activeWorkers[workerID].hasOwnProperty(minerID)) continue;
 					let miner = activeWorkers[workerID][minerID];
-					if (typeof(miner) === 'undefined' || !miner) continue;	
+					if (typeof(miner) === 'undefined' || !miner) continue;
 					if (miner.active) {
   						miners[miner.id] = miner;
 						const name = (miner.identifier && miner.identifier != "x") ? miner.identifier + " (" + miner.ip + ")" : miner.ip;
@@ -1187,13 +1187,12 @@ function activateHTTP() {
 				let targetDiff = activePools[poolName].activeBlocktemplate ? activePools[poolName].activeBlocktemplate.targetDiff : "?";
 				tablePool += `<h2> ${poolName}: ${poolHashrate[poolName]} H/s or ${poolPercentage}% (${targetDiff} diff)</h2>
 				`;
-			}	
+			}
 			res.writeHead(200, {'Content-type':'text/html'});
 			res.write(`
 <html lang="en"><head>
 	<title>XNP v${PROXY_VERSION} Hashrate Monitor</title>
 	<meta charset="utf-8">
-	<meta http-equiv="refresh" content="60">
 	<link rel="shortcut icon" href="data:image/png;base64,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">
 	<style>
 	  html, body {
@@ -1201,17 +1200,36 @@ function activateHTTP() {
 	    font-size: 14px;
 	    text-align: center;
 	  }
-	
+
+    .light {
+      color: #000;
+      background-color: #fff;
+    }
+
+    .dark {
+      color: #ccc;
+      background-color: #2a2a2a;
+    }
+
+    .header {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select:none;
+        user-select:none;
+        o-user-select:none;
+        cursor: hand;
+      }
+
 	  .sorted-table {
 	    margin: auto;
 	    width: 95%;
 	    text-align: center;
 	  }
-	
+
 	  .sorted-table td, .sorted-table th {
 	    border-bottom: 1px solid #d9d9d9;
 	  }
-	
+
 	  .hover {
 	    background-color: #eeeeee;
 	    cursor: pointer;
@@ -1254,27 +1272,29 @@ function activateHTTP() {
               opacity: 1;
           }
 	</style>
-</head><body>
-	<h1>XNP v${PROXY_VERSION} Hashrate Monitor</h1>
-	<h2>Workers: ${totalWorkers}, Hashrate: ${totalHashrate}</h2>
-	${tablePool}
-	<table class="sorted-table">
-		<thead>
-			<th><TAB INDENT=0  ID=t1>Name</th>
-			<th><TAB INDENT=60 ID=t2>Hashrate</th>
-			<th><TAB INDENT=80 ID=t3>Difficulty</th>
-			<th><TAB INDENT=100 ID=t4>Shares</th>
-			<th><TAB INDENT=120 ID=t5>Hashes</th>
-			<th><TAB INDENT=140 ID=t6>Share Ago</th>
-			<th><TAB INDENT=180 ID=t7>Ping Ago</th>
-			<th><TAB INDENT=220 ID=t8>Connected Ago</th>
-			<th><TAB INDENT=260 ID=t9>Pool</th>
-			<th><TAB INDENT=320 ID=t10>Agent</th>
-		</thead>
-		<tbody>
-			${tableBody}
-		</tbody>
-	</table>
+</head><body class="${global.config.theme}">
+    <div title="Toggle theme..."  onclick="theme(body)"><h1 class="header" unselectable="on" onselectstart="return false;" onmousedown="return false;">XNP v${PROXY_VERSION} Hashrate Monitor</h1></div>
+    <div id="content">
+    	<h2>Workers: ${totalWorkers}, Hashrate: ${totalHashrate}</h2>
+    	${tablePool}
+    	<table class="sorted-table">
+    		<thead>
+    			<th><TAB INDENT=0  ID=t1>Name</th>
+    			<th><TAB INDENT=60 ID=t2>Hashrate</th>
+    			<th><TAB INDENT=80 ID=t3>Difficulty</th>
+    			<th><TAB INDENT=100 ID=t4>Shares</th>
+    			<th><TAB INDENT=120 ID=t5>Hashes</th>
+    			<th><TAB INDENT=140 ID=t6>Share Ago</th>
+    			<th><TAB INDENT=180 ID=t7>Ping Ago</th>
+    			<th><TAB INDENT=220 ID=t8>Connected Ago</th>
+    			<th><TAB INDENT=260 ID=t9>Pool</th>
+    			<th><TAB INDENT=320 ID=t10>Agent</th>
+    		</thead>
+    		<tbody>
+    			${tableBody}
+    		</tbody>
+    	</table>
+  </div>
 	<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 	<script>
 	    $('table.sorted-table thead th').on("mouseover", function() {
@@ -1285,9 +1305,9 @@ function activateHTTP() {
 	    }).on("mouseout", function() {
 	      $("td, th").removeClass("hover");
 	    });
-	
+
 	    var thIndex = 0, thInc = 1, curThIndex = null;
-	
+
 	    $(function() {
 	      $('table.sorted-table thead th').click(function() {
 	        thIndex = $(this).index();
@@ -1309,13 +1329,13 @@ function activateHTTP() {
         	} else {
 	          sorting = sorting.sort(function(a, b){return b.localeCompare(a)});
 	        }
-	
+
 	        if (thIndex == curThIndex) {
 	          thInc = 1 - thInc;
 	        } else {
 	          thInc = 0;
 	        }
-	        
+
 	        curThIndex = thIndex;
 	        sortIt();
 	      });
@@ -1328,6 +1348,21 @@ function activateHTTP() {
 	      }
 	      $('table.sorted-table > tbody').html(tbodyHtml);
 	    }
+
+      function theme(body) {
+            var className = body.getAttribute("class");
+            if (className == "light") {
+                body.className = "dark";
+                global.config.theme = "dark";
+            } else {
+                body.className = "light";
+                global.config.theme = "light";
+            }
+        }
+
+        window.setInterval(function(){
+            $( "#content" ).load( "/ #content" );
+          }, ${global.config.refreshTime} * 1000);
 	</script>
 </body></html>
 `);
@@ -1553,7 +1588,7 @@ if (cluster.isMaster) {
     connectPools();
     setInterval(enumerateWorkerStats, 15*1000);
     setInterval(balanceWorkers, 90*1000);
-    if (global.config.httpEnable) { 
+    if (global.config.httpEnable) {
         console.log("Activating Web API server on " + (global.config.httpAddress || "localhost") + ":" + (global.config.httpPort || "8081"));
         activateHTTP();
     }

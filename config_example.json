@@ -58,6 +58,8 @@
   "httpPass": "",
   "minerInactivityTime": "120",
   "keepOfflineMiners": 0,
+  "refreshTime": 30,
+  "theme": "light",
   "coinSettings": {
     "xmr":{
       "minDiff": 100,
