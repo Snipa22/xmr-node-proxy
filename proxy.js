@@ -1361,7 +1361,70 @@ function activateHTTP() {
         }
 
         window.setInterval(function(){
-            $( "#content" ).load( "/ #content" );
+            $( "#content" ).load( "/ #content", function() {
+              $('table.sorted-table thead th').on("mouseover", function() {
+        	      var el = $(this),
+        	      pos = el.index();
+        	      el.addClass("hover");
+        	      $('table.sorted-table > tbody > tr > td').filter(":nth-child(" + (pos+1) + ")").addClass("hover");
+        	    }).on("mouseout", function() {
+        	      $("td, th").removeClass("hover");
+        	    });
+
+        	    var thIndex = 0, thInc = 1, curThIndex = null;
+
+        	    $(function() {
+        	      $('table.sorted-table thead th').click(function() {
+        	        thIndex = $(this).index();
+        	        sorting = [];
+        	        tbodyHtml = null;
+        	        $('table.sorted-table > tbody > tr').each(function() {
+        	          var str = $(this).children('td').eq(thIndex).html();
+        	          var re1 = /^<.+>(\\d+)<\\/.+>$/;
+        	          var m;
+        	          if (m = re1.exec(str)) {
+        	            var pad = "000000000000";
+        	            str = (pad + Number(m[1])).slice(-pad.length);
+        	          }
+        	          sorting.push(str + ', ' + $(this).index());
+        	        });
+
+        	        if (thIndex != curThIndex || thInc == 1) {
+        	          sorting = sorting.sort();
+                	} else {
+        	          sorting = sorting.sort(function(a, b){return b.localeCompare(a)});
+        	        }
+
+        	        if (thIndex == curThIndex) {
+        	          thInc = 1 - thInc;
+        	        } else {
+        	          thInc = 0;
+        	        }
+
+        	        curThIndex = thIndex;
+        	        sortIt();
+        	      });
+        	    })
+
+        	    function sortIt() {
+        	      for (var sortingIndex = 0; sortingIndex < sorting.length; sortingIndex++) {
+        	        rowId = parseInt(sorting[sortingIndex].split(', ')[1]);
+        	        tbodyHtml = tbodyHtml + $('table.sorted-table > tbody > tr').eq(rowId)[0].outerHTML;
+        	      }
+        	      $('table.sorted-table > tbody').html(tbodyHtml);
+        	    }
+
+              function theme(body) {
+                    var className = body.getAttribute("class");
+                    if (className == "light") {
+                        body.className = "dark";
+                        global.config.theme = "dark";
+                    } else {
+                        body.className = "light";
+                        global.config.theme = "light";
+                    }
+                }
+            });
           }, ${global.config.refreshTime} * 1000);
 	</script>
 </body></html>
