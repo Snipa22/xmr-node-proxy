@@ -1162,7 +1162,6 @@ function activateHTTP() {
 			}
 			let tablePool = "";
 			let tableBody = "";
-            if (!global.config.moDashboard) global.config.moDashboard = false;
     			for (let miner_id in miners) {
 				const miner = miners[miner_id];
 				const name = (miner.identifier && miner.identifier != "x") ? miner.identifier + " (" + miner.ip + ")" : miner.ip;
@@ -1186,12 +1185,12 @@ function activateHTTP() {
     			for (let poolName in poolHashrate) {
 				let poolPercentage = (100*poolHashrate[poolName]/totalHashrate).toFixed(2);
 				let targetDiff = activePools[poolName].activeBlocktemplate ? activePools[poolName].activeBlocktemplate.targetDiff : "?";
-                let walletId = activePools[poolName].username
-				if (global.config.moDashboard == true && poolName.includes("moneroocean")) {
-                    tablePool += `<a class="${global.config.theme}" href="https://moneroocean.stream/#/dashboard?addr=${walletId}" title="MoneroOcean Dashboard" target="_blank"><h2> ${poolName}: ${poolHashrate[poolName]} H/s or ${poolPercentage}% (${targetDiff} diff)</h2></a>`;
-                } else {
-                    tablePool += `<h2> ${poolName}: ${poolHashrate[poolName]} H/s or ${poolPercentage}% (${targetDiff} diff)</h2></a>`;
-                }
+                		let walletId = activePools[poolName].username
+				if (poolName.includes("moneroocean")) {
+					tablePool += `<a class="${global.config.theme}" href="https://moneroocean.stream/#/dashboard?addr=${walletId}" title="MoneroOcean Dashboard" target="_blank"><h2> ${poolName}: ${poolHashrate[poolName]} H/s or ${poolPercentage}% (${targetDiff} diff)</h2></a>`;
+				} else {
+					tablePool += `<h2> ${poolName}: ${poolHashrate[poolName]} H/s or ${poolPercentage}% (${targetDiff} diff)</h2></a>`;
+				}
 			}
 
       //expect old config
