@@ -60,6 +60,7 @@
   "keepOfflineMiners": 0,
   "refreshTime": 30,
   "theme": "light",
+  "moDashboard": false,
   "coinSettings": {
     "xmr":{
       "minDiff": 100,
