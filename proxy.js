@@ -783,7 +783,6 @@ function handlePoolMessage(jsonData, hostname){
         if (jsonData.error !== null){
             console.error(`${global.threadName}Error response from pool ${pool.hostname}: ${JSON.stringify(jsonData.error)}`);
             activePools[hostname].disable();
-            setTimeout(activePools[hostname].connect, 30*1000, pool.hostname);
             return;
         }
         let sendLog = pool.sendLog[jsonData.id];
