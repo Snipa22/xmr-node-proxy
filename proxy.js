@@ -226,7 +226,7 @@ function Pool(poolData){
         this.active = false;
     };
 
-    this.connect = function(){
+    this.connect = function(hostname){
 	function connect2(ssl, port, hostname, allowSelfSignedSSL) {
                 try {
                     if (activePools[hostname].socket !== null){
@@ -255,8 +255,9 @@ function Pool(poolData){
 	        }
 	}
 
-        activePools[this.hostname].disable();
-	connect2(this.ssl, this.port, this.hostname, this.allowSelfSignedSSL);
+	let pool = activePools[hostname];
+        pool.disable();
+	connect2(pool.ssl, pool.port, pool.hostname, pool.allowSelfSignedSSL);
     };
     this.sendData = function (method, params) {
         if (typeof params === 'undefined'){
@@ -758,11 +759,11 @@ function poolSocket(hostname){
     }).on('error', (err) => {
         console.warn(`${global.threadName}Pool socket error from ${pool.hostname}: ${err}`);
         activePools[pool.hostname].disable();
-        setTimeout(activePools[pool.hostname].connect, 30*1000);
+        setTimeout(activePools[pool.hostname].connect, 30*1000, pool.hostname);
     }).on('close', () => {
         console.warn(`${global.threadName}Pool socket closed from ${pool.hostname}`);
         activePools[pool.hostname].disable();
-        setTimeout(activePools[pool.hostname].connect, 30*1000);
+        setTimeout(activePools[pool.hostname].connect, 30*1000, pool.hostname);
     });
     socket.setKeepAlive(true);
     socket.setEncoding('utf8');
@@ -782,7 +783,7 @@ function handlePoolMessage(jsonData, hostname){
         if (jsonData.error !== null){
             console.error(`${global.threadName}Error response from pool ${pool.hostname}: ${JSON.stringify(jsonData.error)}`);
             activePools[hostname].disable();
-            setTimeout(activePools[hostname].connect, 30*1000);
+            setTimeout(activePools[hostname].connect, 30*1000, pool.hostname);
             return;
         }
         let sendLog = pool.sendLog[jsonData.id];
