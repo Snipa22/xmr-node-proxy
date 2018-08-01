@@ -947,8 +947,8 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
             identifier: this.identifier,
             ip: this.ip,
             agent: this.agent,
-            algo: this.algo,
-            algo_perf: this.algo_perf,
+            algos: this.algos,
+            algos_perf: this.algos_perf,
         };
     };
 
