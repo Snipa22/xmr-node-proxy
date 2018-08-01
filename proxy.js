@@ -217,6 +217,18 @@ function Pool(poolData){
         if (pool.keepAlive && pool.socket && is_active_pool(pool.hostname)) pool.sendData('keepalived');
     }, 30000, this);
 
+    this.close_socket = function(){
+        try {
+            if (this.socket !== null){
+                this.socket.end();
+                this.socket.destroy();
+            }
+        } catch (e) {
+            console.warn(global.threadName + "Had issues murdering the old socket. Om nom: " + e)
+        }
+        this.socket = null;
+    };
+
     this.disable = function(){
         for (let worker in cluster.workers){
             if (cluster.workers.hasOwnProperty(worker)){
@@ -224,40 +236,34 @@ function Pool(poolData){
             }
         }
         this.active = false;
+
+        this.close_socket();
     };
 
     this.connect = function(hostname){
-	function connect2(ssl, port, hostname, allowSelfSignedSSL) {
-                try {
-                    if (activePools[hostname].socket !== null){
-                        activePools[hostname].socket.end();
-                        activePools[hostname].socket.destroy();
-                    }
-                } catch (e) {
-                    console.warn(global.threadName + "Had issues murdering the old socket. Om nom: " + e)
-                }
-                activePools[hostname].socket = null;
+	function connect2(pool) {
+                pool.close_socket();
 
 	        if (ssl){
-	            activePools[hostname].socket = tls.connect(port, hostname, {rejectUnauthorized: allowSelfSignedSSL})
-		    .on('connect', () => { poolSocket(hostname); })
+	            pool.socket = tls.connect(pool.port, pool.hostname, {rejectUnauthorized: pool.allowSelfSignedSSL})
+		    .on('connect', () => { poolSocket(pool.hostname); })
 		    .on('error', (err) => {
-	                setTimeout(connect2, 30*1000, ssl, port, hostname, allowSelfSignedSSL);
-	                console.warn(`${global.threadName}SSL pool socket connect error from ${hostname}: ${err}`);
+	                setTimeout(connect2, 30*1000, pool);
+	                console.warn(`${global.threadName}SSL pool socket connect error from ${pool.hostname}: ${err}`);
 	            });
 	        } else {
-	            activePools[hostname].socket = net.connect(port, hostname)
-		    .on('connect', () => { poolSocket(hostname); })
+	            pool.socket = net.connect(pool.port, pool.hostname)
+		    .on('connect', () => { poolSocket(pool.hostname); })
 		    .on('error', (err) => {
-	                setTimeout(connect2, 30*1000, ssl, port, hostname, allowSelfSignedSSL);
-	                console.warn(`${global.threadName}Plain pool socket connect error from ${hostname}: ${err}`);
+	                setTimeout(connect2, 30*1000, port);
+	                console.warn(`${global.threadName}Plain pool socket connect error from ${pool.hostname}: ${err}`);
 	            });
 	        }
 	}
 
 	let pool = activePools[hostname];
         pool.disable();
-	connect2(pool.ssl, pool.port, pool.hostname, pool.allowSelfSignedSSL);
+	connect2(pool);
     };
     this.sendData = function (method, params) {
         if (typeof params === 'undefined'){
