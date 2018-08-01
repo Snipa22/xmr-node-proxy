@@ -11,6 +11,7 @@ const support = require('./lib/support.js')();
 global.config = require('./config.json');
 
 const PROXY_VERSION = "0.2.0";
+const DEFAULT_ALGO = "cryptonight/1";
 
 /*
  General file design/where to find things.
@@ -207,7 +208,7 @@ function Pool(poolData){
     this.algo = poolData.algo;
     this.blob_type = poolData.blob_type;
 
-    const algo_default = this.algo ? this.algo : "cryptonight/1";
+    const algo_default = this.algo ? this.algo : DEFAULT_ALGO;
     this.algos = {};
     this.algos[algo_default] = 1;
     this.algos_perf = {};
@@ -675,16 +676,18 @@ function enumerateWorkerStats() {
                             stats.hashes += workerData.hashes;
                             stats.hashRate += workerData.avgSpeed;
                             stats.diff += workerData.diff;
-                            if (workerData.algos && workerData.algos_perf) { // only process smart miners
-				if (workerData.pool in pool_algos) { // compute union of workerData.algos and pool_algos[workerData.pool]
-				    for (let algo in pool_algos[workerData.pool]) {
-				        if (!(algo in workerData.algos)) delete pool_algos[workerData.pool][algo];
-				    }
-                                } else {
-                                    pool_algos[workerData.pool] = workerData.algos;
-                                    pool_algos_perf[workerData.pool] = {};
-                                }
-                                // add algo_perf from all miners
+                             // process smart miners and assume all other miners to only support pool algo
+                            let miner_algos = workerData.algos;
+                            if (!miner_algos) miner_algos[activePools[workerData.pool].algo ? activePools[workerData.pool].algo : DEFAULT_ALGO] = 1;
+    		            if (workerData.pool in pool_algos) { // compute union of miner_algos and pool_algos[workerData.pool]
+			        for (let algo in pool_algos[workerData.pool]) {
+			           if (!(algo in miner_algos)) delete pool_algos[workerData.pool][algo];
+			       }
+                            } else {
+                                pool_algos[workerData.pool] = miner_algos;
+                                pool_algos_perf[workerData.pool] = {};
+                            }
+                            if (workerData.algos_perf) { // only process smart miners and add algo_perf from all smart miners
                                 for (let algo in workerData.algos_perf) {
                                     if (algo in pool_algos_perf[workerData.pool]) pool_algos_perf[workerData.pool][algo] += workerData.algos_perf[algo];
                                     else pool_algos_perf[workerData.pool][algo] = workerData.algos_perf[algo];
