@@ -278,7 +278,7 @@ function Pool(poolData){
             params.id = this.id;
         }
         rawSend.params = params;
-        if (!this.socket.writable){
+        if (this.socket === null || !this.socket.writable){
             return false;
         }
         this.socket.write(JSON.stringify(rawSend) + '\n');
