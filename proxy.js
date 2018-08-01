@@ -309,6 +309,7 @@ function Pool(poolData){
              Object.keys(prev_algos_perf).length == Object.keys(algos_perf).length &&
              Object.keys(prev_algos_perf).every(function(u, i) { return prev_algos_perf[u] === algos_perf[u]; })
            ) return;
+        console.log("Setting common algo: " + JSON.stringify(Object.keys(algos)) + " with algo-perf: " + JSON.stringify(algos_perf));
         this.sendData('getjob', {
             "algo": Object.keys(this.algos = algos),
             "algo-perf": (this.algos_perf = algos_perf)
