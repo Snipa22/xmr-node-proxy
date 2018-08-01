@@ -217,14 +217,16 @@ function Pool(poolData){
         if (pool.keepAlive && pool.socket && is_active_pool(pool.hostname)) pool.sendData('keepalived');
     }, 30000, this);
 
-    this.connect = function(){
+    this.disable = function(){
         for (let worker in cluster.workers){
             if (cluster.workers.hasOwnProperty(worker)){
                 cluster.workers[worker].send({type: 'disablePool', pool: this.hostname});
             }
         }
         this.active = false;
+    }
 
+    this.connect = function(){
 	function connect2(ssl, port, hostname, allowSelfSignedSSL) {
                 try {
                     if (activePools[hostname].socket !== null){
@@ -253,6 +255,7 @@ function Pool(poolData){
 	        }
 	}
 
+        this.disable();
 	connect2(this.ssl, this.port, this.hostname, this.allowSelfSignedSSL);
     };
     this.sendData = function (method, params) {
@@ -753,11 +756,13 @@ function poolSocket(hostname){
             dataBuffer = incomplete;
         }
     }).on('error', (err) => {
-        activePools[pool.hostname].connect();
         console.warn(`${global.threadName}Pool socket error from ${pool.hostname}: ${err}`);
+        activePools[pool.hostname].disable();
+        setTimeout(activePools[pool.hostname].connect, 30*1000);
     }).on('close', () => {
-        activePools[pool.hostname].connect();
         console.warn(`${global.threadName}Pool socket closed from ${pool.hostname}`);
+        activePools[pool.hostname].disable();
+        setTimeout(activePools[pool.hostname].connect, 30*1000);
     });
     socket.setKeepAlive(true);
     socket.setEncoding('utf8');
@@ -775,8 +780,10 @@ function handlePoolMessage(jsonData, hostname){
         }
     } else {
         if (jsonData.error !== null){
-            activePools[hostname].connect();
-            return console.error(`${global.threadName}Error response from pool ${pool.hostname}: ${JSON.stringify(jsonData.error)}`);
+            console.error(`${global.threadName}Error response from pool ${pool.hostname}: ${JSON.stringify(jsonData.error)}`);
+            activePools[hostname].disable();
+            setTimeout(activePools[hostname].connect, 30*1000);
+            return;
         }
         let sendLog = pool.sendLog[jsonData.id];
         switch(sendLog.method){
