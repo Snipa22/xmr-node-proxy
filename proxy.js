@@ -255,7 +255,7 @@ function Pool(poolData){
 	        }
 	}
 
-        this.disable();
+        activePools[this.hostname].disable();
 	connect2(this.ssl, this.port, this.hostname, this.allowSelfSignedSSL);
     };
     this.sendData = function (method, params) {
