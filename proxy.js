@@ -665,7 +665,7 @@ function enumerateWorkerStats() {
                             stats.diff += workerData.diff;
                             if (workerData.algos && workerData.algos_perf) { // only process smart miners
 				if (workerData.pool in pool_algos) { // compute union of workerData.algos and pool_algos[workerData.pool]
-				    for (algo in pool_algos[workerData.pool]) {
+				    for (let algo in pool_algos[workerData.pool]) {
 				        if (!(algo in workerData.algos)) delete pool_algos[workerData.pool][algo];
 				    }
                                 } else {
@@ -673,7 +673,7 @@ function enumerateWorkerStats() {
                                     pool_algos_perf[workerData.pool] = {};
                                 }
                                 // add algo_perf from all miners
-                                for (algo in workerData.algos_perf) {
+                                for (let algo in workerData.algos_perf) {
                                     if (algo in pool_algos_perf[workerData.pool]) pool_algos_perf[workerData.pool][algo] += workerData.algos_perf[algo];
                                     else pool_algos_perf[workerData.pool][algo] = workerData.algos_perf[algo];
                                 }
@@ -706,7 +706,7 @@ function enumerateWorkerStats() {
     if (pool_hs != "") pool_hs = " (" + pool_hs + ")";
 
     // do update of algo/algo-perf if it was changed
-    for (pool in pool_algos) activePools[pool].update_algo_perf(pool_algos[pool], pool_algos_perf[pool]);
+    for (let pool in pool_algos) activePools[pool].update_algo_perf(pool_algos[pool], pool_algos_perf[pool]);
 
     console.log(`The proxy currently has ${global_stats.miners} miners connected at ${global_stats.hashRate} h/s${pool_hs} with an average diff of ${Math.floor(global_stats.diff/global_stats.miners)}`);
 }
@@ -855,7 +855,7 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
     this.agent = params.agent;  // Documentation purposes only.
     this.ip = ip;  // Documentation purposes only.
     if (params.algo && (params.algo instanceof Array)) { // To report union of defined algo set to the pool for all its miners
-        for (i in params.algo) {
+        for (let i in params.algo) {
             this.algos = {};
             for (let i in params.algo) this.algos[algos[i]] = 1;
         }
