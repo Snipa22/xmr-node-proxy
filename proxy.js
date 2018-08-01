@@ -10,7 +10,7 @@ const uuidV4 = require('uuid/v4');
 const support = require('./lib/support.js')();
 global.config = require('./config.json');
 
-const PROXY_VERSION = "0.1.6";
+const PROXY_VERSION = "0.2.0";
 
 /*
  General file design/where to find things.
@@ -207,6 +207,10 @@ function Pool(poolData){
     this.algo = poolData.algo;
     this.blob_type = poolData.blob_type;
 
+    const algo_default = this.algo ? this.algo : "cryptonight/1";
+    this.algos = { algo_default };
+    this.algos_perf = { algo_default: 1 };
+
     setInterval(function(pool) {
         if (pool.keepAlive && pool.socket && is_active_pool(pool.hostname)) pool.sendData('keepalived');
     }, 30000, this);
@@ -232,15 +236,15 @@ function Pool(poolData){
 
 	        if (ssl){
 	            activePools[hostname].socket = tls.connect(port, hostname, {rejectUnauthorized: allowSelfSignedSSL})
-		    .on('connect', ()=>{ poolSocket(hostname); })
-		    .on('error', (err)=>{
+		    .on('connect', () => { poolSocket(hostname); })
+		    .on('error', (err) => {
 	                setTimeout(connect2, 30*1000, ssl, port, hostname, allowSelfSignedSSL);
 	                console.warn(`${global.threadName}SSL pool socket connect error from ${hostname}: ${err}`);
 	            });
 	        } else {
 	            activePools[hostname].socket = net.connect(port, hostname)
-		    .on('connect', ()=>{ poolSocket(hostname); })
-		    .on('error', (err)=>{
+		    .on('connect', () => { poolSocket(hostname); })
+		    .on('error', (err) => {
 	                setTimeout(connect2, 30*1000, ssl, port, hostname, allowSelfSignedSSL);
 	                console.warn(`${global.threadName}Plain pool socket connect error from ${hostname}: ${err}`);
 	            });
@@ -269,10 +273,13 @@ function Pool(poolData){
         debug.pool(`Sent ${JSON.stringify(rawSend)} to ${this.hostname}`);
     };
     this.login = function () {
+        const algo_default = this.algo ? this.algo : "cryptonight/1";
         this.sendData('login', {
             login: this.username,
             pass: this.password,
-            agent: 'xmr-node-proxy/' + PROXY_VERSION
+            agent: 'xmr-node-proxy/' + PROXY_VERSION,
+            "algo": Object.keys(this.algos),
+            "algo-perf": this.algos_perf
         });
         this.active = true;
         for (let worker in cluster.workers){
@@ -280,6 +287,18 @@ function Pool(poolData){
                 cluster.workers[worker].send({type: 'enablePool', pool: this.hostname});
             }
         }
+    };
+    this.update_algo_perf = function (algos, algos_perf) {
+        // do not update not changed algo/algo-perf
+        if ( Object.keys(this.algos).length == Object.keys(algos).length &&
+             Object.keys(this.algos).every(function(u, i) { return this.algos[u] === algos[u]; }) &&
+             Object.keys(this.algos_perf).length == Object.keys(algos_perf).length &&
+             Object.keys(this.algos_perf).every(function(u, i) { return this.algos_perf[u] === algos_perf[u]; })
+           ) return;
+        this.sendData('getjob', {
+            "algo": Object.keys(this.algos = algos),
+            "algo-perf": (this.algos_perf = algos_perf)
+        });
     };
     this.sendShare = function (worker, shareData) {
         //btID - Block template ID in the poolJobs circ buffer.
@@ -618,6 +637,8 @@ function balanceWorkers(){
 
 function enumerateWorkerStats() {
     let stats, global_stats = {miners: 0, hashes: 0, hashRate: 0, diff: 0};
+    let pool_algos = {};
+    let pool_algos_perf = {};
     for (let poolID in activeWorkers){
         if (activeWorkers.hasOwnProperty(poolID)){
             stats = {
@@ -641,6 +662,21 @@ function enumerateWorkerStats() {
                             stats.hashes += workerData.hashes;
                             stats.hashRate += workerData.avgSpeed;
                             stats.diff += workerData.diff;
+                            if (workerData.algos && workerData.algos_perf) { // only process smart miners
+				if (workerData.pool in pool_algos) { // compute union of workerData.algos and pool_algos[workerData.pool]
+				    for (algo in pool_algos[workerData.pool]) {
+				        if (!(algo in workerData.algos)) delete pool_algos[workerData.pool][algo];
+				    }
+                                } else {
+                                    pool_algos[workerData.pool] = workerData.algos;
+                                    pool_algos_perf[workerData.pool] = {};
+                                }
+                                // add algo_perf from all miners
+                                for (algo in workerData.algos_perf) {
+                                    if (algo in pool_algos_perf[workerData.pool]) pool_algos_perf[workerData.pool][algo] += workerData.algos_perf[algo];
+                                    else pool_algos_perf[workerData.pool][algo] = workerData.algos_perf[algo];
+                                }
+                            }
                         } catch (err) {
                             delete activeWorkers[poolID][workerID];
                         }
@@ -667,6 +703,9 @@ function enumerateWorkerStats() {
         }
     }
     if (pool_hs != "") pool_hs = " (" + pool_hs + ")";
+
+    // do update of algo/algo-perf if it was changed
+    for (pool in pool_algos) activePools[pool].update_algo_perf(pool_algos[pool], pool_algos_perf[pool]);
 
     console.log(`The proxy currently has ${global_stats.miners} miners connected at ${global_stats.hashRate} h/s${pool_hs} with an average diff of ${Math.floor(global_stats.diff/global_stats.miners)}`);
 }
@@ -814,6 +853,13 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
     this.password = params.pass;  // For accessControl and workerStats.
     this.agent = params.agent;  // Documentation purposes only.
     this.ip = ip;  // Documentation purposes only.
+    if (params.algo && (params.algo instanceof Array)) { // To report union of defined algo set to the pool for all its miners
+        for (i in params.algo) {
+            this.algos = {};
+            for (let i in params.algo) this.algos[algos[i]] = 1;
+        }
+    }
+    this.algos_perf = params["algo-perf"]; // To report sum of defined algo_perf to the pool for all its miners
     this.socket = minerSocket;
     this.messageSender = pushMessage;
     this.error = "";
@@ -900,6 +946,8 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
             identifier: this.identifier,
             ip: this.ip,
             agent: this.agent,
+            algo: this.algo,
+            algo_perf: this.algo_perf,
         };
     };
 
