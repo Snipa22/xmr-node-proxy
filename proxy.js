@@ -208,11 +208,11 @@ function Pool(poolData){
     this.algo = poolData.algo;
     this.blob_type = poolData.blob_type;
 
-    const algo_default = this.algo ? this.algo : DEFAULT_ALGO;
+    const default_algo = this.algo ? this.algo : DEFAULT_ALGO;
     this.algos = {};
-    this.algos[algo_default] = 1;
+    this.algos[default_algo] = 1;
     this.algos_perf = {};
-    this.algos_perf[algo_default] = 1;
+    this.algos_perf[default_algo] = 1;
 
     setInterval(function(pool) {
         if (pool.keepAlive && pool.socket && is_active_pool(pool.hostname)) pool.sendData('keepalived');
@@ -676,7 +676,7 @@ function enumerateWorkerStats() {
                             stats.hashes += workerData.hashes;
                             stats.hashRate += workerData.avgSpeed;
                             stats.diff += workerData.diff;
-                             // process smart miners and assume all other miners to only support pool algo
+                            // process smart miners and assume all other miners to only support pool algo
                             let miner_algos = workerData.algos;
                             if (!miner_algos) miner_algos[activePools[workerData.pool].algo ? activePools[workerData.pool].algo : DEFAULT_ALGO] = 1;
     		            if (workerData.pool in pool_algos) { // compute union of miner_algos and pool_algos[workerData.pool]
@@ -721,7 +721,11 @@ function enumerateWorkerStats() {
     if (pool_hs != "") pool_hs = " (" + pool_hs + ")";
 
     // do update of algo/algo-perf if it was changed
-    for (let pool in pool_algos) activePools[pool].update_algo_perf(pool_algos[pool], pool_algos_perf[pool]);
+    for (let pool in pool_algos) {
+        let pool_algos_perf2 = pool_algos_perf[pool];
+        if (Object.keys(pool_algos_perf2).length === 0) pool_algos_perf2[activePools[pool].algo ? activePools[pool].algo : DEFAULT_ALGO] = 1;
+        activePools[pool].update_algo_perf(pool_algos[pool], pool_algos_perf2);
+    }
 
     console.log(`The proxy currently has ${global_stats.miners} miners connected at ${global_stats.hashRate} h/s${pool_hs} with an average diff of ${Math.floor(global_stats.diff/global_stats.miners)}`);
 }
