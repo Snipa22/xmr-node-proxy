@@ -857,7 +857,7 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
     if (params.algo && (params.algo instanceof Array)) { // To report union of defined algo set to the pool for all its miners
         for (let i in params.algo) {
             this.algos = {};
-            for (let i in params.algo) this.algos[algos[i]] = 1;
+            for (let i in params.algo) this.algos[params.algo[i]] = 1;
         }
     }
     this.algos_perf = params["algo-perf"]; // To report sum of defined algo_perf to the pool for all its miners
