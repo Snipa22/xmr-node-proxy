@@ -208,8 +208,10 @@ function Pool(poolData){
     this.blob_type = poolData.blob_type;
 
     const algo_default = this.algo ? this.algo : "cryptonight/1";
-    this.algos = { algo_default };
-    this.algos_perf = { algo_default: 1 };
+    this.algos = {};
+    this.algos[algo_default] = 1;
+    this.algos_perf = {};
+    this.algos_perf[algo_default] = 1;
 
     setInterval(function(pool) {
         if (pool.keepAlive && pool.socket && is_active_pool(pool.hostname)) pool.sendData('keepalived');
@@ -273,7 +275,6 @@ function Pool(poolData){
         debug.pool(`Sent ${JSON.stringify(rawSend)} to ${this.hostname}`);
     };
     this.login = function () {
-        const algo_default = this.algo ? this.algo : "cryptonight/1";
         this.sendData('login', {
             login: this.username,
             pass: this.password,
