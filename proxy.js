@@ -339,7 +339,7 @@ function connectPools(){
             return;
         }
         activePools[poolData.hostname] = new Pool(poolData);
-        activePools[poolData.hostname].connect();
+        activePools[poolData.hostname].connect(poolData.hostname);
     });
     let seen_coins = {};
     if (global.config.developerShare > 0){
@@ -353,7 +353,7 @@ function connectPools(){
                     return;
                 }
                 activePools[devPool.hostname] = new Pool(devPool);
-                activePools[devPool.hostname].connect();
+                activePools[devPool.hostname].connect(devPool.hostname);
                 seen_coins[activePools[pool].coin] = true;
             }
         }
