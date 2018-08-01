@@ -224,7 +224,7 @@ function Pool(poolData){
             }
         }
         this.active = false;
-    }
+    };
 
     this.connect = function(){
 	function connect2(ssl, port, hostname, allowSelfSignedSSL) {
