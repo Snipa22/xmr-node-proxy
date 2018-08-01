@@ -244,7 +244,7 @@ function Pool(poolData){
 	function connect2(pool) {
                 pool.close_socket();
 
-	        if (ssl){
+	        if (pool.ssl){
 	            pool.socket = tls.connect(pool.port, pool.hostname, {rejectUnauthorized: pool.allowSelfSignedSSL})
 		    .on('connect', () => { poolSocket(pool.hostname); })
 		    .on('error', (err) => {
