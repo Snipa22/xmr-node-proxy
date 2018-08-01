@@ -291,10 +291,12 @@ function Pool(poolData){
     };
     this.update_algo_perf = function (algos, algos_perf) {
         // do not update not changed algo/algo-perf
-        if ( Object.keys(this.algos).length == Object.keys(algos).length &&
-             Object.keys(this.algos).every(function(u, i) { return this.algos[u] === algos[u]; }) &&
-             Object.keys(this.algos_perf).length == Object.keys(algos_perf).length &&
-             Object.keys(this.algos_perf).every(function(u, i) { return this.algos_perf[u] === algos_perf[u]; })
+        const prev_algos = this.algos;
+        const prev_algos_perf = this.algos_perf;
+        if ( Object.keys(prev_algos).length == Object.keys(algos).length &&
+             Object.keys(prev_algos).every(function(u, i) { return prev_algos[u] === algos[u]; }) &&
+             Object.keys(prev_algos_perf).length == Object.keys(algos_perf).length &&
+             Object.keys(prev_algos_perf).every(function(u, i) { return prev_algos_perf[u] === algos_perf[u]; })
            ) return;
         this.sendData('getjob', {
             "algo": Object.keys(this.algos = algos),
