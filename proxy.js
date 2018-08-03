@@ -1242,13 +1242,13 @@ function activateHTTP() {
 				tableBody += `
 				<tr>
 					<td><TAB TO=t1>${name}</td>
-					<td><TAB TO=t2>${avgSpeed}</td>
+					<td><TAB TO=t2>${avgSpeed} H/s</td>
 					<td><TAB TO=t3>${miner.diff}</td>
 					<td><TAB TO=t4>${miner.shares}</td>
 					<td><TAB TO=t5>${miner.hashes}</td>
-					<td><TAB TO=t6>${moment.unix(miner.lastShare).fromNow(true)}</td>
-					<td><TAB TO=t7>${moment.unix(miner.lastContact).fromNow(true)}</td>
-					<td><TAB TO=t8>${moment(miner.connectTime).fromNow(true)}</td>
+					<td><TAB TO=t6>${moment.unix(miner.lastShare).fromNow(true)} ago</td>
+					<td><TAB TO=t7>${moment.unix(miner.lastContact).fromNow(true)} ago</td>
+					<td><TAB TO=t8>${moment(miner.connectTime).fromNow(true)} ago</td>
 					<td><TAB TO=t9>${miner.pool}</td>
 					<td><TAB TO=t10><div class="tooltip">${agent_parts[0]}<span class="tooltiptext">${miner.agent}</div></td>
 				</tr>
@@ -1297,9 +1297,9 @@ function activateHTTP() {
     			<th><TAB INDENT=80 ID=t3>Difficulty</th>
     			<th><TAB INDENT=100 ID=t4>Shares</th>
     			<th><TAB INDENT=120 ID=t5>Hashes</th>
-    			<th><TAB INDENT=140 ID=t6>Share Ago</th>
-    			<th><TAB INDENT=180 ID=t7>Ping Ago</th>
-    			<th><TAB INDENT=220 ID=t8>Connected Ago</th>
+    			<th><TAB INDENT=140 ID=t6>Share Recvd</th>
+    			<th><TAB INDENT=180 ID=t7>Ping Recvd</th>
+    			<th><TAB INDENT=220 ID=t8>Connected</th>
     			<th><TAB INDENT=260 ID=t9>Pool</th>
     			<th><TAB INDENT=320 ID=t10>Agent</th>
     		</thead>
