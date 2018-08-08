@@ -817,7 +817,14 @@ function handlePoolMessage(jsonData, hostname){
 
 function handleNewBlockTemplate(blockTemplate, hostname){
     let pool = activePools[hostname];
-    console.log(`Received new block template on ${blockTemplate.height} height with ${blockTemplate.target_diff} target difficulty from ${pool.hostname}`);
+    let algo_variant = "";
+    if (blockTemplate.algo) algo_variant += "algo: " + blockTemplate.algo;
+    if (blockTemplate.variant) {
+        if (algo_variant != "") algo_variant += ", ";
+        algo_variant += "variant: " + blockTemplate.variant;
+    }
+    if (algo_variant != "") algo_variant = " (" + algo_variant + ")";
+    console.log(`Received new block template on ${blockTemplate.height} height${algo_variant} with ${blockTemplate.target_diff} target difficulty from ${pool.hostname}`);
     if(pool.activeBlocktemplate){
         if (pool.activeBlocktemplate.job_id === blockTemplate.job_id){
             debug.pool('No update with this job, it is an upstream dupe');
