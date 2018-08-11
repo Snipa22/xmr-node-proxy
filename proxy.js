@@ -256,7 +256,7 @@ function Pool(poolData){
 	            pool.socket = net.connect(pool.port, pool.hostname)
 		    .on('connect', () => { poolSocket(pool.hostname); })
 		    .on('error', (err) => {
-	                setTimeout(connect2, 30*1000, port);
+	                setTimeout(connect2, 30*1000, pool);
 	                console.warn(`${global.threadName}Plain pool socket connect error from ${pool.hostname}: ${err}`);
 	            });
 	        }
