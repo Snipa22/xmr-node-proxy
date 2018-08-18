@@ -10,7 +10,7 @@ const uuidV4 = require('uuid/v4');
 const support = require('./lib/support.js')();
 global.config = require('./config.json');
 
-const PROXY_VERSION = "0.2.0";
+const PROXY_VERSION = "0.2.1";
 const DEFAULT_ALGO = "cryptonight/1";
 
 /*
