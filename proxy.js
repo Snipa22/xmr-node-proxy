@@ -955,9 +955,7 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
     let pass_split = params.pass.split(":");
     this.identifier = pass_split[0];
 
-    this.logString = function() {
-        return (this.identifier && this.identifier != "x") ? this.identifier + " (" + this.ip + ")" : this.ip;
-    };
+    this.logString = (this.identifier && this.identifier != "x") ? this.identifier + " (" + this.ip + ")" : this.ip;
 
     this.minerStats = function(){
         if (this.socket.destroyed && !global.config.keepOfflineMiners){
@@ -982,6 +980,7 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
             agent: this.agent,
             algos: this.algos,
             algos_perf: this.algos_perf,
+            logString: this.logString,
         };
     };
 
@@ -1006,7 +1005,7 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
         if (this.difficulty === this.newDiff) {
             return false;
         }
-        debug.diff(global.threadName + "Difficulty change to: " + this.newDiff + " For: " + this.logString());
+        debug.diff(global.threadName + "Difficulty change to: " + this.newDiff + " For: " + this.logString);
         if (this.hashes > 0){
             debug.diff(global.threadName + "Hashes: " + this.hashes + " in: " + Math.floor((Date.now() - this.connectTime)/1000) + " seconds gives: " +
                 Math.floor(this.hashes/(Math.floor((Date.now() - this.connectTime)/1000))) + " hashes/second or: " +
@@ -1127,13 +1126,13 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage, m
 
             params.nonce = params.nonce.substr(0, 8).toLowerCase();
             if (!nonceCheck.test(params.nonce)) {
-                console.warn(global.threadName + 'Malformed nonce: ' + JSON.stringify(params) + ' from ' + miner.logString());
+                console.warn(global.threadName + 'Malformed nonce: ' + JSON.stringify(params) + ' from ' + miner.logString);
                 sendReply('Duplicate share');
                 return;
             }
 
             if (job.submissions.indexOf(params.nonce) !== -1) {
-                console.warn(global.threadName + 'Duplicate share: ' + JSON.stringify(params) + ' from ' + miner.logString());
+                console.warn(global.threadName + 'Duplicate share: ' + JSON.stringify(params) + ' from ' + miner.logString);
                 sendReply('Duplicate share');
                 return;
             }
@@ -1147,7 +1146,7 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage, m
             })[0];
 
             if (!blockTemplate) {
-                console.warn(global.threadName + 'Block expired, Height: ' + job.height + ' from ' + miner.logString());
+                console.warn(global.threadName + 'Block expired, Height: ' + job.height + ' from ' + miner.logString);
                 if (miner.incremented === false){
                     miner.newDiff = miner.difficulty + 1;
                     miner.incremented = true;
@@ -1224,7 +1223,7 @@ function activateHTTP() {
 					if (typeof(miner) === 'undefined' || !miner) continue;
 					if (miner.active) {
   						miners[miner.id] = miner;
-						const name = miner.logString();
+						const name = miner.logString;
                                                 miner_names[name] = 1;
 						++ totalWorkers;
 						totalHashrate += miner.avgSpeed;
@@ -1237,7 +1236,7 @@ function activateHTTP() {
 			}
     			for (let offline_miner_id in offline_miners) {
 				const miner = offline_miners[offline_miner_id];
-				const name = miner.logString();
+				const name = miner.logString;
 				if (name in miner_names) continue;
 				miners[miner.id] = miner;
 				miner_names[name] = 1;
@@ -1246,7 +1245,7 @@ function activateHTTP() {
 			let tableBody = "";
     			for (let miner_id in miners) {
 				const miner = miners[miner_id];
-				const name = miner.logString();
+				const name = miner.logString;
 				let avgSpeed = miner.active ? miner.avgSpeed : "offline";
 				let agent_parts = miner.agent.split(" ");
 				tableBody += `
