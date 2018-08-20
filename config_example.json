@@ -56,7 +56,7 @@
   "httpPort": "8081",
   "httpUser": "",
   "httpPass": "",
-  "minerInactivityTime": "120",
+  "minerInactivityTime": 120,
   "keepOfflineMiners": 0,
   "refreshTime": 30,
   "theme": "light",
