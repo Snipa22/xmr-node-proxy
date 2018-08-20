@@ -20,7 +20,7 @@
     "async": "2.1.4",
     "bignum": "^0.12.5",
     "circular-buffer": "1.0.2",
-    "debug": "2.5.1",
+    "debug": "2.6.9",
     "express": "4.14.0",
     "minimist": "1.2.0",
     "moment": "2.21.0",
