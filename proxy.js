@@ -953,7 +953,7 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
     this.cachedJob = null;
 
     let pass_split = params.pass.split(":");
-    this.identifier = global.config.addressWorkerID ? miner.user : pass_split[0];
+    this.identifier = global.config.addressWorkerID ? this.user : pass_split[0];
 
     this.logString = (this.identifier && this.identifier != "x") ? this.identifier + " (" + this.ip + ")" : this.ip;
 
