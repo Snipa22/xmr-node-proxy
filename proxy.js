@@ -1246,12 +1246,12 @@ function activateHTTP() {
     			for (let miner_id in miners) {
 				const miner = miners[miner_id];
 				const name = miner.logString;
-				let avgSpeed = miner.active ? miner.avgSpeed : "offline";
+				let avgSpeed = miner.active ? miner.avgSpeed + " H/s" : "offline";
 				let agent_parts = miner.agent.split(" ");
 				tableBody += `
 				<tr>
 					<td><TAB TO=t1>${name}</td>
-					<td><TAB TO=t2>${avgSpeed} H/s</td>
+					<td><TAB TO=t2>${avgSpeed}</td>
 					<td><TAB TO=t3>${miner.diff}</td>
 					<td><TAB TO=t4>${miner.shares}</td>
 					<td><TAB TO=t5>${miner.hashes}</td>
