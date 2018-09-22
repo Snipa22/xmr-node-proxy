@@ -7,9 +7,16 @@ if [[ `whoami` == "root" ]]; then
     exit 1
 fi
 CURUSER=$(whoami)
-sudo apt-get update
-sudo DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
-sudo DEBIAN_FRONTEND=noninteractive apt-get -y install git curl build-essential cmake python-virtualenv libboost-all-dev
+
+if which yum >/dev/null; then
+  sudo yum -y update
+  sudo yum -y upgrade
+  sudo yum -y install git curl make gcc-c++ boost-devel boost-system-devel boost-date-time-devel
+else
+  sudo apt-get update
+  sudo DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
+  sudo DEBIAN_FRONTEND=noninteractive apt-get -y install git curl make g++ libboost-dev libboost-system-dev libboost-date-time-dev
+fi
 cd ~
 git clone https://github.com/MoneroOcean/xmr-node-proxy
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash
