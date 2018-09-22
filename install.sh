@@ -11,11 +11,11 @@ CURUSER=$(whoami)
 if which yum >/dev/null; then
   sudo yum -y update
   sudo yum -y upgrade
-  sudo yum -y install git curl make gcc-c++ boost-devel boost-system-devel boost-date-time-devel
+  sudo yum -y install git curl make gcc-c++ python-virtualenv boost-devel boost-system-devel boost-date-time-devel
 else
   sudo apt-get update
   sudo DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
-  sudo DEBIAN_FRONTEND=noninteractive apt-get -y install git curl make g++ libboost-dev libboost-system-dev libboost-date-time-dev
+  sudo DEBIAN_FRONTEND=noninteractive apt-get -y install git curl make g++ python-virtualenv libboost-dev libboost-system-dev libboost-date-time-dev
 fi
 cd ~
 git clone https://github.com/MoneroOcean/xmr-node-proxy
@@ -34,5 +34,4 @@ sudo env PATH=$PATH:`pwd`/.nvm/versions/node/v8.11.3/bin `pwd`/.nvm/versions/nod
 sudo chown -R $CURUSER. ~/.pm2
 echo "Installing pm2-logrotate in the background!"
 pm2 install pm2-logrotate
-echo "You're setup with a shiny new proxy!  Now, go configure it and have fun."
-source ~/.bashrc
+echo "You're setup with a shiny new proxy! Now, do 'source ~/.bashrc' command, go configure it and have fun."
