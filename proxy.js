@@ -833,7 +833,7 @@ function handleNewBlockTemplate(blockTemplate, hostname){
         debug.pool('Storing the previous block template');
         pool.pastBlockTemplates.enq(pool.activeBlocktemplate);
     }
-    if (!blockTemplate.algo)      blockTemplate.algo = pool.coinFuncs.detectAlgo(pool.default_algo_set, blockTemplate.blocktemplate_blob[0]);
+    if (!blockTemplate.algo)      blockTemplate.algo = pool.coinFuncs.detectAlgo(pool.default_algo_set, 16 * parseInt(blockTemplate.blocktemplate_blob[0]) + parseInt(blockTemplate.blocktemplate_blob[1]));
     if (!blockTemplate.blob_type) blockTemplate.blob_type = pool.blob_type;
     pool.activeBlocktemplate = new pool.coinFuncs.MasterBlockTemplate(blockTemplate);
     for (let id in cluster.workers){
