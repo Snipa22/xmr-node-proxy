@@ -209,7 +209,7 @@ function Pool(poolData){
     const algo_arr = poolData.algo ? (poolData.algo instanceof Array ? poolData.algo : [poolData.algo]) : DEFAULT_ALGO;
     this.default_algo_set = {};
     this.algos            = {};
-    this.algo_arr.forEach(function (algo) { this.algos[algo] = this.default_algo_set[algo] = 1 });
+    algo_arr.forEach(function (algo) { this.algos[algo] = this.default_algo_set[algo] = 1 });
     this.algos_perf = DEFAULT_ALGO_PERF;
     this.blob_type  = poolData.blob_type;
 
