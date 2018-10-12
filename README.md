@@ -1,5 +1,7 @@
 # xmr-node-proxy
 
+:warning: **[Monero will change PoW algorithm on October 18] Please update this proxy to the latest version and if you use it for the pool other than MoneroOcean please put "algo": ["cn/1", "cn/2" ] into your pool section of config.json for smooth transition** :warning:
+
 Supports all known cryptonight/heavy/light coins:
 
 * Monero (XMR), MoneroV (XMV), Monero Original (XMO), Monero Classic (XMC), ...
