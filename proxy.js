@@ -206,8 +206,10 @@ function Pool(poolData){
     if (poolData.hasOwnProperty('allowSelfSignedSSL')){
         this.allowSelfSignedSSL = !poolData.allowSelfSignedSSL;
     }
-    this.algo       = poolData.algo ? (poolData.algo instanceof Array ? poolData.algo : [poolData.algo]) : DEFAULT_ALGO;
-    this.algos      = this.algo;
+    const algo_arr = poolData.algo ? (poolData.algo instanceof Array ? poolData.algo : [poolData.algo]) : DEFAULT_ALGO;
+    this.default_algo_set = {};
+    this.algos            = {};
+    this.algo_arr.forEach(function (algo) { this.algos[algo] = this.default_algo_set[algo] = 1 });
     this.algos_perf = DEFAULT_ALGO_PERF;
     this.blob_type  = poolData.blob_type;
 
@@ -677,7 +679,7 @@ function enumerateWorkerStats() {
                             stats.diff += workerData.diff;
                             // process smart miners and assume all other miners to only support pool algo
                             let miner_algos = workerData.algos;
-                            if (!miner_algos) miner_algos = activePools[workerData.pool].algo;
+                            if (!miner_algos) miner_algos = activePools[workerData.pool].default_algo_set;
     		            if (workerData.pool in pool_algos) { // compute union of miner_algos and pool_algos[workerData.pool]
 			        for (let algo in pool_algos[workerData.pool]) {
 			           if (!(algo in miner_algos)) delete pool_algos[workerData.pool][algo];
@@ -831,7 +833,7 @@ function handleNewBlockTemplate(blockTemplate, hostname){
         debug.pool('Storing the previous block template');
         pool.pastBlockTemplates.enq(pool.activeBlocktemplate);
     }
-    if (!blockTemplate.algo)      blockTemplate.algo = pool.coinFuncs.detectAlgo(pool.algo, blockTemplate.blocktemplate_blob[0]);
+    if (!blockTemplate.algo)      blockTemplate.algo = pool.coinFuncs.detectAlgo(pool.default_algo_set, blockTemplate.blocktemplate_blob[0]);
     if (!blockTemplate.blob_type) blockTemplate.blob_type = pool.blob_type;
     pool.activeBlocktemplate = new pool.coinFuncs.MasterBlockTemplate(blockTemplate);
     for (let id in cluster.workers){
