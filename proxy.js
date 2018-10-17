@@ -260,7 +260,7 @@ function Pool(poolData){
         this.sendData('login', {
             login: this.username,
             pass: this.password,
-            agent: 'xmr-node-proxy/0.0.2'
+            agent: 'xmr-node-proxy/0.0.3'
         });
         this.active = true;
         for (let worker in cluster.workers){
