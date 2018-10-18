@@ -11,7 +11,7 @@ const support = require('./lib/support.js')();
 global.config = require('./config.json');
 
 const PROXY_VERSION = "0.3.3";
-const DEFAULT_ALGO      = [ "cn/1", "cn/2" ];
+const DEFAULT_ALGO      = [ "cn/2" ];
 const DEFAULT_ALGO_PERF = { "cn": 1, "cn/msr": 1.9 };
 
 /*
