@@ -1085,7 +1085,7 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage, m
             if (!portData.coin) portData.coin = "xmr";
             miner = new Miner(minerId, params, ip, pushMessage, portData, minerSocket);
             if (!miner.valid_miner) {
-                console.warn(global.threadName + "Invalid miner, disconnecting due to: " + miner.error);
+                console.warn(global.threadName + "Invalid miner: " + miner.logString + ", disconnecting due to: " + miner.error);
                 sendReply(miner.error);
                 return;
             }
