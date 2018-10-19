@@ -10,7 +10,7 @@ const uuidV4 = require('uuid/v4');
 const support = require('./lib/support.js')();
 global.config = require('./config.json');
 
-const PROXY_VERSION = "0.3.3";
+const PROXY_VERSION = "0.3.4";
 const DEFAULT_ALGO      = [ "cn/2" ];
 const DEFAULT_ALGO_PERF = { "cn": 1, "cn/msr": 1.9 };
 
@@ -933,6 +933,14 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
     if (!isAllowedLogin(this.user, this.password)) {
         this.error = "Unauthorized access";
         this.valid_miner = false;
+    }
+
+    for (let algo in pool.algos) {
+        if (!(algo in this.algos)) {
+            this.error = "Your miner does not have " + algo + " algo support. Please update it.";
+            this.valid_miner = false;
+            break;
+        }
     }
 
     this.id = id;
