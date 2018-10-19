@@ -915,6 +915,14 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
     }
     if (!this.pool) this.pool = defaultPools[portData.coin];
 
+    if (this.algos) for (let algo in activePools[this.pool].default_algo_set) {
+        if (!(algo in this.algos)) {
+            this.error = "Your miner does not have " + algo + " algo support. Please update it.";
+            this.valid_miner = false;
+            break;
+        }
+    }
+
     if (diffSplit.length === 2) {
         this.fixed_diff = true;
         this.difficulty = Number(diffSplit[1]);
@@ -933,14 +941,6 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
     if (!isAllowedLogin(this.user, this.password)) {
         this.error = "Unauthorized access";
         this.valid_miner = false;
-    }
-
-    if (this.algos) for (let algo in this.pool.default_algo_set) {
-        if (!(algo in this.algos)) {
-            this.error = "Your miner does not have " + algo + " algo support. Please update it.";
-            this.valid_miner = false;
-            break;
-        }
     }
 
     this.id = id;
