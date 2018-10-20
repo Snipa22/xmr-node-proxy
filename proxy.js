@@ -300,16 +300,21 @@ function Pool(poolData){
             }
         }
     };
+
     this.update_algo_perf = function (algos, algos_perf) {
         // do not update not changed algo/algo-perf
-        const prev_algos = this.algos;
-        const prev_algos_perf = this.algos_perf;
-        if ( Object.keys(prev_algos).length == Object.keys(algos).length &&
-             Object.keys(prev_algos).every(function(u, i) { return prev_algos[u] === algos[u]; }) &&
-             Object.keys(prev_algos_perf).length == Object.keys(algos_perf).length &&
-             Object.keys(prev_algos_perf).every(function(u, i) { return prev_algos_perf[u] === algos_perf[u]; })
-           ) return;
-        console.log("Setting common algo: " + JSON.stringify(Object.keys(algos)) + " with algo-perf: " + JSON.stringify(algos_perf) + " for pool " + this.hostname);
+        const prev_algos          = this.algos;
+        const prev_algos_perf     = this.algos_perf;
+        const prev_algos_str      = JSON.stringify(Object.keys(prev_algos));
+        const prev_algos_perf_str = JSON.stringify(prev_algos_perf);
+        const algos_str           = JSON.stringify(Object.keys(algos));
+        const algos_perf_str      = JSON.stringify(algos_perf);
+        if ( algos_str === prev_algos_str && algos_perf_str === prev_algos_perf_str) return;
+        const curr_time = Date.now();
+        if (!this.last_common_algo_notify_time || curr_time - this.last_common_algo_notify_time > 5*60*1000 || algos_str !== prev_algos_str) {
+            console.log("Setting common algo: " + algos_str + " with algo-perf: " + algos_perf_str + " for pool " + this.hostname);
+            this.last_common_algo_notify_time = curr_time;
+        }
         this.sendData('getjob', {
             "algo": Object.keys(this.algos = algos),
             "algo-perf": (this.algos_perf = algos_perf)
