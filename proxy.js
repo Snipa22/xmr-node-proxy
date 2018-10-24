@@ -799,7 +799,7 @@ function handlePoolMessage(jsonData, hostname){
             handleNewBlockTemplate(jsonData.params, hostname);
         }
     } else {
-        if (jsonData.error !== null){
+        if (jsonData.error !== null && (jsonData.error instanceof Object) && (typeof jsonData.error.message === 'string') && jsonData.error.message.includes("Unauthenticated")){
             console.error(`${global.threadName}Error response from pool ${pool.hostname}: ${JSON.stringify(jsonData.error)}`);
             activePools[hostname].disable();
             return;
