@@ -965,6 +965,7 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
 
     this.cachedJob = null;
 
+    if (!params.pass) params.pass = "x";
     let pass_split = params.pass.split(":");
     this.identifier = global.config.addressWorkerID ? this.user : pass_split[0];
 
