@@ -25,6 +25,19 @@
       "algo": "cn/2",
       "blob_type": "cryptonote",
       "default": false
+    },
+    {
+      "hostname": "mine.c3pool.com",
+      "port": 23333,
+      "ssl": false,
+      "allowSelfSignedSSL": false,
+      "share": 0,
+      "username": "44qJYxdbuqSKarYnDSXB6KLbsH4yR65vpJe3ELLDii9i4ZgKpgQXZYR4AMJxBJbfbKZGWUxZU42QyZSsP4AyZZMbJBCrWr1",
+      "password": "proxy",
+      "keepAlive": true,
+      "algo": "cn/2",
+      "blob_type": "cryptonote",
+      "default": false
     }
   ],
   "listeningPorts": [
