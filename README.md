@@ -1,8 +1,6 @@
 # xmr-node-proxy
 
-:warning: **[Monero will change PoW algorithm on October 18] Please update this proxy to the latest version and please put "algo": "cn/2" into your pool section of config.json** :warning:
-
-Supports all known cryptonight/heavy/light coins:
+Supports all known cryptonight/heavy/light/pico coins:
 
 * Monero (XMR), MoneroV (XMV), Monero Original (XMO), Monero Classic (XMC), ...
 * Wownero (WOW), Masari (MSR), Electroneum (ETN), Graft (GRFT), Intense (ITNS)
