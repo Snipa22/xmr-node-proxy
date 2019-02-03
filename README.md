@@ -107,5 +107,6 @@ Please contact Snipa at: proxy_installs@snipanet.com or via IRC on irc.freenode.
 * [SECUmine.net](https://secumine.net)
 * [Chinaenter.cn](http://xmr.chinaenter.cn)
 * [XMRPool.eu](https://xmrpool.eu)
+* [2Miners.com](https://2miners.com/xmr-mining-pool)
 
 If you'd like to have your pool added, please make a pull request here, or contact Snipa on IRC!
