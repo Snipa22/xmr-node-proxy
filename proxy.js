@@ -910,7 +910,7 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
         for (let poolName in activePools){
             if (activePools.hasOwnProperty(poolName)){
                 let pool = activePools[poolName];
-                if (pool.coin != portData.coin) continue;
+                if (pool.coin != portData.coin || pool.devPool) continue;
 		if (is_active_pool(poolName)) {
                     this.pool = poolName;
                     break;
