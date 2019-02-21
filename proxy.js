@@ -920,14 +920,17 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
     }
     if (!this.pool) this.pool = defaultPools[portData.coin];
 
-    const pool = activePools[this.pool];
-    const blockTemplate = pool.activeBlocktemplate;
-
-    if (this.algos && blockTemplate !== null) {
-        const pool_algo = pool.coinFuncs.detectAlgo(pool.default_algo_set, 16 * parseInt(blockTemplate.blocktemplate_blob[0]) + parseInt(blockTemplate.blocktemplate_blob[1]));
-        if (!(pool_algo in this.algos)) {
-            this.error = "Your miner does not have " + algo + " algo support. Please update it.";
-            this.valid_miner = false;
+    if (this.algos) {
+        const pool = activePools[this.pool];
+        if (pool) {
+            const blockTemplate = pool.activeBlocktemplate;
+            if (blockTemplate) {
+                const pool_algo = pool.coinFuncs.detectAlgo(pool.default_algo_set, 16 * parseInt(blockTemplate.blocktemplate_blob[0]) + parseInt(blockTemplate.blocktemplate_blob[1]));
+                if (!(pool_algo in this.algos)) {
+                    this.error = "Your miner does not have " + algo + " algo support. Please update it.";
+                    this.valid_miner = false;
+                }
+            }
         }
     }
 
