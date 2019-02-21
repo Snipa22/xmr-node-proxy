@@ -924,7 +924,7 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
         const pool = activePools[this.pool];
         if (pool) {
             const blockTemplate = pool.activeBlocktemplate;
-            if (blockTemplate) {
+            if (blockTemplate && blockTemplate.blocktemplate_blob) {
                 const pool_algo = pool.coinFuncs.detectAlgo(pool.default_algo_set, 16 * parseInt(blockTemplate.blocktemplate_blob[0]) + parseInt(blockTemplate.blocktemplate_blob[1]));
                 if (!(pool_algo in this.algos)) {
                     this.error = "Your miner does not have " + algo + " algo support. Please update it.";
