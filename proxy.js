@@ -927,7 +927,6 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
         if (!(pool_algo in this.algos)) {
             this.error = "Your miner does not have " + algo + " algo support. Please update it.";
             this.valid_miner = false;
-            break;
         }
     }
 
