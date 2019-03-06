@@ -12,7 +12,7 @@ global.config = require('./config.json');
 
 const PROXY_VERSION = "0.9.0";
 const DEFAULT_ALGO      = [ "cn/2", "cn/r" ];
-const DEFAULT_ALGO_PERF = { "cn": 1, "cn/half": 1.9, "cn/zls": 1.3, "cn/double": 0.5 };
+const DEFAULT_ALGO_PERF = { "cn": 1, "cn/half": 1.9, "cn/rwz": 1.3, "cn/zls": 1.3, "cn/double": 0.5 };
 
 /*
  General file design/where to find things.
