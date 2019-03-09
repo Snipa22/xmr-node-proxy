@@ -9,7 +9,7 @@
       "username": "44qJYxdbuqSKarYnDSXB6KLbsH4yR65vpJe3ELLDii9i4ZgKpgQXZYR4AMJxBJbfbKZGWUxZU42QyZSsP4AyZZMbJBCrWr1",
       "password": "proxy",
       "keepAlive": true,
-      "algo": "cn/2",
+      "algo": "cn/r",
       "blob_type": "cryptonote",
       "default": true
     },
@@ -22,7 +22,7 @@
       "username": "44qJYxdbuqSKarYnDSXB6KLbsH4yR65vpJe3ELLDii9i4ZgKpgQXZYR4AMJxBJbfbKZGWUxZU42QyZSsP4AyZZMbJBCrWr1",
       "password": "proxy",
       "keepAlive": true,
-      "algo": "cn/2",
+      "algo": "cn/r",
       "blob_type": "cryptonote",
       "default": false
     },
@@ -35,7 +35,7 @@
       "username": "44qJYxdbuqSKarYnDSXB6KLbsH4yR65vpJe3ELLDii9i4ZgKpgQXZYR4AMJxBJbfbKZGWUxZU42QyZSsP4AyZZMbJBCrWr1",
       "password": "proxy",
       "keepAlive": true,
-      "algo": "cn/2",
+      "algo": "cn/r",
       "blob_type": "cryptonote",
       "default": false
     }
