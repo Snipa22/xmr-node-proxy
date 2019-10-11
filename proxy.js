@@ -10,8 +10,8 @@ const uuidV4 = require('uuid/v4');
 const support = require('./lib/support.js')();
 global.config = require('./config.json');
 
-const PROXY_VERSION = "0.13.0";
-const DEFAULT_ALGO      = [ "cn/r" ];
+const PROXY_VERSION = "0.14.0";
+const DEFAULT_ALGO      = [ "cn/r", "rx/0" ];
 const DEFAULT_ALGO_PERF = { "cn": 1, "cn/half": 1.9, "cn/rwz": 1.3, "cn/zls": 1.3, "cn/double": 0.5 };
 
 /*
