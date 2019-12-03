@@ -808,6 +808,11 @@ function handlePoolMessage(jsonData, hostname){
         let sendLog = pool.sendLog[jsonData.id];
         switch(sendLog.method){
             case 'login':
+                if (typeof jsonData.result.job == 'undefined') {
+                  console.error(`${global.threadName}Empty response from pool ${pool.hostname}`);
+                  activePools[hostname].disable();
+                  return;
+                }
                 pool.id = jsonData.result.id;
                 handleNewBlockTemplate(jsonData.result.job, hostname);
                 break;
