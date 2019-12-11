@@ -80,7 +80,7 @@
   "coinSettings": {
     "xmr":{
       "minDiff": 100,
-      "maxDiff": 300000,
+      "maxDiff": 10000000,
       "shareTargetTime": 15
     }
   }
