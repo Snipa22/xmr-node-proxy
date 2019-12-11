@@ -10,7 +10,7 @@ const uuidV4 = require('uuid/v4');
 const support = require('./lib/support.js')();
 global.config = require('./config.json');
 
-const PROXY_VERSION = "0.15.2";
+const PROXY_VERSION = "0.15.3";
 const DEFAULT_ALGO      = [ "rx/0" ];
 const DEFAULT_ALGO_PERF = { "rx/0": 1, "rx/loki": 1 };
 
@@ -211,7 +211,7 @@ function Pool(poolData){
     this.default_algo_set = {};
     this.algos            = {};
     for (let i in algo_arr) this.algos[algo_arr[i]] = this.default_algo_set[algo_arr[i]] = 1;
-    this.algos_perf = DEFAULT_ALGO_PERF;
+    this.algos_perf = this.default_algos_perf = poolData.algo_perf && poolData.algo_perf instanceof Object ? poolData.algo_perf : DEFAULT_ALGO_PERF;
     this.blob_type  = poolData.blob_type;
 
 
@@ -730,7 +730,7 @@ function enumerateWorkerStats() {
     // do update of algo/algo-perf if it was changed
     for (let pool in pool_algos) {
         let pool_algos_perf2 = pool_algos_perf[pool];
-        if (Object.keys(pool_algos_perf2).length === 0) pool_algos_perf2 = DEFAULT_ALGO_PERF;
+        if (Object.keys(pool_algos_perf2).length === 0) pool_algos_perf2 = activePools[pool].default_algos_perf;
         activePools[pool].update_algo_perf(pool_algos[pool], pool_algos_perf2);
     }
 
