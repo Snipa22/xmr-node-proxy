@@ -10,9 +10,9 @@ const uuidV4 = require('uuid/v4');
 const support = require('./lib/support.js')();
 global.config = require('./config.json');
 
-const PROXY_VERSION = "0.15.3";
+const PROXY_VERSION = "0.15.4";
 const DEFAULT_ALGO      = [ "rx/0" ];
-const DEFAULT_ALGO_PERF = { "rx/0": 1, "rx/loki": 1 };
+const DEFAULT_ALGO_PERF = { "rx/0": 1, "rx/loki": 1, "rx/v": 1 };
 
 /*
  General file design/where to find things.

@@ -10,7 +10,7 @@
       "password": "proxy",
       "keepAlive": true,
       "algo": "rx/0",
-      "algo_perf": { "rx/0": 1, "rx/loki": 1 },
+      "algo_perf": { "rx/0": 1, "rx/loki": 1, "rx/v": 1 },
       "blob_type": "cryptonote",
       "default": true
     },
@@ -24,7 +24,7 @@
       "password": "proxy",
       "keepAlive": true,
       "algo": "rx/0",
-      "algo_perf": { "rx/0": 1, "rx/loki": 1 },
+      "algo_perf": { "rx/0": 1, "rx/loki": 1, "rx/v": 1 },
       "blob_type": "cryptonote",
       "default": false
     },
@@ -38,7 +38,7 @@
       "password": "proxy",
       "keepAlive": true,
       "algo": "rx/0",
-      "algo_perf": { "rx/0": 1, "rx/loki": 1 },
+      "algo_perf": { "rx/0": 1, "rx/loki": 1, "rx/v": 1 },
       "blob_type": "cryptonote",
       "default": false
     }
