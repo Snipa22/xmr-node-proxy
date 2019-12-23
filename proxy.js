@@ -2,6 +2,7 @@
 const cluster = require('cluster');
 const net = require('net');
 const tls = require('tls');
+const http = require('http');
 const fs = require('fs');
 const async = require('async');
 const uuidV4 = require('uuid/v4');
@@ -578,7 +579,13 @@ function balanceWorkers(){
     }
 }
 
-function enumerateWorkerStats(){
+function enumerateWorkerStats() {
+	// here we do a bit of a hack and "cache" the activeWorkers
+	// this file is parsed for the http://host/json endpoint
+	fs.writeFile("workers.json", JSON.stringify(activeWorkers), function(err) {
+		if(err)
+			return console.log(err);
+	});
     let stats, global_stats = {miners: 0, hashes: 0, hashRate: 0, diff: 0};
     for (let poolID in activeWorkers){
         if (activeWorkers.hasOwnProperty(poolID)){
@@ -803,7 +810,8 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
             lastShare: this.lastShareTime,
             coin: this.coin,
             pool: this.pool,
-            id: this.id
+            id: this.id,
+            password: this.password
         };
     };
 
@@ -952,6 +960,33 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage, m
     }
 }
 
+function activateHTTP() {
+	var jsonServer = http.createServer((req, res) => {
+		if(req.url == "/") {
+			res.writeHead(200, {'Content-type':'text/html'});
+			fs.readFile('index.html', 'utf8', function(err, contents) {
+				res.write(contents);
+				res.end();
+			})
+		} else if(req.url.substring(0, 5) == "/json") {
+			fs.readFile('workers.json', 'utf8', (err, data) => {
+				if(err) {
+					res.writeHead(503);
+				} else {
+					res.writeHead(200, {'Content-type':'application/json'});
+					res.write(data + "\r\n");
+				}
+				res.end();
+			});
+		} else {
+			res.writeHead(404);
+			res.end();
+		}
+	});
+
+	jsonServer.listen(global.config.httpPort || "8080", global.config.httpAddress || "localhost")
+}
+
 function activatePorts() {
     /*
      Reads the current open ports, and then activates any that aren't active yet
@@ -990,7 +1025,7 @@ function activatePorts() {
                 socket.write(sendData);
             };
             handleMinerData(jsonData.method, jsonData.params, socket.remoteAddress, portData, sendReply, pushMessage, minerSocket);
-            };
+		};
 
         function socketConn(socket) {
             socket.setKeepAlive(true);
@@ -1183,4 +1218,6 @@ if (cluster.isMaster) {
     }, 10000);
     setInterval(checkActivePools, 90000);
     activatePorts();
+	if(global.config.httpEnable)
+		activateHTTP();
 }

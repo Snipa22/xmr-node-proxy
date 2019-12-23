@@ -48,6 +48,9 @@
   "bindAddress": "0.0.0.0",
   "developerShare": 1,
   "daemonAddress": "127.0.0.1:18081",
+  "httpEnable": false,
+  "httpAddress": "127.0.0.1",
+  "httpPort": "8080",
   "coinSettings": {
     "xmr":{
       "minDiff": 100,
