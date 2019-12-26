@@ -1112,7 +1112,7 @@ function isInAccessControl(username, password) {
     return typeof accessControl[username] !== 'undefined' && accessControl[username] === password;
 }
 
-function handleMinerData(minerSocket, id, method, params, ip, portData, sendReply, sendReplyFinal, sendReplyMethodResult, pushMessage) {
+function handleMinerData(minerSocket, id, method, params, ip, portData, sendReply, sendReplyFinal, pushMessage) {
     switch (method) {
         case 'login': { // grin and default
             if (ip in bans) {
@@ -1147,14 +1147,10 @@ function handleMinerData(minerSocket, id, method, params, ip, portData, sendRepl
                 }
             }
             if (id === "Stratum") {
-                sendReplyMethodResult("login", "ok");
+                sendReply(null, "ok");
                 miner.protocol = "grin";
             } else {
-                sendReply(null, {
-                    id: minerId,
-                    job: miner.getNewJob(),
-                    status: 'OK'
-                });
+                sendReply(null, { id: minerId, job: miner.getNewJob(), status: 'OK' });
                 miner.protocol = "default";
             }
             break;
@@ -1168,7 +1164,7 @@ function handleMinerData(minerSocket, id, method, params, ip, portData, sendRepl
                 return;
             }
             miner.heartbeat();
-            sendReplyMethodResult("getjobtemplate", miner.getNewJob());
+            sendReply(null, miner.getNewJob());
             break;
         }
 
@@ -1183,7 +1179,7 @@ function handleMinerData(minerSocket, id, method, params, ip, portData, sendRepl
                 return;
             }
             miner.heartbeat();
-            sendReplyMethodResult("job", miner.getNewJob());
+            sendReply(null, miner.getNewJob());
             break;
         }
 
@@ -1260,7 +1256,7 @@ function handleMinerData(minerSocket, id, method, params, ip, portData, sendRepl
             miner.lastShareTime = Date.now() / 1000 || 0;
 
             if (miner.protocol === "grin") {
-                sendReplyMethodResult("submit", "ok");
+                sendReply(null, "ok");
             } else {
                 sendReply(null, {status: 'OK'});
             }
@@ -1479,33 +1475,26 @@ function activatePorts() {
             let sendReply = function (error, result) {
                 if (!socket.writable) return;
                 socket.write(JSON.stringify({
-                    id: jsonData.id,
                     jsonrpc: "2.0",
-                    error: error ? {code: -1, message: error} : null,
-                    result: result
+                    id:      jsonData.id,
+                    method:  jsonData.method,
+                    error:   error ? {code: -1, message: error} : null,
+                    result:  result
                 }) + "\n");
             };
             let sendReplyFinal = function (error) {
                 setTimeout(function() {
                   if (!socket.writable) return;
                   socket.end(JSON.stringify({
-                    id: jsonData.id,
                     jsonrpc: "2.0",
-                    error: {code: -1, message: error},
-                    result: null
+                    id:      jsonData.id,
+                    method:  jsonData.method,
+                    error:   {code: -1, message: error},
+                    result:  null
                   }) + "\n");
                 }, 9 * 1000);
             };
-            let sendReplyMethodResult = function (method, result) {
-                if (!socket.writable) return;
-                socket.write(JSON.stringify({
-                    id: jsonData.id,
-                    jsonrpc: "2.0",
-                    method: method,
-                    result: result
-                }) + "\n");
-            };
-            handleMinerData(socket, jsonData.id, jsonData.method, jsonData.params, socket.remoteAddress, portData, sendReply, sendReplyFinal, sendReplyMethodResult, pushMessage);
+            handleMinerData(socket, jsonData.id, jsonData.method, jsonData.params, socket.remoteAddress, portData, sendReply, sendReplyFinal, pushMessage);
         };
 
         function socketConn(socket) {
