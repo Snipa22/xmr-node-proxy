@@ -1183,7 +1183,7 @@ function handleMinerData(minerSocket, id, method, params, ip, portData, sendRepl
                 return;
             }
             miner.heartbeat();
-            sendReply(null, { id: miner.id, job: miner.getNewJob(), status: 'OK' });
+            sendReplyMethodResult("job", miner.getNewJob());
             break;
         }
 
