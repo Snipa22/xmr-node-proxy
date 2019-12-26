@@ -10,7 +10,7 @@
       "password": "proxy",
       "keepAlive": true,
       "algo": "rx/0",
-      "algo_perf": { "rx/0": 1, "rx/loki": 1, "rx/v": 1 },
+      "algo_perf": { "rx/0": 1, "rx/loki": 1 },
       "blob_type": "cryptonote",
       "default": true
     },
@@ -24,7 +24,7 @@
       "password": "proxy",
       "keepAlive": true,
       "algo": "rx/0",
-      "algo_perf": { "rx/0": 1, "rx/loki": 1, "rx/v": 1 },
+      "algo_perf": { "rx/0": 1 },
       "blob_type": "cryptonote",
       "default": false
     },
@@ -38,7 +38,7 @@
       "password": "proxy",
       "keepAlive": true,
       "algo": "rx/0",
-      "algo_perf": { "rx/0": 1, "rx/loki": 1, "rx/v": 1 },
+      "algo_perf": { "rx/0": 1, "rx/loki": 1 },
       "blob_type": "cryptonote",
       "default": false
     }
@@ -47,17 +47,22 @@
     {
       "port": 8080,
       "ssl": false,
-      "diff": 5000
+      "diff": 10000
     },
     {
       "port": 8443,
       "ssl": true,
-      "diff": 5000
+      "diff": 10000
     },
     {
       "port": 3333,
       "ssl": false,
-      "diff": 10000
+      "diff": 1000
+    },
+    {
+      "port": 1111,
+      "ssl": false,
+      "diff": 1
     }
   ],
   "bindAddress": "0.0.0.0",
@@ -79,9 +84,9 @@
   "theme": "light",
   "coinSettings": {
     "xmr":{
-      "minDiff": 100,
+      "minDiff": 1,
       "maxDiff": 10000000,
-      "shareTargetTime": 15
+      "shareTargetTime": 30
     }
   }
 }
