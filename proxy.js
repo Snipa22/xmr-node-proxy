@@ -819,11 +819,6 @@ function handlePoolMessage(jsonData, hostname){
         let sendLog = pool.sendLog[jsonData.id];
         switch(sendLog.method){
             case 'login':
-                if (typeof jsonData.result.job == 'undefined') {
-                  console.error(`${global.threadName}Empty response from pool ${pool.hostname}`);
-                  activePools[hostname].disable();
-                  return;
-                }
                 pool.id = jsonData.result.id;
                 handleNewBlockTemplate(jsonData.result.job, hostname);
                 break;
@@ -838,6 +833,11 @@ function handlePoolMessage(jsonData, hostname){
 }
 
 function handleNewBlockTemplate(blockTemplate, hostname){
+    if (!blockTemplate) {
+        console.error(`${global.threadName}Empty response from pool ${hostname}`);
+        activePools[hostname].disable();
+        return;
+    }
     let pool = activePools[hostname];
     let algo_variant = "";
     if (blockTemplate.algo) algo_variant += "algo: " + blockTemplate.algo;
