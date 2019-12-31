@@ -823,7 +823,8 @@ function handlePoolMessage(jsonData, hostname){
                 handleNewBlockTemplate(jsonData.result.job, hostname);
                 break;
             case 'getjob':
-                handleNewBlockTemplate(jsonData.result, hostname);
+                // null for same job
+                if (jsonData.result !== null) handleNewBlockTemplate(jsonData.result, hostname);
                 break;
             case 'submit':
                 sendLog.accepted = true;
@@ -835,7 +836,7 @@ function handlePoolMessage(jsonData, hostname){
 function handleNewBlockTemplate(blockTemplate, hostname){
     if (!blockTemplate) {
         console.error(`${global.threadName}Empty response from pool ${hostname}`);
-        //activePools[hostname].disable();
+        activePools[hostname].disable();
         return;
     }
     let pool = activePools[hostname];
