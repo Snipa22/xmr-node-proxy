@@ -835,7 +835,7 @@ function handlePoolMessage(jsonData, hostname){
 function handleNewBlockTemplate(blockTemplate, hostname){
     if (!blockTemplate) {
         console.error(`${global.threadName}Empty response from pool ${hostname}`);
-        activePools[hostname].disable();
+        //activePools[hostname].disable();
         return;
     }
     let pool = activePools[hostname];
