@@ -1207,7 +1207,7 @@ function handleMinerData(minerSocket, id, method, params, ip, portData, sendRepl
                 return;
             }
 
-            const is_bad_nonce = job.blob_type == 8 ?
+            const is_bad_nonce = miner.coinFuncs.blobTypeGrin(job.blob_type) ?
                                  (typeof params.nonce !== 'number') || !(params.pow instanceof Array) || (params.pow.length != 32) :
                                  (typeof params.nonce !== 'string') || !(job.blob_type == 7 ? nonceCheck64.test(params.nonce) : nonceCheck32.test(params.nonce) );
 
@@ -1223,7 +1223,7 @@ function handleMinerData(minerSocket, id, method, params, ip, portData, sendRepl
                 return;
             }
 
-            const nonce_test = job.blob_type == 8 ? params.pow.join(':') : params.nonce;
+            const nonce_test = miner.coinFuncs.blobTypeGrin(job.blob_type) ? params.pow.join(':') : params.nonce;
 
             job.submissions.push(nonce_test);
             let activeBlockTemplate = activePools[miner.pool].activeBlocktemplate;
