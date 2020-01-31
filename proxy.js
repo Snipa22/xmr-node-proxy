@@ -898,7 +898,7 @@ function Miner(id, params, ip, pushMessage, portData, minerSocket) {
     // If there is no miner identifier, then the miner identifier is set to the password
     // If the password is x, aka, old-logins, we're not going to allow detailed review of miners.
 
-    const login_diff_split = params.login.split("+");
+    const login_diff_split = params.login ? params.login.split("+") : "";
     if (!params.pass) params.pass = "x";
     const pass_algo_split = params.pass.split("~");
     const pass_split = pass_algo_split[0].split(":");
