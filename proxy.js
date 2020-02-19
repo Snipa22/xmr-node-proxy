@@ -945,6 +945,7 @@ function handleMinerData(method, params, ip, portData, sendReply, pushMessage, m
                 sendReply('Unauthenticated');
                 return;
             }
+            miner.heartbeat();
             sendReply(null, {
                 status: 'KEEPALIVED'
             });
