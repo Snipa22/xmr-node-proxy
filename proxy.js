@@ -644,7 +644,7 @@ function balanceWorkers(){
                 if(minerChanges.hasOwnProperty(pool) && minerChanges[pool].length > 0){
                     minerChanges[pool].forEach(function(miner){
                         let minerBits = miner.split('_');
-                        cluster.workers[minerBits[0]].send({
+                        if (cluster.workers[minerBits[0]]) cluster.workers[minerBits[0]].send({
                             type: 'changePool',
                             worker: minerBits[1],
                             pool: pool
