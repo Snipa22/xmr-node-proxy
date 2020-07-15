@@ -9,7 +9,7 @@ const async = require('async');
 const support = require('./lib/support.js')();
 global.config = require('./config.json');
 
-const PROXY_VERSION = "0.17.4";
+const PROXY_VERSION = "0.18.0";
 const DEFAULT_ALGO      = [ "rx/0" ];
 const DEFAULT_ALGO_PERF = { "rx/0": 1, "rx/loki": 1 };
 
@@ -1207,9 +1207,10 @@ function handleMinerData(minerSocket, id, method, params, ip, portData, sendRepl
                 return;
             }
 
-            const is_bad_nonce = miner.coinFuncs.blobTypeGrin(job.blob_type) ?
-                                 (typeof params.nonce !== 'number') || !(params.pow instanceof Array) || (params.pow.length != 32) :
-                                 (typeof params.nonce !== 'string') || !(job.blob_type == 7 ? nonceCheck64.test(params.nonce) : nonceCheck32.test(params.nonce) );
+            const blob_type_num = job.blob_type;
+            const is_bad_nonce = miner.coinFuncs.blobTypeGrin(blob_type_num) ?
+                                 (typeof params.nonce !== 'number') || !(params.pow instanceof Array) || (params.pow.length != miner.coinFuncs.c29ProofSize(blob_type_num)) :
+                                 (typeof params.nonce !== 'string') || !(miner.coinFuncs.nonceSize(blob_type_num) == 8 ? nonceCheck64.test(params.nonce) : nonceCheck32.test(params.nonce) );
 
             if (is_bad_nonce) {
                 console.warn(global.threadName + 'Malformed nonce: ' + JSON.stringify(params) + ' from ' + miner.logString);
@@ -1223,7 +1224,7 @@ function handleMinerData(minerSocket, id, method, params, ip, portData, sendRepl
                 return;
             }
 
-            const nonce_test = miner.coinFuncs.blobTypeGrin(job.blob_type) ? params.pow.join(':') : params.nonce;
+            const nonce_test = miner.coinFuncs.blobTypeGrin(blob_type_num) ? params.pow.join(':') : params.nonce;
 
             job.submissions.push(nonce_test);
             let activeBlockTemplate = activePools[miner.pool].activeBlocktemplate;
