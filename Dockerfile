@@ -5,7 +5,7 @@ RUN apt-get update \
     && curl -fsSL https://deb.nodesource.com/setup_8.x -o /tmp/node_setup.sh \
     && bash /tmp/node_setup.sh \
     && rm /tmp/node_setup.sh \
-    && apt-get install -y nodejs git make g++ libboost-dev libboost-system-dev libboost-date-time-dev \
+    && apt-get install -y nodejs git make g++ libboost-dev libboost-system-dev libboost-date-time-dev libsodium-dev \
     && git clone https://github.com/MoneroOcean/xmr-node-proxy /xmr-node-proxy \
     && cd /xmr-node-proxy \
     && npm install \
