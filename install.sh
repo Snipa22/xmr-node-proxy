@@ -11,11 +11,11 @@ CURUSER=$(whoami)
 if which yum >/dev/null; then
   sudo yum -y update
   sudo yum -y upgrade
-  sudo yum -y install git curl make gcc-c++ python-virtualenv boost-devel boost-system-devel boost-date-time-devel libsodium-devel
+  sudo yum -y install git curl make gcc-c++ python boost-devel boost-system-devel boost-date-time-devel libsodium-devel
 else
   sudo apt-get update
   sudo DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
-  sudo DEBIAN_FRONTEND=noninteractive apt-get -y install git curl make g++ python-virtualenv libboost-dev libboost-system-dev libboost-date-time-dev libsodium-dev
+  sudo DEBIAN_FRONTEND=noninteractive apt-get -y install git curl make g++ python libboost-dev libboost-system-dev libboost-date-time-dev libsodium-dev
 fi
 cd ~
 git clone https://github.com/MoneroOcean/xmr-node-proxy
