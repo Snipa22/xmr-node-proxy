@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:latest
 LABEL maintainer="Pedro Lobo <https://github.com/pslobo>"
 LABEL Name="Dockerized xmr-node-proxy"
 LABEL Version="1.4"
