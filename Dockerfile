@@ -8,7 +8,6 @@ RUN export BUILD_DEPS="cmake \
                        git \
                        build-essential \
                        curl" \
-
     && apt-get update && apt-get upgrade -qqy  \
     && apt-get install --no-install-recommends -qqy \
         ${BUILD_DEPS} python3-virtualenv \
