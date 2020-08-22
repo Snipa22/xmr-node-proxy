@@ -18,7 +18,7 @@
   "homepage": "https://github.com/snipa22/xmr-node-proxy#readme",
   "dependencies": {
     "async": "2.1.4",
-    "bignum": "^0.12.5",
+    "bignum": "^0.13.0",
     "body-parser": "^1.16.0",
     "circular-buffer": "1.0.2",
     "cluster": "0.7.7",
