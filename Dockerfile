@@ -17,7 +17,7 @@ RUN export BUILD_DEPS="cmake \
         libunbound-dev libminiupnpc-dev \
         libunwind8-dev liblzma-dev libldns-dev \
         libexpat1-dev libgtest-dev libzmq3-dev \
-    && curl -o- https://deb.nodesource.com/setup_6.x| bash \
+    && curl -o- https://deb.nodesource.com/setup_12.x| bash \
     && apt-get install nodejs \
     && git clone https://github.com/Snipa22/xmr-node-proxy /app \
     && cd /app && npm install \
