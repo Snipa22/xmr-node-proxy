@@ -3,7 +3,7 @@
 
 ## Setup Instructions
 
-Based on a clean Ubuntu 16.04 LTS minimal install
+Based on a clean Ubuntu 20.04 LTS minimal install
 
 ## Deployment via Installer
 
