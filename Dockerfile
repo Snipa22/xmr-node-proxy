@@ -11,7 +11,7 @@ RUN export BUILD_DEPS="cmake \
 
     && apt-get update && apt-get upgrade -qqy  \
     && apt-get install --no-install-recommends -qqy \
-        ${BUILD_DEPS} python-virtualenv \
+        ${BUILD_DEPS} python3-virtualenv \
         python3-virtualenv ntp screen \
         libboost-all-dev libevent-dev \
         libunbound-dev libminiupnpc-dev \
