@@ -1,8 +1,9 @@
-FROM ubuntu:latest
+FROM ubuntu:20.04
 LABEL maintainer="Pedro Lobo <https://github.com/pslobo>"
 LABEL Name="Dockerized xmr-node-proxy"
 LABEL Version="1.4"
-
+RUN apt-get update
+RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata
 RUN export BUILD_DEPS="cmake \
                        pkg-config \
                        git \
@@ -27,8 +28,6 @@ RUN export BUILD_DEPS="cmake \
     && rm -rf /var/lib/apt/lists/* \
     && chown -R proxy.proxy /app \
     && mkdir /logs && chown -R proxy.proxy /logs
-
 USER proxy
 WORKDIR /app
-
 ENTRYPOINT ["node","proxy.js"]
