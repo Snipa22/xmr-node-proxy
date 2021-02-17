@@ -17,7 +17,7 @@ source ~/.nvm/nvm.sh
 nvm install v6.9.2
 cd ~/xmr-node-proxy
 npm install
-npm install -g pm2
+npm install -g pm2@3.5.1
 cp config_example.json config.json
 openssl req -subj "/C=IT/ST=Pool/L=Daemon/O=Mining Pool/CN=mining.proxy" -newkey rsa:2048 -nodes -keyout cert.key -x509 -out cert.pem -days 36500
 cd ~
