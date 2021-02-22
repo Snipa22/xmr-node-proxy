@@ -26,6 +26,7 @@ MY_NODE_VERSION="6.9.2"
 MY_NVM_VERSION="0.37.2"
 
 echo -e "${UYel}ALERT:${$RCol}${Yel} This unattended xmr-node-proxy installer is about to modify your system!\nIt will reset ANY user configurations you want in:\n\n    - node.js\n    - node version manager\n    - pm2 app manager\n\n${RCol}${BCya}Press CTRL+C if you wish to exit this script within the next 15 seconds.\nWait if you don't care.\n${RCol}"
+sleep 15s
 
 # Detect and remove managed directories
 declare -a m=("$HOME/.npm" "$HOME/.pm2" "$HOME/.nvm" "$HOME/.node-gyp" "$HOME/xmr-node-proxy" "$HOME/.cache" )
