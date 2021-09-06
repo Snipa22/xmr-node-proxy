@@ -3,7 +3,7 @@
 
 ## Setup Instructions
 
-Based on a clean Ubuntu 16.04 LTS minimal install
+Based on a clean Ubuntu 20.04 LTS minimal install
 
 ## Deployment via Installer
 
@@ -51,7 +51,7 @@ pm2 monit
 
 VMs with 512Mb or less RAM will need some swap space in order to compile the C extensions for node.  Bignum and the CN libraries can chew through some serious memory during compile.  In regards to this, one of our users has put together a guide for T2.Micro servers: https://docs.google.com/document/d/1m8E4_pDwKuFo0TnWJaO13LDHqOmbL6YrzyR6FvzqGgU (Credit goes to MayDay30 for his work with this!)
 
-If not running on an Ubuntu 16.04 system, please make sure your kernel is at least 3.2 or higher, as older versions will not work for this.
+If not running on an Ubuntu 20.04 system, please make sure your kernel is at least 3.2 or higher, as older versions will not work for this.
 
 Many smaller VMs come with ulimits set very low. We suggest looking into setting the ulimit higher. In particular, `nofile` (Number of files open) needs to be raised for high-usage instances.
 
@@ -82,7 +82,7 @@ The proxy is pre-configured for a 1% donation. This is easily toggled inside of 
 
 ## Installation/Configuration Assistance
 
-If you need help installing the pool from scratch, please have your servers ready, which would be Ubuntu 16.04 servers, blank and clean, DNS records pointed.  These need to be x86_64 boxes with AES-NI Available.
+If you need help installing the pool from scratch, please have your servers ready, which would be Ubuntu 20.04 servers, blank and clean, DNS records pointed.  These need to be x86_64 boxes with AES-NI Available.
 
 Installation assistance is 4 XMR, with a 2 XMR deposit, with remainder to be paid on completion.  
 Configuration assistance is 2 XMR with a 1 XMR deposit, and includes debugging your proxy configurations, ensuring that everything is running, and tuning for your uses/needs.  
@@ -96,16 +96,8 @@ Please contact Snipa at: proxy_installs@snipanet.com or via IRC on irc.freenode.
 * [XMRPool.net](https://xmrpool.net)
 * [supportXMR.com](https://supportxmr.com)
 * [pool.xmr.pt](https://pool.xmr.pt)
-* [minemonero.pro](https://minemonero.pro)
-* [XMRPool.xyz](https://xmrpool.xyz)
-* [ViaXMR.com](https://viaxmr.com)
-* [mine.MoneroPRO.com](https://mine.moneropro.com)
 * [MinerCircle.com](https://www.minercircle.com)
-* [xmr.p00ls.net](https://www.p00ls.net)
-* [MoriaXMR.com](https://moriaxmr.com)
 * [MoneroOcean.stream](https://moneroocean.stream)
-* [SECUmine.net](https://secumine.net)
-* [Chinaenter.cn](http://xmr.chinaenter.cn)
 * [XMRPool.eu](https://xmrpool.eu)
 
 If you'd like to have your pool added, please make a pull request here, or contact Snipa on IRC!
