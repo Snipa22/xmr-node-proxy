@@ -36,6 +36,7 @@
     "uuid": "3.0.1"
   },
   "optionalDependencies": {
+    "forknote-util": "git://github.com/wallet42/node-forknote-util.git",
     "cryptonote-util": "git://github.com/Snipa22/node-cryptonote-util.git#xmr-Nan-2.0",
     "multi-hashing": "git+https://github.com/Snipa22/node-multi-hashing-aesni.git#v0.1",
     "cryptonight-hashing": "git+https://github.com/MoneroOcean/node-cryptonight-hashing.git#865a1f18e7dd5cf0513ae6becfdbeba3a10c9fb9"
