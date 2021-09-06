@@ -1,5 +1,9 @@
 # xmr-node-proxy
 
+## Monero v8 Update procedure:
+In order to update your existing proxy installation for the Oct. 2018 Monero fork, run this from the proxy dir:
+
+git pull && npm install --upgrade nan && rm -rfv node_modules/cryptonight-hashing && npm i git+https://github.com/MoneroOcean/node-cryptonight-hashing.git
 
 ## Setup Instructions
 
