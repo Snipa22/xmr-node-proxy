@@ -9,7 +9,7 @@ const async = require('async');
 const support = require('./lib/support.js')();
 global.config = require('./config.json');
 
-const PROXY_VERSION = "0.22.0";
+const PROXY_VERSION = "0.22.1";
 const DEFAULT_ALGO      = [ "rx/0" ];
 const DEFAULT_ALGO_PERF = { "rx/0": 1, "rx/loki": 1 };
 
