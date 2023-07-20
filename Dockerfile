@@ -1,8 +1,8 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 RUN apt-get update \
     && apt-get install -y curl gnupg \
-    && curl -fsSL https://deb.nodesource.com/setup_8.x -o /tmp/node_setup.sh \
+    && curl -fsSL https://deb.nodesource.com/setup_14.x -o /tmp/node_setup.sh \
     && bash /tmp/node_setup.sh \
     && rm /tmp/node_setup.sh \
     && apt-get install -y nodejs git make g++ libboost-dev libboost-system-dev libboost-date-time-dev libsodium-dev \

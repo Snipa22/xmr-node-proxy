@@ -15,7 +15,7 @@ if which yum >/dev/null; then
 else
   sudo apt-get update
   sudo DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
-  sudo DEBIAN_FRONTEND=noninteractive apt-get -y install git curl make g++ python libboost-dev libboost-system-dev libboost-date-time-dev libsodium-dev
+  sudo DEBIAN_FRONTEND=noninteractive apt-get -y install git curl make g++ python2 libboost-dev libboost-system-dev libboost-date-time-dev libsodium-dev
 fi
 cd ~
 git clone https://github.com/MoneroOcean/xmr-node-proxy
